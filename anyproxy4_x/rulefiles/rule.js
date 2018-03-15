@@ -3,24 +3,11 @@ var http=require('http');
 var nodejsQueue = 'nodejsQueue'
 var port = 3000;
 var ruler = [];
-http.get('http://'+nodejsQueue+":"+port,function(req,res){
-    var jsonString='';
-    req.on('data',function(data){
-        jsonString+=data;
-    });
-    req.on('end',function(){
-        console.log('加载规则数据');
-        console.log(jsonString);
-        try{
-            var jsonData = JSON.parse(jsonString);
-            if (jsonData.status == "success")
-                ruler  = JSON.parse(jsonData.data);
-        }catch (e){
-            console.log(e);
-        }
 
-    });
-});
+GetRuler();//获取互联网规则
+
+//定时执行获取规则
+var myInterval=setInterval(GetRuler,1000*60*5);
 
 module.exports = {
   summary: 'a rule to hack response',
@@ -52,7 +39,30 @@ module.exports = {
     return null;
   },
 };
+/**
+ * 获取匹配规则内容
+ * @constructor
+ */
+function GetRuler() {
+    http.get('http://'+nodejsQueue+":"+port,function(req,res){
+        var jsonString='';
+        req.on('data',function(data){
+            jsonString+=data;
+        });
+        req.on('end',function(){
+            console.log('加载规则数据');
+            console.log(jsonString);
+            try{
+                var jsonData = JSON.parse(jsonString);
+                if (jsonData.status == "success")
+                    ruler  = JSON.parse(jsonData.data);
+            }catch (e){
+                console.log(e);
+            }
 
+        });
+    });
+}
 //发送json数据到服务器
 function HttpPost(bodyString,url,reqData,queueTag) {//将json发送到服务器，bodyString为json内容 url请求的地址，reqData请求的数据 queueTag消息队列
     console.log('==================================HttpPost==============================');
