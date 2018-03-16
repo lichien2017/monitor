@@ -1,0 +1,20 @@
+
+
+docker run --name redis-container -d -p 6379:6379 redis
+
+docker run --name mongo-container -p 27017:27017 -v /home/tymx/Documents/mongodbData:/data/db -d mongo
+
+
+docker run -d --name nodejsqueue -v /Users/lizhengqing/Documents/DockerContainer/nodejsqueue:/usr/local/nodejsqueue --link redis-container:redisdb tymx/nodejsqueue:v1
+
+docker run -d -p 8001:8001 -p 8002:8002 -p 8013:8013 -v /Users/lizhengqing/Documents/DockerContainer/anyproxy4_x:/usr/local/anyproxy --link nodejsqueue:nodejsQueue tymx/anyproxy406:v2 --intercept --rule /usr/local/anyproxy/rulefiles/rule.js
+
+
+docker run -d --name nodejsqueue -v /home/tymx/Documents/DockerContainer/nodejsqueue:/usr/local/nodejsqueue --link redis-container:redisdb tymx/nodejsqueue:v1
+
+
+docker run -d -p 7001:8001 -p 7002:8002 -p 7013:8013 -v /home/tymx/Documents/DockerContainer/anyproxy4_x:/usr/local/anyproxy --link nodejsqueue:nodejsQueue tymx/anyproxy406:v1 --intercept --rule /usr/local/anyproxy/rulefiles/rule.js
+
+
+
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d "{\"tag\":\"今日头条\",\"msg\":\"这是一条push消息\",\"time\":1111111111111,\"imgfile\":\"11111.jpg\"}" http://192.168.10.52:3000/push
