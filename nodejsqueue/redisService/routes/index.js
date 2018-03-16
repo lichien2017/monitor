@@ -7,8 +7,14 @@ const fs = require('fs');
 
 var router = express.Router();
 
+var debug = false;
 var redisIp ='redisdb';//container里面的redisdb名称
 var mongodbIp = 'mongodb';//container里面的mongodb名称
+
+if (debug){
+    redisIp = '192.168.10.176';
+    mongodbIp= '192.168.10.176';
+}
 
 var DB_CONN_STR = 'mongodb://'+mongodbIp+':27017';
 /**
@@ -67,14 +73,10 @@ router.get('/applist',function (req,res) {
             // dataList.push(data);
             // client.set('applist',JSON.stringify(dataList),redis.print);
             // var rulerString =  client.get('applist',redis.print);//得到规则字符串
-            var rulerString =  client.get('ruler',function (err,result) {
+            client.get('ruler',function (err,result) {
                 //得到规则字符串
-                res.send({"status": "success","data":result});
+                res.json({"status": "success","data":result});
             });
-            if (!rulerString){
-                res.send({"status": "error"});
-            }
-            // res.send({"status": "success","data":rulerString});
         });
 
         // redis 链接错误
@@ -83,7 +85,7 @@ router.get('/applist',function (req,res) {
         });
 
     }catch (e){
-        res.send({"status": "error"});
+        res.json({"status": "error"});
         console.log(e);
     }
 });
@@ -174,13 +176,10 @@ router.get('/ruler', function (req, res) {
         client.on('connect', function() {
             console.log('connected');
             //先把数据存进去
-            var rulerString =  client.get('ruler',function (err,result) {
+            client.get('ruler',function (err,result) {
                 //得到规则字符串
                 res.send({"status": "success","data":result});
             });
-            if (!rulerString){
-                res.send({"status": "error"});
-            }
 
         });
 
