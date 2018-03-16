@@ -7,7 +7,7 @@ const fs = require('fs');
 
 var router = express.Router();
 
-var debug = false;
+var debug = true;
 var redisIp ='redisdb';//container里面的redisdb名称
 var mongodbIp = 'mongodb';//container里面的mongodb名称
 
@@ -73,7 +73,7 @@ router.get('/applist',function (req,res) {
             // dataList.push(data);
             // client.set('applist',JSON.stringify(dataList),redis.print);
             // var rulerString =  client.get('applist',redis.print);//得到规则字符串
-            client.get('ruler',function (err,result) {
+            client.get('applist',function (err,result) {
                 //得到规则字符串
                 res.json({"status": "success","data":result});
             });
