@@ -7,7 +7,7 @@ const fs = require('fs');
 
 var router = express.Router();
 
-var debug = true;
+var debug = false;
 var redisIp ='redisdb';//container里面的redisdb名称
 var mongodbIp = 'mongodb';//container里面的mongodb名称
 
