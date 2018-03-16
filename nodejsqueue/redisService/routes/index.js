@@ -100,18 +100,18 @@ router.post("/image",function (req,res) {
         form.maxFieldsSize = 20 * 1024 * 1024;
         //处理图片
         form.parse(req, function (err, fields, files){
-            var filename = files.file.name
-            var nameArray = filename.split('.');
-            var type = nameArray[nameArray.length - 1];
-            var name = '';
-            for (var i = 0; i < nameArray.length - 1; i++) {
-                name = name + nameArray[i];
-            }
-            var date = new Date();
+            var filename = files.uploadfile.name
+            // var nameArray = filename.split('.');
+            // var type = nameArray[nameArray.length - 1];
+            // var name = '';
+            // for (var i = 0; i < nameArray.length - 1; i++) {
+            //     name = name + nameArray[i];
+            // }
+            // var date = new Date();
             //var time = '_' + date.getFullYear() + "_" + date.getMonth() + "_" + date.getDay() + "_" + date.getHours() + "_" + date.getMinutes();
-            var avatarName = name  + '.' + type;
-            var newPath = form.uploadDir + "/" + avatarName;
-            fs.renameSync(files.file.path, newPath);  //重命名
+            // var avatarName = name  + '.' + type;
+            var newPath = form.uploadDir + "/" + filename;
+            fs.renameSync(files.uploadfile.path, newPath);  //重命名
             res.send({"status": "success","url":"/uploads/"+avatarName});
         })
     }catch (e){
