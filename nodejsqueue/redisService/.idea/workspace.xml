@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="89a870f0-d1fd-4fa2-85ee-8dcb485f225b" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/../../dock启动脚本.txt" afterPath="$PROJECT_DIR$/../../dock启动脚本.txt" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/routes/index.js" afterPath="$PROJECT_DIR$/routes/index.js" />
     </list>
@@ -26,8 +27,8 @@
       <file leaf-file-name="index.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
-              <caret line="13" column="11" lean-forward="true" selection-start-line="13" selection-start-column="11" selection-end-line="13" selection-end-column="11" />
+            <state relative-caret-position="282">
+              <caret line="105" column="51" lean-forward="true" selection-start-line="105" selection-start-column="51" selection-end-line="105" selection-end-column="51" />
               <folding>
                 <element signature="e#532#1647#0" expanded="false" />
               </folding>
@@ -260,7 +261,7 @@
       <workItem from="1521077272159" duration="2000" />
       <workItem from="1521081005261" duration="4153000" />
       <workItem from="1521180027563" duration="2247000" />
-      <workItem from="1521183529406" duration="4602000" />
+      <workItem from="1521183529406" duration="4837000" />
     </task>
     <task id="LOCAL-00001" summary="1、增加mongodb模块&#10;2、增加图片上传服务、通知数据上传服务、applist服务">
       <created>1521188281059</created>
@@ -283,11 +284,18 @@
       <option name="project" value="LOCAL" />
       <updated>1521189382253</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="修改bug">
+      <created>1521189918679</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1521189918679</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="29010000" />
+    <option name="totallyTimeSpent" value="29245000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -321,7 +329,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="1、增加mongodb模块&#10;2、增加图片上传服务、通知数据上传服务、applist服务" />
     <MESSAGE value="1、修改图片上传代码的bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="1、修改图片上传代码的bug" />
+    <MESSAGE value="修改bug" />
+    <option name="LAST_COMMIT_MESSAGE" value="修改bug" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -567,8 +576,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="13" column="11" lean-forward="true" selection-start-line="13" selection-start-column="11" selection-end-line="13" selection-end-column="11" />
+        <state relative-caret-position="282">
+          <caret line="105" column="51" lean-forward="true" selection-start-line="105" selection-start-column="51" selection-end-line="105" selection-end-column="51" />
           <folding>
             <element signature="e#532#1647#0" expanded="false" />
           </folding>

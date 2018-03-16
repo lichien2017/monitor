@@ -114,7 +114,7 @@ router.post("/image",function (req,res) {
             // var avatarName = name  + '.' + type;
             var newPath = form.uploadDir + "/" + filename;
             fs.renameSync(files.uploadfile.path, newPath);  //重命名
-            res.send({"status": "success","url":"/uploads/"+avatarName});
+            res.send({"status": "success"});
         })
     }catch (e){
         console.log(e)
