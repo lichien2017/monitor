@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="89a870f0-d1fd-4fa2-85ee-8dcb485f225b" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/../../anyproxy4_x/rulefiles/rule.js" afterPath="$PROJECT_DIR$/../../anyproxy4_x/rulefiles/rule.js" />
-      <change beforePath="$PROJECT_DIR$/../../dock启动脚本.txt" afterPath="$PROJECT_DIR$/../../dock启动脚本.txt" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/routes/index.js" afterPath="$PROJECT_DIR$/routes/index.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -279,7 +276,7 @@
       <workItem from="1521077272159" duration="2000" />
       <workItem from="1521081005261" duration="4153000" />
       <workItem from="1521180027563" duration="2247000" />
-      <workItem from="1521183529406" duration="7774000" />
+      <workItem from="1521183529406" duration="7799000" />
     </task>
     <task id="LOCAL-00001" summary="1、增加mongodb模块&#10;2、增加图片上传服务、通知数据上传服务、applist服务">
       <created>1521188281059</created>
@@ -337,11 +334,18 @@
       <option name="project" value="LOCAL" />
       <updated>1521430751913</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="修改bug">
+      <created>1521446797074</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1521446797074</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="32182000" />
+    <option name="totallyTimeSpent" value="32207000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
