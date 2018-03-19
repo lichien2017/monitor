@@ -5,9 +5,14 @@ var formidable = require('formidable');
 const path = require('path');
 const fs = require('fs');
 
+
+// var MongoClient = require('mongodb').MongoClient
+//     , Server = require('mongodb').Server;
+
+
 var router = express.Router();
 
-var debug = false;
+var debug = true;
 var redisIp ='redisdb';//container里面的redisdb名称
 var mongodbIp = 'mongodb';//container里面的mongodb名称
 
@@ -16,7 +21,7 @@ if (debug){
     mongodbIp= '192.168.10.176';
 }
 
-var DB_CONN_STR = 'mongodb://'+mongodbIp+':27017';
+var DB_CONN_STR = 'mongodb://'+mongodbIp+':27017/crawlnews';
 /**
  * 测试地址
  */
@@ -149,6 +154,24 @@ var insertPushData = function(db, insertData,callback) {
 router.post("/push",function (req,res) {
     console.log("收到push消息："+req.body);
     try{
+
+        // var mongoClient = new MongoClient(new Server(mongodbIp, 27017));
+        // mongoClient.open(function(err, mongoClient) {
+        //     if(err){
+        //         console.log(err);
+        //         return;
+        //     }
+        //     console.log("mongodb连接成功！");
+        //     var db1 = mongoClient.db("crawlnews");
+        //
+        //     insertPushData(db1, req.body,function(result) {
+        //         console.log(result);
+        //         mongoClient.close();
+        //         res.json({"status": "success"});
+        //     });
+        //
+        // });
+
         var MongoClient = mongodb.MongoClient;
         MongoClient.connect(DB_CONN_STR, function(err, db) {
             console.log("mongodb连接成功！");
@@ -161,8 +184,9 @@ router.post("/push",function (req,res) {
         });
 
     }catch (e){
-        res.json({"status": "error"});
         console.log(e);
+        res.json({"status": "error"});
+
     }
 });
 

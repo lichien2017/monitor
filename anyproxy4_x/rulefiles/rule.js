@@ -44,24 +44,29 @@ module.exports = {
  * @constructor
  */
 function GetRuler() {
-    http.get('http://'+nodejsQueue+":"+port,function(req,res){
-        var jsonString='';
-        req.on('data',function(data){
-            jsonString+=data;
-        });
-        req.on('end',function(){
-            console.log('加载规则数据');
-            console.log(jsonString);
-            try{
-                var jsonData = JSON.parse(jsonString);
-                if (jsonData.status == "success")
-                    ruler  = JSON.parse(jsonData.data);
-            }catch (e){
-                console.log(e);
-            }
+    try{
+        http.get('http://'+nodejsQueue+":"+port,function(req,res){
+            var jsonString='';
+            req.on('data',function(data){
+                jsonString+=data;
+            });
+            req.on('end',function(){
+                console.log('加载规则数据');
+                console.log(jsonString);
+                try{
+                    var jsonData = JSON.parse(jsonString);
+                    if (jsonData.status == "success")
+                        ruler  = JSON.parse(jsonData.data);
+                }catch (e){
+                    console.log(e);
+                }
 
+            });
         });
-    });
+    }catch (e){
+        console.log('获取规则文件失败:'+e);
+    }
+
 }
 //发送json数据到服务器
 function HttpPost(bodyString,url,reqData,queueTag) {//将json发送到服务器，bodyString为json内容 url请求的地址，reqData请求的数据 queueTag消息队列

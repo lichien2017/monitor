@@ -10,7 +10,7 @@ docker run -d --name nodejsqueue -v /Users/lizhengqing/Documents/DockerContainer
 docker run -d -p 8001:8001 -p 8002:8002 -p 8013:8013 -v /Users/lizhengqing/Documents/DockerContainer/anyproxy4_x:/usr/local/anyproxy --link nodejsqueue:nodejsQueue tymx/anyproxy406:v2 --intercept --rule /usr/local/anyproxy/rulefiles/rule.js
 
 
-docker run -d --name nodejsqueue -v /home/tymx/Documents/DockerContainer/nodejsqueue:/usr/local/nodejsqueue --link redis-container:redisdb tymx/nodejsqueue:v1
+docker run -d --name nodejsqueue -v /home/tymx/Documents/DockerContainer/nodejsqueue:/usr/local/nodejsqueue -p 3000:3000 --link redis-container:redisdb tymx/nodejsqueue:v1
 
 
 docker run -d -p 7001:8001 -p 7002:8002 -p 7013:8013 -v /home/tymx/Documents/DockerContainer/anyproxy4_x:/usr/local/anyproxy --link nodejsqueue:nodejsQueue tymx/anyproxy406:v1 --intercept --rule /usr/local/anyproxy/rulefiles/rule.js
@@ -18,3 +18,26 @@ docker run -d -p 7001:8001 -p 7002:8002 -p 7013:8013 -v /home/tymx/Documents/Doc
 
 
 curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d "{\"tag\":\"今日头条\",\"msg\":\"这是一条push消息\",\"time\":1111111111111,\"imgfile\":\"11111.jpg\"}" http://192.168.10.52:3000/push
+
+
+
+db.originnews.save({
+  "title": "这里是标题",
+  "description": "这里是描述",
+  "content": "这里是内容",
+  "source": "这里是来源",
+  "pubtimestr": "这里是发布时间",
+  "pubtime": "123",
+  "crawltimestr": "这里是抓取时间",
+  "crawltime": "123",
+  "status": "这里是状态，默认是0，处理过后变成了1",
+  "shorturl": "这里是文章的地址",
+  "logo": "这里是图标，可以为空",
+  "labels": "这里是标签，可以有多个，以\",\"分割",
+  "keyword": "这里是关键字，可以为空",
+  "feedback": "评论数",
+  "identity": "唯一标示",
+  "appname": "所属app",
+  "category": "栏目”,
+  “restype”:”资源类型1图文 2图片 3视频”  
+});
