@@ -12,13 +12,15 @@ const fs = require('fs');
 
 var router = express.Router();
 
-var debug = false;
+var debug = true;
 var redisIp ='redisdb';//container里面的redisdb名称
 var mongodbIp = 'mongodb';//container里面的mongodb名称
+var uploadpath = '/usr/local/nodejsqueue/redisService/uploads/';//图片保存路径
 
 if (debug){
     redisIp = '192.168.10.176';
     mongodbIp= '192.168.10.176';
+    uploadpath =path.join(process.cwd() + "/../uploads");
 }
 
 var DB_CONN_STR = 'mongodb://'+mongodbIp+':27017/crawlnews';
@@ -103,7 +105,7 @@ router.post("/image",function (req,res) {
     try{
         var form = new formidable.IncomingForm();
         form.encoding = 'utf-8';
-        form.uploadDir = path.join(process.cwd() + "/../uploads");
+        form.uploadDir = uploadpath;//path.join(process.cwd() + "/../uploads");
         console.log(form.uploadDir);
         form.keepExtensions = true;//保留后缀
         form.maxFieldsSize = 20 * 1024 * 1024;
