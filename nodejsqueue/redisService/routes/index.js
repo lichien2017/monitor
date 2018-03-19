@@ -99,10 +99,12 @@ router.get('/applist',function (req,res) {
  * 接收上传图片
  */
 router.post("/image",function (req,res) {
+    console.log("开始接收上传文件");
     try{
         var form = new formidable.IncomingForm();
         form.encoding = 'utf-8';
         form.uploadDir = path.join(process.cwd() + "/../uploads");
+        console.log(form.uploadDir);
         form.keepExtensions = true;//保留后缀
         form.maxFieldsSize = 20 * 1024 * 1024;
         //处理图片
