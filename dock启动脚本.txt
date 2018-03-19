@@ -1,16 +1,17 @@
-
+本机
 
 docker run --name redis-container -d -p 6379:6379 redis
 
 docker run --name mongo-container -p 27017:27017 -v /home/tymx/Documents/mongodbData:/data/db -d mongo
 
 
-docker run -d --name nodejsqueue -v /Users/lizhengqing/Documents/DockerContainer/nodejsqueue:/usr/local/nodejsqueue --link redis-container:redisdb tymx/nodejsqueue:v1
+docker run -d --name nodejsqueue -v /Users/lizhengqing/Documents/DockerContainer/nodejsqueue:/usr/local/nodejsqueue --link redis-container:redisdb --link mongo-container:mongodb tymx/nodejsqueue:v1
 
 docker run -d -p 8001:8001 -p 8002:8002 -p 8013:8013 -v /Users/lizhengqing/Documents/DockerContainer/anyproxy4_x:/usr/local/anyproxy --link nodejsqueue:nodejsQueue tymx/anyproxy406:v2 --intercept --rule /usr/local/anyproxy/rulefiles/rule.js
 
+测试服务器
 
-docker run -d --name nodejsqueue -v /home/tymx/Documents/DockerContainer/nodejsqueue:/usr/local/nodejsqueue -p 3000:3000 --link redis-container:redisdb tymx/nodejsqueue:v1
+docker run -d --name nodejsqueue -v /home/tymx/Documents/DockerContainer/nodejsqueue:/usr/local/nodejsqueue -p 3000:3000 --link redis-container:redisdb --link mongo-container:mongodb tymx/nodejsqueue:v1
 
 
 docker run -d -p 7001:8001 -p 7002:8002 -p 7013:8013 -v /home/tymx/Documents/DockerContainer/anyproxy4_x:/usr/local/anyproxy --link nodejsqueue:nodejsQueue tymx/anyproxy406:v1 --intercept --rule /usr/local/anyproxy/rulefiles/rule.js

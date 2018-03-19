@@ -108,6 +108,7 @@ router.post("/image",function (req,res) {
         //处理图片
         form.parse(req, function (err, fields, files){
             var filename = files.uploadfile.name
+            console.log('filename='+filename);
             // var nameArray = filename.split('.');
             // var type = nameArray[nameArray.length - 1];
             // var name = '';
@@ -118,6 +119,7 @@ router.post("/image",function (req,res) {
             //var time = '_' + date.getFullYear() + "_" + date.getMonth() + "_" + date.getDay() + "_" + date.getHours() + "_" + date.getMinutes();
             // var avatarName = name  + '.' + type;
             var newPath = form.uploadDir + "/" + filename;
+            console.log('newPath='+newPath);
             fs.renameSync(files.uploadfile.path, newPath);  //重命名
             res.send({"status": "success"});
         })

@@ -70,52 +70,57 @@ function GetRuler() {
 }
 //发送json数据到服务器
 function HttpPost(bodyString,url,reqData,queueTag) {//将json发送到服务器，bodyString为json内容 url请求的地址，reqData请求的数据 queueTag消息队列
-    console.log('==================================HttpPost==============================');
+    try{
+        console.log('==================================HttpPost==============================');
 
-    var data = {
-        str: encodeURIComponent(bodyString),
-        url: encodeURIComponent(url),
-        tag: encodeURIComponent(queueTag),
-        post:encodeURIComponent(reqData),
-        time:new Date().getTime()
-    };
-    var resContent = JSON.stringify(data);
+        var data = {
+            str: encodeURIComponent(bodyString),
+            url: encodeURIComponent(url),
+            tag: encodeURIComponent(queueTag),
+            post:encodeURIComponent(reqData),
+            time:new Date().getTime()
+        };
+        var resContent = JSON.stringify(data);
 
-    var headers = {
-        'Content-Type': 'application/json',
-        'Content-Length': resContent.length
-    };
+        var headers = {
+            'Content-Type': 'application/json',
+            'Content-Length': resContent.length
+        };
 
-    console.log(resContent);
+        console.log(resContent);
 
-    var options = {
-        host: nodejsQueue,
-        port: port,
-        path: '/pkg',
-        method: 'POST',
-        headers: headers
-    };
+        var options = {
+            host: nodejsQueue,
+            port: port,
+            path: '/pkg',
+            method: 'POST',
+            headers: headers
+        };
 
-    var req=http.request(options,function(res){
-        res.setEncoding('utf-8');
+        var req=http.request(options,function(res){
+            res.setEncoding('utf-8');
 
-        var responseString = '';
+            var responseString = '';
 
-        res.on('data', function(data) {
-            responseString += data;
+            res.on('data', function(data) {
+                responseString += data;
+            });
+
+            res.on('end', function() {
+                //这里接收的参数是字符串形式,需要格式化成json格式使用
+                // var resultObject = JSON.parse(responseString);
+                console.log('-----resBody-----',responseString);
+            });
+
+            req.on('error', function(e) {
+                // TODO: handle error.
+                console.log('-----error-------',e);
+            });
         });
+        req.write(resContent);
+        req.end();
+    }catch (e){
+        console.log(e);
+    }
 
-        res.on('end', function() {
-            //这里接收的参数是字符串形式,需要格式化成json格式使用
-            // var resultObject = JSON.parse(responseString);
-            console.log('-----resBody-----',responseString);
-        });
-
-        req.on('error', function(e) {
-            // TODO: handle error.
-            console.log('-----error-------',e);
-        });
-    });
-    req.write(resContent);
-    req.end();
 }
