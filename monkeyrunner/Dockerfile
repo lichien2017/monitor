@@ -1,6 +1,8 @@
 FROM python:3
 MAINTAINER lichien@qq.com
 
+RUN mkdir /usr/local/monkeyrunner/
+
 RUN mkdir /usr/local/monkeyrunner/ecological
 
 WORKDIR /usr/local/monkeyrunner/ecological
