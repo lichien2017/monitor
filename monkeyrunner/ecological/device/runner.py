@@ -5,9 +5,10 @@ from threading import Thread
 import time
 import subprocess
 import os
+import sys
 
 class DeviceRunner(Thread):
-    tag = "" #对应应用程序的标示，通过这个标示获取脚本和执行频率
+
     _settings = {}
     def __init__(self,settings):
         Thread.__init__(self)
@@ -52,18 +53,20 @@ class DeviceRunner(Thread):
     def _take_photo(self):
         # 截图上传
         t = str(int(round(time.time() * 1000)))
-        cmd1 = r"adb shell screencap -p /sdcard/" + t + ".png"  # 命令1：在手机上截图
-        cmd2 = r"adb pull /sdcard/" + t + ".png d:/catchImg/" + t + ".png"  # 命令2：将图片保存到电脑
-        self.screen(cmd1)
-        self.saveComputer(cmd2)
+        file_name = t + ".png"
+        full_file_name = self._cur_file_dir()+"/uploads/" + file_name
+        cmd1 = r"adb shell screencap -p /sdcard/" + file_name      # 命令1：在手机上截图
+        cmd2 = r"adb pull /sdcard/" + t + ".png "+ full_file_name  # 命令2：将图片保存到电脑
+        self._execute_cmd(cmd1) # 在手机上截图
+        self._execute_cmd(cmd2) # 将截图保存到电脑
 
-    def screen(self, cmd):  # 在手机上截图
+    def _execute_cmd(self, cmd):
         screenExecute = subprocess.Popen(str(cmd), stderr=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
         stdout, stderr = screenExecute.communicate()
 
-    def saveComputer(self, cmd):  # 将截图保存到电脑
-        screenExecute = subprocess.Popen(str(cmd), stderr=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
-        stdout, stderr = screenExecute.communicate()
+    # def saveComputer(self, cmd):
+    #     screenExecute = subprocess.Popen(str(cmd), stderr=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
+    #     stdout, stderr = screenExecute.communicate()
 
     def _running(self):
         # # 打开App
@@ -84,5 +87,15 @@ class DeviceRunner(Thread):
         # 点击
         self._click(self._settings["clickpoint"])
 
+    # 获取脚本文件的当前路径
+    def _cur_file_dir(self):
+        # 获取脚本路径
+        path = sys.path[0]
+        # 判断为脚本文件还是py2exe编译后的文件，如果是脚本文件，则返回的是脚本的目录，如果是py2exe编译后的文件，则返回的是编译后的文件路径
+        if os.path.isdir(path):
+            return path
+        elif os.path.isfile(path):
+            return os.path.dirname(path)
+
     def to_string(self):
-        print('Thread Object(%s), Time:%s\n' % (self.tag, time.ctime()))
+        print('Thread Object(%s), Time:%s\n' % (1, time.ctime()))
