@@ -10,6 +10,8 @@ import sys
 class DeviceRunner(Thread):
 
     _settings = {}
+    clickstart = ""
+
     def __init__(self,settings):
         Thread.__init__(self)
         self._settings = settings
@@ -18,6 +20,8 @@ class DeviceRunner(Thread):
     def run(self):  # Overwrite run() method, put what you want the thread do here
         while not self.thread_stop:
             print('Thread Object(%s), Time:%s\n' % (self.tag, time.ctime()))
+            self._launch_app(self._settings["categroy"]+"/"+self._settings["activity"])
+            self._waitting(self._settings["setuptime"])
             self._running()
             self._waitting(self._settings["setuptime"])
 
@@ -27,7 +31,7 @@ class DeviceRunner(Thread):
 
     def _launch_app(self, apkname):
         # 打开App
-        os.system("adb shell am start -n com." + apkname)
+        os.system("adb shell am start -n " + apkname)
 
     def _drag(self, start, end):
         # 下拉刷新
