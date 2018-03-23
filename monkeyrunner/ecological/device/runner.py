@@ -5,7 +5,6 @@ from threading import Thread
 import time
 import subprocess
 import os
-import  json
 
 class DeviceRunner(Thread):
     tag = "" #对应应用程序的标示，通过这个标示获取脚本和执行频率
