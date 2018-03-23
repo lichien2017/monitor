@@ -1,20 +1,26 @@
 本机
 
-docker run --name redis-container -d -p 6379:6379 redis
+docker run --name redis-container --restart="always" -d -p 6379:6379 redis
 
-docker run --name mongo-container -p 27017:27017 -v /home/tymx/Documents/mongodbData:/data/db -d mongo
+docker run --name mongo-container --restart="always" -p 27017:27017 -v /Users/lizhengqing/Documents/mongodbData:/data/db -d mongo
 
 
-docker run -d --name nodejsqueue -v /Users/lizhengqing/Documents/DockerContainer/nodejsqueue:/usr/local/nodejsqueue --link redis-container:redisdb --link mongo-container:mongodb tymx/nodejsqueue:v1
+docker run --restart="always" -d --name nodejsqueue -v /Users/lizhengqing/Documents/DockerContainer/nodejsqueue:/usr/local/nodejsqueue --link redis-container:redisdb --link mongo-container:mongodb tymx/nodejsqueue:v1
 
-docker run -d -p 8001:8001 -p 8002:8002 -p 8013:8013 -v /Users/lizhengqing/Documents/DockerContainer/anyproxy4_x:/usr/local/anyproxy --link nodejsqueue:nodejsQueue tymx/anyproxy406:v2 --intercept --rule /usr/local/anyproxy/rulefiles/rule.js
+
+docker run --restart="always" -d -p 8001:8001 -p 8002:8002 -p 8013:8013 -v /Users/lizhengqing/Documents/DockerContainer/anyproxy4_x:/usr/local/anyproxy --link nodejsqueue:nodejsQueue tymx/anyproxy406:v2 --intercept --rule /usr/local/anyproxy/rulefiles/rule.js
+
+
+docker run --restart="always" -itd --name ecologicalmonitor -v /Users/lizhengqing/Documents/DockerContainer/monkeyrunner/ecological:/usr/local/monkeyrunner/ecological --link redis-container:redisdb --link mongo-container:mongodb tymx/ecological
 
 测试服务器
 
-docker run -d --name nodejsqueue -v /home/tymx/Documents/DockerContainer/nodejsqueue:/usr/local/nodejsqueue -p 3000:3000 --link redis-container:redisdb --link mongo-container:mongodb tymx/nodejsqueue:v1
+docker run --name mongo-container --restart="always" -p 27017:27017 -v /home/tymx/Documents/mongodbData:/data/db -d mongo
+
+docker run --restart="always" --name nodejsqueue -d -v /home/tymx/Documents/DockerContainer/nodejsqueue:/usr/local/nodejsqueue -p 3000:3000 --link redis-container:redisdb --link mongo-container:mongodb tymx/nodejsqueue:v1
 
 
-docker run -d -p 7001:8001 -p 7002:8002 -p 7013:8013 -v /home/tymx/Documents/DockerContainer/anyproxy4_x:/usr/local/anyproxy --link nodejsqueue:nodejsQueue tymx/anyproxy406:v1 --intercept --rule /usr/local/anyproxy/rulefiles/rule.js
+docker run --restart="always" -d -p 7001:8001 -p 7002:8002 -p 7013:8013 -v /home/tymx/Documents/DockerContainer/anyproxy4_x:/usr/local/anyproxy --link nodejsqueue:nodejsQueue tymx/anyproxy406:v1 --intercept --rule /usr/local/anyproxy/rulefiles/rule.js
 
 
 
@@ -42,3 +48,10 @@ db.originnews.save({
   "category": "栏目”,
   “restype”:”资源类型1图文 2图片 3视频”  
 });
+
+
+
+1、普通新闻详情接口，group_id
+http://a3.pstatp.com/article/content/19/2/6532412294834422019/6532412294834422019/1/0/
+2、大V新闻详情接口 thread_id
+http://lf.snssdk.com/ugc/thread/detail/v2/content/?thread_id=1595252651931661

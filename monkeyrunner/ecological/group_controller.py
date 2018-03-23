@@ -20,6 +20,7 @@ class DeviceGroupController:
 
 
     def start(self):
+        print('DeviceGroupController start')
         self._redis_subscript()
 
     def _redis_subscript(self):
