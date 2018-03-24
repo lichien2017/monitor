@@ -10,27 +10,26 @@ import time
 import pymongo
 import configparser
 
-class DeviceRunner(Thread):
+class DeviceRunner():
     _settings = None
     _runner_log = None
     _mongodb_client = None
     def __init__(self,settings):
-        Thread.__init__(self)
         self._settings = settings
-        self.thread_stop = False
         config = configparser.ConfigParser()
         config.read("config.ini")
         self._mongodb_client = pymongo.MongoClient(config.get("global", "mongodbip"), 27017)
 
     def run(self):  # Overwrite run() method, put what you want the thread do here
-        while not self.thread_stop:
-            print('Thread Object(%s), Time:%s\n' % (self._settings["tag"], time.ctime()))
-            _tmp_log = self._runner_log
-            del _tmp_log
-            self._runner_log = {"tag":self._settings["tag"]}
-            self._running()
-            self._write_to_mongodb()   #将日志写入mongodb
-            self._waitting(self._settings["repeattime"]) #重启脚本时间间隔
+        print('App(%s), in Device(%s) Time:%s,is running !\n' % (self._settings["categroy"],self._settings["tag"], time.ctime()))
+        _tmp_log = self._runner_log
+        del _tmp_log
+        self._runner_log = {"tag": self._settings["tag"]}
+        if self._running() == False:  # 如果设备没有准备好
+            return False
+        self._write_to_mongodb()  # 将日志写入mongodb
+        # self._waitting(self._settings["repeattime"])  # 重启脚本时间间隔，改为由父线程控制
+        return True
 
 
 
@@ -40,7 +39,9 @@ class DeviceRunner(Thread):
 
     def _running(self):
         # # 打开App
-        self._launch_app(self._settings["categroy"] + "/" + self._settings["activity"])
+        result = self._launch_app(self._settings["categroy"] + "/" + self._settings["activity"])
+        if result !=0:
+            return False
         #等待应用启动
         self._waitting(self._settings["setuptime"])
         # 点击
@@ -70,7 +71,7 @@ class DeviceRunner(Thread):
             # 上传图片文件
             self._upload_screenshot(full_file_name)
             self._runner_log["screenshot"+i] = file_name
-
+        return True
     #
     # 下面是工具函数
     #
@@ -96,7 +97,7 @@ class DeviceRunner(Thread):
     def _launch_app(self, apkname):
         # 打开App
         result = os.system("adb -s " +self._settings["tag"]+" shell am start -n " + apkname)
-        print("_launch_app:%d",result)
+        return result
 
     def _drag(self, start, end):
         # 下拉刷新

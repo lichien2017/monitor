@@ -69,8 +69,7 @@ class DeviceGroupController:
             return
         self._groups[:] = []   #清空数据
         for item in settings:
-            deviceid = item["deviceid"]
-            group = device.DeviceGroup(deviceid,item["runner"])
+            group = device.DeviceGroup(item["deviceid"],item["repeattime"],item["runner"])
             self._groups.append(group)
             group.start()
 
