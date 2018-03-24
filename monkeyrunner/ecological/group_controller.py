@@ -16,7 +16,7 @@ class DeviceGroupController:
         config = configparser.ConfigParser()
         config.read("config.ini")
         pool = redis.ConnectionPool(host=config.get("global", "redisip"), port=6379, db=config.get("global", "redisdb"))
-        _redis_server = redis.StrictRedis(connection_pool=pool)
+        self._redis_server = redis.StrictRedis(connection_pool=pool)
 
     def start(self):
         print('DeviceGroupController start')

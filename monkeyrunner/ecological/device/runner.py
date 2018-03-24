@@ -20,7 +20,7 @@ class DeviceRunner(Thread):
         self.thread_stop = False
         config = configparser.ConfigParser()
         config.read("config.ini")
-        self._mongodb_client = pymongo.MongoClient(config.get("global", "mongodb"), 27017)
+        self._mongodb_client = pymongo.MongoClient(config.get("global", "mongodbip"), 27017)
 
     def run(self):  # Overwrite run() method, put what you want the thread do here
         while not self.thread_stop:
@@ -95,7 +95,8 @@ class DeviceRunner(Thread):
 
     def _launch_app(self, apkname):
         # 打开App
-        os.system("adb -s " +self._settings["tag"]+" shell am start -n " + apkname)
+        result = os.system("adb -s " +self._settings["tag"]+" shell am start -n " + apkname)
+        print("_launch_app:%d",result)
 
     def _drag(self, start, end):
         # 下拉刷新
@@ -112,13 +113,8 @@ class DeviceRunner(Thread):
             end.split('|')[1])
 
     def _click(self, click):
-        # 点击
-        if self.clickstart == "":
-            self.clickstart = str(int(click.split('|')[0]) + 100)
-        else:
-            self.clickstart = str(int(self.clickstart) + 100)
-
-        os.system("adb -s " +self._settings["tag"]+" shell input tap " + self.clickstart + " " + click.split('|')[1])
+        start,end = click.split('|')
+        os.system("adb -s " +self._settings["tag"]+" shell input tap " + start + " " + end)
 
     #截屏，返回文件名和完整文件路径
     def _take_photo(self):
