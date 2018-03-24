@@ -7,17 +7,16 @@ import configparser
 import json
 
 class DeviceGroupController:
-    _msg_channel = "groupchannel"
+    _msg_channel = None
     _groups = []
-    _config = configparser.ConfigParser()
-    _config.read("config.ini")
-    _redisip = _config.get("global", "redisip")
-    _pool = redis.ConnectionPool(host=_redisip, port=6379, db=_config.get("global", "redisdb"))
-    _redis_server = redis.StrictRedis(connection_pool=_pool)
+    _redis_server = None
 
     def __init__(self,channel="groupchannel"):
         self._msg_channel = channel #可以指定消息频道
-
+        config = configparser.ConfigParser()
+        config.read("config.ini")
+        pool = redis.ConnectionPool(host=config.get("global", "redisip"), port=6379, db=config.get("global", "redisdb"))
+        _redis_server = redis.StrictRedis(connection_pool=pool)
 
     def start(self):
         print('DeviceGroupController start')
