@@ -1,3 +1,4 @@
+#-*- coding: UTF-8 -*-
 """
 deivice group 的控制类
 """
@@ -5,7 +6,9 @@ import device
 import redis
 import configparser
 import json
-
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
 class DeviceGroupController:
     _msg_channel = None
     _groups = []
@@ -31,7 +34,7 @@ class DeviceGroupController:
                 data = item['data']
                 result = self._parse_redis_message(data)  # 解析数据包
                 if result == False:
-                    break;
+                    break
             elif item['type'] == 'subscribe': #开始监听消息队列了
                 self._get_default_settings()   #获取最新的配置，配置中包含需要启动的设备数，以及设备中runner的个数
         p.unsubscribe('spub')

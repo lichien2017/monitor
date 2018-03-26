@@ -24,8 +24,18 @@ docker run --restart="always" -d -p 7001:8001 -p 7002:8002 -p 7013:8013 -v /home
 
 
 
+ADB服务
+docker run -d --privileged -v /dev/bus/usb:/dev/bus/usb --name adbd sorccu/adb
+
 curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d "{\"tag\":\"今日头条\",\"msg\":\"这是一条push消息\",\"time\":1111111111111,\"imgfile\":\"11111.jpg\"}" http://192.168.10.52:3000/push
 
+
+
+[global]
+debug=true
+redisip = redisdb
+redisdb = 0
+mongodbip = mongodb
 
 
 db.originnews.save({

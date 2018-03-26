@@ -1,3 +1,4 @@
+#-*- coding: UTF-8 -*-
 """
 设备分组，每个设备按跑的多少个应用进行分组，每个设备都有唯一标示
 标示可以通过 adb devices获取到
@@ -8,7 +9,9 @@ import json
 import time
 from threading import Thread
 from device.runner import DeviceRunner
-
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
 class DeviceGroup(Thread):
     _device_id = ""                                            #设备的唯一标示
     _repeat_time = 5

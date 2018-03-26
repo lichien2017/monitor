@@ -1,7 +1,7 @@
+#-*- coding: UTF-8 -*-
 """
 
 """
-from threading import Thread
 import json
 import subprocess
 import os
@@ -9,7 +9,9 @@ import sys
 import time
 import pymongo
 import configparser
-
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
 class DeviceRunner():
     _settings = None
     _runner_log = None
