@@ -10,17 +10,66 @@ import time
 import pymongo
 import configparser
 import sys
+import sys
+import time
+import re
+import unittest
+import os
+import subprocess
+import image
+try:
+    sys.path.insert(0, os.path.join(os.environ['ANDROID_VIEW_CLIENT_HOME'], 'src'))
+except:
+    pass
+
+from adbclient import AdbClient
+from common import obtainAdbPath
+
+VERBOSE = False
+TEST_TEMPERATURE_CONVERTER_APP = False
+TEMPERATURE_CONVERTER_PKG = 'com.example.i2at.tc'
+TEMPERATURE_CONVERTER_ACTIVITY = 'TemperatureConverterActivity'
+CALCULATOR_KEYWORD = 'calculator'
+CALCULATOR_ACTIVITY = 'Calculator'
+
+DEBUG = False
+DEBUG_SHELL = DEBUG and False
+
+
 reload(sys)
 sys.setdefaultencoding('utf8')
 class DeviceRunner():
     _settings = None
     _runner_log = None
     _mongodb_client = None
+    adbClient = None;
+
+
     def __init__(self,settings):
         self._settings = settings
         config = configparser.ConfigParser()
         config.read("config.ini")
         self._mongodb_client = pymongo.MongoClient(config.get("global", "mongodbip"), 27017)
+
+        try:
+            self.adbClient = AdbClient('M3LDU15518000041', settransport=False)
+        except RuntimeError, ex:
+            if re.search('Connection refused', str(ex)):
+                raise RuntimeError("adb is not running")
+            raise (ex)
+        devices = self.adbClient.getDevices()
+        if len(devices) == 0:
+            raise RuntimeError("This tests require at least one device connected. None was found.")
+        for device in devices:
+            if device.status == 'device':
+                androidSerial = device.serialno
+                print(androidSerial)
+
+
+
+
+
+
 
     def run(self):  # Overwrite run() method, put what you want the thread do here
         print('App(%s), in Device(%s) Time:%s,is running !\n' % (self._settings["categroy"],self._settings["tag"], time.ctime()))
@@ -59,11 +108,11 @@ class DeviceRunner():
         # 截图
         file_name,full_file_name = self._take_photo()
         # 上传图片文件
-        self._upload_screenshot(full_file_name)
+        #self._upload_screenshot(full_file_name)
         self._runner_log["screenshot0"] = file_name
         for i in range(1, 4):
             # 下拉以前先记录当前的时间
-            self._runner_log["time"+i] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+            self._runner_log["time"+str(i)] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
             # 上拉
             self._dragup(self._settings["startpoint"], self._settings["endpoint"])
             # 等待
@@ -71,8 +120,8 @@ class DeviceRunner():
             # 截图
             file_name, full_file_name = self._take_photo()
             # 上传图片文件
-            self._upload_screenshot(full_file_name)
-            self._runner_log["screenshot"+i] = file_name
+            #self._upload_screenshot(full_file_name)
+            self._runner_log["screenshot"+str(i)] = file_name
         return True
     #
     # 下面是工具函数
@@ -98,37 +147,55 @@ class DeviceRunner():
 
     def _launch_app(self, apkname):
         # 打开App
-        result = os.system("adb -s " +self._settings["tag"]+" shell am start -n " + apkname)
-        return result
+        self.adbClient.startActivity(apkname)
+        #result = os.system("adb -s " +self._settings["tag"]+" shell am start -n " + apkname)
+        return 0
 
     def _drag(self, start, end):
         # 下拉刷新
-        os.system(
-            "adb -s " +self._settings["tag"]+" shell input swipe " + start.split('|')[0] + " " + start.split('|')[1] + " " + end.split('|')[
-                0] + " " +
-            end.split('|')[1])
+        startx = start.split('|')[0]
+        starty = start.split('|')[1]
+        endx = end.split('|')[0]
+        endy = end.split('|')[1]
+        self.adbClient.drag((int(startx), int(starty)),(int(endx),int(endy)), 100)
+        # os.system(
+        #     "adb -s " +self._settings["tag"]+" shell input swipe " + start.split('|')[0] + " " + start.split('|')[1] + " " + end.split('|')[
+        #         0] + " " +
+        #     end.split('|')[1])
 
     def _dragup(self, end, start):
         # 加载更多
-        os.system(
-            "adb -s " +self._settings["tag"]+" shell input swipe " + start.split('|')[0] + " " + start.split('|')[1] + " " + end.split('|')[
-                0] + " " +
-            end.split('|')[1])
+        startx = start.split('|')[0]
+        starty = start.split('|')[1]
+        endx = end.split('|')[0]
+        endy = end.split('|')[1]
+        self.adbClient.drag((int(startx), int(starty)), (int(endx), int(endy)), 100)
+        # os.system(
+        #     "adb -s " +self._settings["tag"]+" shell input swipe " + start.split('|')[0] + " " + start.split('|')[1] + " " + end.split('|')[
+        #         0] + " " +
+        #     end.split('|')[1])
 
     def _click(self, click):
         start,end = click.split('|')
-        os.system("adb -s " +self._settings["tag"]+" shell input tap " + start + " " + end)
+        self.adbClient.touch(int(start), int(end), 100)
+
+        #os.system("adb -s " +self._settings["tag"]+" shell input tap " + start + " " + end)
 
     #截屏，返回文件名和完整文件路径
     def _take_photo(self):
         # 截图上传
+        image = self.adbClient.takeSnapshot()
         t = str(int(round(time.time() * 1000)))
         file_name = t + ".png"
         full_file_name = self._cur_file_dir() + "/uploads/" + file_name
-        cmd1 = r"adb -s " +self._settings["tag"]+" shell screencap -p /sdcard/" + file_name  # 命令1：在手机上截图
-        cmd2 = r"adb -s " +self._settings["tag"]+" pull /sdcard/" + t + ".png " + full_file_name  # 命令2：将图片保存到电脑
-        self._execute_cmd(cmd1)  # 在手机上截图
-        self._execute_cmd(cmd2)  # 将截图保存到电脑
+        image.save(full_file_name)
+        # t = str(int(round(time.time() * 1000)))
+        # file_name = t + ".png"
+        # full_file_name = self._cur_file_dir() + "/uploads/" + file_name
+        # cmd1 = r"adb -s " +self._settings["tag"]+" shell screencap -p /sdcard/" + file_name  # 命令1：在手机上截图
+        # cmd2 = r"adb -s " +self._settings["tag"]+" pull /sdcard/" + t + ".png " + full_file_name  # 命令2：将图片保存到电脑
+        # self._execute_cmd(cmd1)  # 在手机上截图
+        # self._execute_cmd(cmd2)  # 将截图保存到电脑
         return (file_name,full_file_name)
 
     #执行命令行
