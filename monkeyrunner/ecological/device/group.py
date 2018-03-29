@@ -33,7 +33,7 @@ class DeviceGroup(Thread):
                 self._msg_channel = "%s:%s" % ('groupchannel', self._device_id)  # 当前分组的控制消息队列
                 for runner in self._runner_settings:
                     try:
-                        r = DeviceRunner(runner)   #实例化一个runner
+                        r = DeviceRunner(self._device_id,runner)   #实例化一个runner
                         # self._runners.append(r)    #加入runner数组,不需要管理，顺着执行
                         r.run()                    #奔跑吧，兄弟 -_-!!
                     except Exception as ex:

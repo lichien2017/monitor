@@ -45,14 +45,14 @@ class DeviceRunner():
     adbClient = None;
 
 
-    def __init__(self,settings):
+    def __init__(self,deviceid,settings):
         self._settings = settings
         config = configparser.ConfigParser()
         config.read("config.ini")
         self._mongodb_client = pymongo.MongoClient(config.get("global", "mongodbip"), 27017)
 
         try:
-            self.adbClient = AdbClient(self._settings["tag"], hostname=config.get("global", "adbserver"),  settransport=False)
+            self.adbClient = AdbClient(deviceid, hostname=config.get("global", "adbserver"),  settransport=False)
         except RuntimeError, ex:
             if re.search('Connection refused', str(ex)):
                 raise RuntimeError("adb is not running")
