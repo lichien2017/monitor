@@ -33,7 +33,15 @@ class DeviceGroup(Thread):
                 self._msg_channel = "%s:%s" % ('groupchannel', self._device_id)  # 当前分组的控制消息队列
                 for runner in self._runner_settings:
                     try:
-                        r = DeviceRunner(self._device_id,runner)   #实例化一个runner
+                        # 方式1：使用__import__()导入模块
+                        # 导入指定模块，导入时会执行全局方法。
+                        ip_module = __import__(runner["imp_module"])
+                        # dir()查看模块属性
+                        print(dir(ip_module))
+                        # 使用getattr()获取imp_module的类
+                        runner_class = getattr(ip_module, runner["imp_class"])
+                        # 动态加载类runner_class生成类对象
+                        r = runner_class(self._device_id,runner)   #实例化一个runner
                         # self._runners.append(r)    #加入runner数组,不需要管理，顺着执行
                         r.run()                    #奔跑吧，兄弟 -_-!!
                     except Exception as ex:
