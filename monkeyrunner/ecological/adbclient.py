@@ -195,6 +195,13 @@ class AdbClient:
             self.initDisplayProperties()
 
 
+    def stopActivity(self, apk=None):
+        cmd = 'am force-stop ' + apk
+        out = self.shell(cmd)
+        if re.search(r"(Error type)|(Error: )|(Cannot find 'App')", out, re.IGNORECASE | re.MULTILINE):
+            raise RuntimeError(out)
+
+
     def takeSnapshot(self, reconnect=False):
         '''
         Takes a snapshot of the device and return it as a PIL Image.
