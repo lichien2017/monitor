@@ -132,7 +132,8 @@ class DeviceRunner():
     def _upload_screenshot(self,full_file_name):
         cmd = r'curl -F "uploadfile=@'+full_file_name+'" '+self._settings["imgserver"]
         print(cmd)
-        response = json.loads(self._execute_cmd(cmd))
+        exec_result = self._execute_cmd(cmd)
+        response = json.loads(exec_result)
         if response["status"] == "success":
             cmd = r'rm -f ' + full_file_name
             print(cmd)
