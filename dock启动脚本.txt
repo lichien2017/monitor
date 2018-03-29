@@ -11,7 +11,7 @@ docker run --restart="always" -d --name nodejsqueue -v /Users/lizhengqing/Docume
 docker run --restart="always" -d -p 8001:8001 -p 8002:8002 -p 8013:8013 -v /Users/lizhengqing/Documents/DockerContainer/anyproxy4_x:/usr/local/anyproxy --link nodejsqueue:nodejsQueue tymx/anyproxy406:v2 --intercept --rule /usr/local/anyproxy/rulefiles/rule.js
 
 
-docker run --restart="always" -itd --name ecologicalmonitor -v /Users/lizhengqing/Documents/DockerContainer/monkeyrunner/ecological:/usr/local/monkeyrunner/ecological --link redis-container:redisdb --link mongo-container:mongodb tymx/ecological
+docker run --restart="always" -itd --name ecologicalmonitor -v /Users/lizhengqing/Documents/DockerContainer/monkeyrunner/ecological:/usr/local/monkeyrunner/ecological --link redis-container:redisdb --link mongo-container:mongodb --link adbd:adbd tymx/ecological:v1
 
 测试服务器
 
@@ -23,11 +23,9 @@ docker run --restart="always" --name nodejsqueue -d -v /home/tymx/Documents/Dock
 docker run --restart="always" -d -p 7001:8001 -p 7002:8002 -p 7013:8013 -v /home/tymx/Documents/DockerContainer/anyproxy4_x:/usr/local/anyproxy --link nodejsqueue:nodejsQueue tymx/anyproxy406:v1 --intercept --rule /usr/local/anyproxy/rulefiles/rule.js
 
 
-docker run --restart="always" -itd --name ecologicalmonitor -v /home/tymx/Documents/DockerContainer/monkeyrunner/ecological:/usr/local/monkeyrunner/ecological --link redis-container:redisdb --link mongo-container:mongodb tymx/ecological:v1
+docker run --restart="always" -itd --name ecologicalmonitor -v /home/tymx/Documents/DockerContainer/monkeyrunner/ecological:/usr/local/monkeyrunner/ecological --link redis-container:redisdb --link mongo-container:mongodb --link adbd:adbd tymx/ecological:v1
 
 
-
-docker run -itd --name ecologicalmonitor -v /home/tymx/Documents/DockerContainer/monkeyrunner/ecological:/usr/local/monkeyrunner/ecological --link redis-container:redisdb --link mongo-container:mongodb tymx/ecological:v1 python main.py
 
 ADB服务
 docker run -d --privileged -v /dev/bus/usb:/dev/bus/usb --name adbd sorccu/adb

@@ -52,7 +52,7 @@ class DeviceRunner():
         self._mongodb_client = pymongo.MongoClient(config.get("global", "mongodbip"), 27017)
 
         try:
-            self.adbClient = AdbClient('M3LDU15518000041', settransport=False)
+            self.adbClient = AdbClient(self._settings["tag"], hostname=config.get("global", "adbserver"),  settransport=False)
         except RuntimeError, ex:
             if re.search('Connection refused', str(ex)):
                 raise RuntimeError("adb is not running")
@@ -64,10 +64,6 @@ class DeviceRunner():
             if device.status == 'device':
                 androidSerial = device.serialno
                 print(androidSerial)
-
-
-
-
 
 
 
