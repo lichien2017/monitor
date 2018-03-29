@@ -133,6 +133,7 @@ class DeviceRunner():
         cmd = r'curl -F "uploadfile=@'+full_file_name+'" '+self._settings["imgserver"]
         print(cmd)
         exec_result = self._execute_cmd(cmd)
+        print(exec_result)
         response = json.loads(exec_result)
         if response["status"] == "success":
             cmd = r'rm -f ' + full_file_name
