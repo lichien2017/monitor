@@ -1,6 +1,7 @@
 androidviewclient==14.0.0
 certifi==2018.1.18
 chardet==3.0.4
+configparser==3.5.0
 cycler==0.10.0
 idna==2.6
 kiwisolver==1.0.1
