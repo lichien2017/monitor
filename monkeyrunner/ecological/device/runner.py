@@ -104,7 +104,7 @@ class DeviceRunner():
         # 截图
         file_name,full_file_name = self._take_photo()
         # 上传图片文件
-        #self._upload_screenshot(full_file_name)
+        self._upload_screenshot(full_file_name)
         self._runner_log["screenshot0"] = file_name
         for i in range(1, 4):
             # 下拉以前先记录当前的时间
@@ -116,7 +116,7 @@ class DeviceRunner():
             # 截图
             file_name, full_file_name = self._take_photo()
             # 上传图片文件
-            #self._upload_screenshot(full_file_name)
+            self._upload_screenshot(full_file_name)
             self._runner_log["screenshot"+str(i)] = file_name
         return True
     #
