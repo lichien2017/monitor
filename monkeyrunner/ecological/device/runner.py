@@ -132,9 +132,10 @@ class DeviceRunner():
     def _upload_screenshot(self,full_file_name):
         cmd = r'curl -F "uploadfile=@'+full_file_name+'" '+self._settings["imgserver"]
         print(cmd)
-        exec_result = self._execute_cmd(cmd)
-        print(exec_result)
-        response = json.loads(exec_result)
+        resultOk,error = self._execute_cmd(cmd)
+        print(resultOk)
+        print(error)
+        response = json.loads(resultOk)
         if response["status"] == "success":
             cmd = r'rm -f ' + full_file_name
             print(cmd)
@@ -205,6 +206,7 @@ class DeviceRunner():
     def _execute_cmd(self, cmd):
         screenExecute = subprocess.Popen(str(cmd), stderr=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
         stdout, stderr = screenExecute.communicate()
+        return stdout,stderr
 
     # 获取脚本文件的当前路径
     def _cur_file_dir(self):
