@@ -135,9 +135,12 @@ class DeviceRunner():
         response = json.loads(self._execute_cmd(cmd))
         if response["status"] == "success":
             cmd = r'rm -f ' + full_file_name
+            print(cmd)
             self._execute_cmd(cmd)
             return True
-        return False
+        else:
+            print('上传结果：'+response)
+            return False
 
     def _waitting(self, second):
         # 等待時間
