@@ -32,9 +32,12 @@ class DeviceGroup(Thread):
                 print("DeviceID(%s) is running" % self._device_id)
                 self._msg_channel = "%s:%s" % ('groupchannel', self._device_id)  # 当前分组的控制消息队列
                 for runner in self._runner_settings:
-                    r = DeviceRunner(runner)   #实例化一个runner
-                    # self._runners.append(r)    #加入runner数组,不需要管理，顺着执行
-                    r.run()                    #奔跑吧，兄弟 -_-!!
+                    try:
+                        r = DeviceRunner(runner)   #实例化一个runner
+                        # self._runners.append(r)    #加入runner数组,不需要管理，顺着执行
+                        r.run()                    #奔跑吧，兄弟 -_-!!
+                    except Exception as ex:
+                        print(ex)
                     self._waitting(self._repeat_time)  # 重启脚本时间间隔
         print("DeviceID(%s) is stop" % self._device_id)
         # else:
