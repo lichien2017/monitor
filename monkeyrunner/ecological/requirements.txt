@@ -3,10 +3,13 @@ certifi==2018.1.18
 chardet==3.0.4
 configparser==3.5.0
 cycler==0.10.0
+Django==2.0.3
 idna==2.6
+image==1.5.20
 kiwisolver==1.0.1
 matplotlib==2.2.2
 numpy==1.14.2
+Pillow==5.0.0
 pymongo==3.6.1
 pyparsing==2.2.0
 python-dateutil==2.7.1
