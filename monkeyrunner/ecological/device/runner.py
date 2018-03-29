@@ -134,6 +134,8 @@ class DeviceRunner():
         print(cmd)
         response = json.loads(self._execute_cmd(cmd))
         if response["status"] == "success":
+            cmd = r'rm -f ' + full_file_name
+            self._execute_cmd(cmd)
             return True
         return False
 
