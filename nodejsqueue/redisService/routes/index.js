@@ -41,9 +41,9 @@ router.get('/', function(req, res, next) {
             // rulerItem.tag = 'snssdk';
             // ruler.push(rulerItem);
             //
-            // client.set('ruler',JSON.stringify(ruler));
+            // client.set('rules',JSON.stringify(ruler));
             //先把数据存进去
-            client.get('ruler',function (err,rulerString) {
+            client.get('rules',function (err,rulerString) {
                 // var obj  = JSON.parse(rulerString);
                 // var regex1 = RegExp(decodeURIComponent(obj[0].regStr),'i');
 

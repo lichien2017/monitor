@@ -13,6 +13,8 @@ docker run --restart="always" -d -p 8001:8001 -p 8002:8002 -p 8013:8013 -v /User
 
 docker run --restart="always" -itd --name ecologicalmonitor -v /Users/lizhengqing/Documents/DockerContainer/monkeyrunner/ecological:/usr/local/monkeyrunner/ecological --link redis-container:redisdb --link mongo-container:mongodb --net container:adbd tymx/ecological:v1
 
+docker run --name mysql-container -v /Users/lizhengqing/Documents/mysqldata:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -d mysql
+
 测试服务器
 
 docker run --name mongo-container --restart="always" -p 27017:27017 -v /home/tymx/Documents/mongodbData:/data/db -d mongo
@@ -26,11 +28,17 @@ docker run --restart="always" -d -p 7001:8001 -p 7002:8002 -p 7013:8013 -v /home
 docker run --restart="always" -itd --name ecologicalmonitor -v /home/tymx/Documents/DockerContainer/monkeyrunner/ecological:/usr/local/monkeyrunner/ecological --link redis-container:redisdb --link mongo-container:mongodb tymx/ecological:v1
 
 
+docker run --name mysql-container -v /home/tymx/Documents/mysqldata:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -d mysql:tag
 
 ADB服务
 docker run -d --privileged -v /dev/bus/usb:/dev/bus/usb --name adbd sorccu/adb
 
 curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d "{\"tag\":\"今日头条\",\"msg\":\"这是一条push消息\",\"time\":1111111111111,\"imgfile\":\"11111.jpg\"}" http://192.168.10.52:3000/push
+
+
+mysql服务
+docker run --name mysql-container -v /home/tymx/Documents/mysqldata:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -d mysql
+
 
 
 
