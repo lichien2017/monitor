@@ -118,6 +118,8 @@ class DeviceRunner():
             # 上传图片文件
             self._upload_screenshot(full_file_name)
             self._runner_log["screenshot"+str(i)] = file_name
+        # 关闭应用
+        self.adbClient.stopActivity(self._settings["categroy"])
         return True
     #
     # 下面是工具函数
