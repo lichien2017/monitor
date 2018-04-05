@@ -126,7 +126,7 @@ class DeviceRunner():
     #
     #结果写入数据库
     def _write_to_mongodb(self):
-        db = self._mongodb_client['originnews']
+        db = self._mongodb_client['crawlnews']
         runner_logs = db["runner_logs"]
         runner_logs.insert(self._runner_log)
 
