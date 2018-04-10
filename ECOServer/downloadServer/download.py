@@ -10,7 +10,7 @@ from downloadServer.config import ConfigHelper
 # 设定ThreadPoolExecutor 类最多使用几个线程
 MAX_WORKERS = 20
 # 图片保存地址
-DEST_DIR = ConfigHelper.image_savepath  # "/mnt/download_media/"
+DEST_DIR = os.path.dirname(__file__) + "/files/"  # "/mnt/download_media/"
 # mongodb
 mongodb_client = pymongo.MongoClient(ConfigHelper.mongodbip, 27017)
 # redis
