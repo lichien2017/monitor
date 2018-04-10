@@ -1,46 +1,56 @@
 本机
-
+Redis
 docker run --name redis-container --restart="always" -d -p 6379:6379 redis
 
+Mongodb
 docker run --name mongo-container --restart="always" -p 27017:27017 -v /Users/lizhengqing/Documents/mongodbData:/data/db -d mongo
 
-
+自定义的消息队列（nodejs）
 docker run --restart="always" -d --name nodejsqueue -v /Users/lizhengqing/Documents/DockerContainer/nodejsqueue:/usr/local/nodejsqueue --link redis-container:redisdb --link mongo-container:mongodb tymx/nodejsqueue:v1
 
-
+数据包抓取
 docker run --restart="always" -d -p 8001:8001 -p 8002:8002 -p 8013:8013 -v /Users/lizhengqing/Documents/DockerContainer/anyproxy4_x:/usr/local/anyproxy --link nodejsqueue:nodejsQueue tymx/anyproxy406:v2 --intercept --rule /usr/local/anyproxy/rulefiles/rule.js
 
-
+手机监控
 docker run --restart="always" -itd --name ecologicalmonitor -v /Users/lizhengqing/Documents/DockerContainer/monkeyrunner/ecological:/usr/local/monkeyrunner/ecological --link redis-container:redisdb --link mongo-container:mongodb --net container:adbd tymx/ecological:v1
 
+mysql
 docker run --name mysql-container -v /Users/lizhengqing/Documents/mysqldata:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -d mysql
 
+================================================================================
 测试服务器
 
+Redis
+docker run --name redis-container --restart="always" -d -p 6379:6379 redis
+
+Mongodb
 docker run --name mongo-container --restart="always" -p 27017:27017 -v /home/tymx/Documents/mongodbData:/data/db -d mongo
 
+自定义的消息队列（nodejs）
 docker run --restart="always" --name nodejsqueue -d -v /home/tymx/Documents/DockerContainer/nodejsqueue:/usr/local/nodejsqueue -p 3000:3000 --link redis-container:redisdb --link mongo-container:mongodb tymx/nodejsqueue:v1
 
-
+数据包抓取
 docker run --restart="always" -d -p 7001:8001 -p 7002:8002 -p 7013:8013 -v /home/tymx/Documents/DockerContainer/anyproxy4_x:/usr/local/anyproxy --link nodejsqueue:nodejsQueue tymx/anyproxy406:v1 --intercept --rule /usr/local/anyproxy/rulefiles/rule.js
 
-
+手机监控
 docker run --restart="always" -itd --name ecologicalmonitor -v /home/tymx/Documents/DockerContainer/monkeyrunner/ecological:/usr/local/monkeyrunner/ecological --link redis-container:redisdb --link mongo-container:mongodb tymx/ecological:v1
 
 
-docker run --name mysql-container -v /home/tymx/Documents/mysqldata:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -d mysql:tag
+mysql服务
+docker run --name mysql-container -v /home/tymx/Documents/mysqldata:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -d mysql
 
 ADB服务
 docker run -d --privileged -v /dev/bus/usb:/dev/bus/usb --name adbd sorccu/adb
-
-curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d "{\"tag\":\"今日头条\",\"msg\":\"这是一条push消息\",\"time\":1111111111111,\"imgfile\":\"11111.jpg\"}" http://192.168.10.52:3000/push
 
 
 mysql服务
 docker run --name mysql-container -v /home/tymx/Documents/mysqldata:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -d mysql
 
 
+图片下载服务
+docker run --restart="always" -itd --name imagedownload -v /home/tymx/Documents/DockerContainer/ECOServer:/usr/local/imagedownload -v /mnt/download_media:/usr/local/imagedownload/files --link redis-container:redisdb --link mongo-container:mongodb tymx/mediadownload:v1
 
+curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d "{\"tag\":\"今日头条\",\"msg\":\"这是一条push消息\",\"time\":1111111111111,\"imgfile\":\"11111.jpg\"}" http://192.168.10.52:3000/push
 
 [global]
 debug=true
@@ -72,7 +82,12 @@ db.originnews.save({
 
 
 
-1、普通新闻详情接口，group_id
-http://a3.pstatp.com/article/content/19/2/6532412294834422019/6532412294834422019/1/0/
-2、大V新闻详情接口 thread_id
-http://lf.snssdk.com/ugc/thread/detail/v2/content/?thread_id=1595252651931661
+调用原子服务
+Http method:POST
+数据格式:
+{"mq":"x1","seq":x2,"data":x3,"resid":x4,"resp":"x5"}
+x1--用于记录子任务状态的缓存hashset
+X2--子任务序号，从1开始编号
+x3--需要解析的数据内容，json格式[],如果是文本则可能[文本];如果是图片则[图片url,数据中心地址,处理后保存地址]
+X4--资源的id
+X5--子任务状态修改完后，通知处理程序，向"recvjob:"+x5的消息队列中插入一个值（resid）
