@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3a9f1209-bf27-4831-8365-62528b80939a" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Dockerfile" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/scrapyServer/Dockerfile" afterPath="$PROJECT_DIR$/Dockerfile" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/analysis/rule_level0_service.py" afterPath="$PROJECT_DIR$/analysis/rule_level0_service.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/flowcontrol.py" afterPath="$PROJECT_DIR$/flowcontrol.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../dock启动脚本.txt" afterPath="$PROJECT_DIR$/../dock启动脚本.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../monkeyrunner/ecological/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../monkeyrunner/ecological/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../nodejsqueue/redisService/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../nodejsqueue/redisService/.idea/workspace.xml" />
@@ -43,18 +43,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ToutiaoModel.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/scrapyServer/ToutiaoModel.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="1" column="18" lean-forward="false" selection-start-line="1" selection-start-column="18" selection-end-line="1" selection-end-column="18" />
-              <folding>
-                <element signature="e#396#8074#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="config.ini" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scrapyServer/config.ini">
           <provider selected="true" editor-type-id="text-editor">
@@ -75,7 +63,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="rule_level0_service.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="rule_level0_service.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/analysis/rule_level0_service.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="1200">
@@ -89,6 +77,16 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="Dockerfile" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Dockerfile">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="165">
+              <caret line="11" column="0" lean-forward="true" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="flowcontrol.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/flowcontrol.py">
           <provider selected="true" editor-type-id="text-editor">
@@ -97,16 +95,6 @@
               <folding>
                 <element signature="e#16#62#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Dockerfile" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/scrapyServer/Dockerfile">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="10" column="29" lean-forward="true" selection-start-line="10" selection-start-column="29" selection-end-line="10" selection-end-column="29" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -319,10 +307,10 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/ruleServer" />
       <recent name="$PROJECT_DIR$/downloadServer" />
       <recent name="$PROJECT_DIR$/scrapyServer" />
-      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/analysis" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -734,7 +722,14 @@
       <option name="project" value="LOCAL" />
       <updated>1523371722034</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="docker">
+      <created>1523371887771</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1523371887771</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -1014,14 +1009,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Dockerfile">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/downloadServer/Dockerfile">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1246,6 +1233,14 @@
             <marker date="1523371758190" expanded="true" signature="758:803" ph="select * fro... analysis_rules" />
             <marker date="1523371758190" expanded="true" signature="1991:2036" ph="select * fro... analysis_rules" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Dockerfile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" column="0" lean-forward="true" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
