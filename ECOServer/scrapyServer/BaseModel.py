@@ -46,7 +46,8 @@ class BaseParse(object):
         # 把数据分发给打标服务，服务分为两类，一类基础服务（0），一类高级服务（1）
         # Rule0server.execute_all(articleid)
         # Rule1server.add_resource_to_all_queue(articleid)
-
+        queue = MyQueue(db=ConfigHelper.redisdb, host=ConfigHelper.redisip)
+        queue.push(ConfigHelper.analysis_msgqueue,articleid)
     #每个App解析方法重载该方法
     def tryparse(self,str):
         None

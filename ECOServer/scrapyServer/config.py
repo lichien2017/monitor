@@ -15,6 +15,6 @@ class ConfigHelper:
     redisip = __config.get("redis", "redisip")
     redisdb = __config.get("redis", "redisdb")
     # load_rule_time = __config.getint("global", "load_rule_time")
-    #download_msgqueue = __config.get("global", "download_msgqueue")
+    analysis_msgqueue = __config.get("global", "analysis_msgqueue")
 
 
