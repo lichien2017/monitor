@@ -14,7 +14,6 @@ class ConfigHelper:
     mongodbip = __config.get("mongodb", "mongodbip")
     redisip = __config.get("redis", "redisip")
     redisdb = __config.get("redis", "redisdb")
-    image_savepath = __config.get("global", "image_savepath")
     download_msgqueue = __config.get("global", "download_msgqueue")
 
 
