@@ -217,7 +217,7 @@ class TianTianParse(BaseParse):
                 category = "问答"
             elif chlid == "kb_photo_news":
                 category = "图片"
-            else: 
+            else:
                 print(post)
                 return
         else :

@@ -66,8 +66,8 @@ class ToutiaoParse(BaseParse):
         except:
             print("无发布时间")
         #如果是美图栏目
-        if category == "美图":  
-            try: 
+        if category == "美图":
+            try:
                 title = data['content']
             except:
                 print("无内容仅只有图片")
@@ -244,8 +244,8 @@ class ToutiaoParse(BaseParse):
         # 转json对象
         strjson = json.loads(strjson)
         url = strjson['url']
-        result = urllib.parse.urlparse(url) 
-        params = urllib.parse.parse_qs(result.query,True) 
+        result = urllib.parse.urlparse(url)
+        params = urllib.parse.parse_qs(result.query,True)
         category = ""#类型
         try:
             category = params['category'][0]

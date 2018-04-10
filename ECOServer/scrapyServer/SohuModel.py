@@ -137,8 +137,8 @@ class SohuParse(BaseParse):
         #转json对象
         strjson = json.loads(strjson)
         url = strjson['url']
-        result = urllib.parse.urlparse(url) 
-        params = urllib.parse.parse_qs(result.query,True) 
+        result = urllib.parse.urlparse(url)
+        params = urllib.parse.parse_qs(result.query,True)
         channelId = params['channelId'][0]
         if url.find('v6/news.go') > -1:
             if channelId == "1":
