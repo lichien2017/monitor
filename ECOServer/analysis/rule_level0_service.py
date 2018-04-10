@@ -17,8 +17,8 @@ class RuleServiceLevel0:
         self._rule_instance = []
         print("RuleServiceLevel0")
         self.refresh_rule_time = refresh_rule_time
-        # timer = threading.Timer(refresh_rule_time,self.load_rules)
-        # timer.start()
+        timer = threading.Timer(refresh_rule_time,self.load_rules)
+        timer.start()
 
     #加载规则配置
     def load_rules(self,level = 0):
@@ -39,8 +39,8 @@ class RuleServiceLevel0:
             result = cursor.fetchone()
         cursor.close()
         conn.close()
-        # timer = threading.Timer(self.refresh_rule_time,self.load_rules)
-        # timer.start()
+        timer = threading.Timer(self.refresh_rule_time,self.load_rules)
+        timer.start()
 
     # 调用规则方法
     def execute_all(self,resource_id):
@@ -53,8 +53,8 @@ class RuleServiceLevel1:
         self._settings = []
         self.load_rule_time = load_rule_time
         print("RuleServiceLevel1")
-        # timer = threading.Timer(self.load_rule_time,self.load_rules)
-        # timer.start()
+        timer = threading.Timer(self.load_rule_time,self.load_rules)
+        timer.start()
     #加载规则配置
     def load_rules(self,level = 1):
         print('RuleServiceLevel1 load_rules enter')
@@ -75,8 +75,8 @@ class RuleServiceLevel1:
             result = cursor.fetchone()
         cursor.close()
         conn.close()
-        # timer = threading.Timer(self.load_rule_time, self.load_rules)
-        # timer.start()
+        timer = threading.Timer(self.load_rule_time, self.load_rules)
+        timer.start()
 
     # 启动服务
     def execute_all(self):
