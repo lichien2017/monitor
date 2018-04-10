@@ -244,8 +244,8 @@ class FenHParse(BaseParse):
         #转json对象
         strjson = json.loads(strjson)
         url = strjson['url']
-        result = urllib.parse.urlparse(url) 
-        params = urllib.parse.parse_qs(result.query,True) 
+        result = urllib.parse.urlparse(url)
+        params = urllib.parse.parse_qs(result.query,True)
         category = ""#类型
         #区分栏目
         if url.find('api.3g.ifeng.com/get_pic_list?channel=news') > -1:

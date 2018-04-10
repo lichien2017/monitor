@@ -10,9 +10,10 @@ import hashlib
 import uuid
 import sys
 
+
 class i1NewsParse(BaseParse):
-    #解析一点资讯
-    def Analysis_ydzx(self,data,category,crawltime,y):
+    # 解析一点资讯
+    def Analysis_ydzx(self, data, category, crawltime, y):
         # try:
         #     date = time.strftime('%Y%m%d%H%M%S',time.localtime(time.time()))#当前时间
         #     f = open("E:\\" + category + date + ".txt",'a')
@@ -21,30 +22,30 @@ class i1NewsParse(BaseParse):
         # except:
         #     print("文件未保存")
         try:
-            cardSubType=data['cardSubType']
-            if cardSubType=="special_topic":
-                documents_list=data['documents']
+            cardSubType = data['cardSubType']
+            if cardSubType == "special_topic":
+                documents_list = data['documents']
                 for d in documents_list:
-                    self.add_ydzx_db(d,category,crawltime,y)
+                    self.add_ydzx_db(d, category, crawltime, y)
         except:
-            self.add_ydzx_db(data,category,crawltime,y)
-   
-    #一点资讯插入数据库
-    def add_ydzx_db(self,data,category,crawltime,y):
-        seq = y + 1#排序
-        title = ""#标题
-        articleid = ""#文章标识
-        restype = 1#类型 1 图文 2 图片 3 视频
-        logo = ""#图片
-        source = ""#来源
-        abstract = ""#摘要
-        tab = ""#标签
+            self.add_ydzx_db(data, category, crawltime, y)
+
+    # 一点资讯插入数据库
+    def add_ydzx_db(self, data, category, crawltime, y):
+        seq = y + 1  # 排序
+        title = ""  # 标题
+        articleid = ""  # 文章标识
+        restype = 1  # 类型 1 图文 2 图片 3 视频
+        logo = ""  # 图片
+        source = ""  # 来源
+        abstract = ""  # 摘要
+        tab = ""  # 标签
         gallary = ""
-        IsArtID = False#是否为广告资讯
-        content = ""#内容
-        publish_timestr=""
-        publish_time=""
-        url=""#跳转地址
+        IsArtID = False  # 是否为广告资讯
+        content = ""  # 内容
+        publish_timestr = ""
+        publish_time = ""
+        url = ""  # 跳转地址
         title = data['title']
         source = data['source']
         try:
@@ -55,14 +56,14 @@ class i1NewsParse(BaseParse):
             articleid = data['docid']
         except:
             print("广告资讯")
-            articleid=data['aid']
-            if title=="":
-                title=abstract
+            articleid = data['aid']
+            if title == "":
+                title = abstract
         try:
             image_list = data['image_urls']
             for i in image_list:
                 if i != "":
-                    logo+=i + ","
+                    logo += i + ","
         except:
             print("无图片")
         try:
@@ -87,36 +88,36 @@ class i1NewsParse(BaseParse):
                 content = data['video_url']
             elif content_type == "slides":
                 restype = 2
-                gallery_items=data['gallery_items']
+                gallery_items = data['gallery_items']
                 for g in gallery_items:
-                    if g['img']!="":
-                        gallary+=g['img']+","
-                    if g['desc']!="":
-                        content+=g['desc']+"<br/>"
-            elif content_type=="picture":
-                logo=data['image']
+                    if g['img'] != "":
+                        gallary += g['img'] + ","
+                    if g['desc'] != "":
+                        content += g['desc'] + "<br/>"
+            elif content_type == "picture":
+                logo = data['image']
         except:
             ctype = data['ctype']
             if ctype == "advertisement":
-                 IsArtID = True
-                 tab = data['tag']
+                IsArtID = True
+                tab = data['tag']
             print("广告")
         crawltimestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(crawltime / 1000))
-        #拼链接地址
+        # 拼链接地址
         news_detail_url = 'https://a1.go2yd.com/Website/contents/content?docid=' + str(articleid)
-        headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0'}
-        #若不为广告资讯或者视频资讯，取资讯详细信息
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0'}
+        # 若不为广告资讯或者视频资讯，取资讯详细信息
         if IsArtID == False:
-            if restype ==1:
+            if restype == 1:
                 news_detail = requests.get(news_detail_url).json()['documents']
-                if category=="美图":
-                    news_title=news_detail[0]['title']
-                    if news_title!="":
-                        title=news_title
-                        abstract=news_detail[0]['summary']
+                if category == "美图":
+                    news_title = news_detail[0]['title']
+                    if news_title != "":
+                        title = news_title
+                        abstract = news_detail[0]['summary']
                 content = news_detail[0]['content']
         print(title)
-        #判断列表封面图末尾是否为，若是则进行删除
+        # 判断列表封面图末尾是否为，若是则进行删除
         logolen = len(logo)
         if logolen > 0:
             logostr = logo[logolen - 1]
@@ -137,27 +138,27 @@ class i1NewsParse(BaseParse):
             "labels": tab,
             "keyword": "",
             "seq": seq,
-            "identity":str(articleid),
+            "identity": str(articleid),
             "appname": "一点资讯",
             "category": category,
             "restype": restype,
             "gallary": gallary
         }
-        self.db(sdata,articleid,title)
+        self.db(sdata, articleid, title)
 
-    def tryparse(self,str):
-         #转换编码格式
-        strjson = str.decode("UTF-8","ignore")
-        #转json对象
+    def tryparse(self, str):
+        # 转换编码格式
+        strjson = str.decode("UTF-8", "ignore")
+        # 转json对象
         strjson = json.loads(strjson)
         url = strjson['url']
-        result = urllib.parse.urlparse(url) 
-        params = urllib.parse.parse_qs(result.query,True)
+        result = urllib.parse.urlparse(url)
+        params = urllib.parse.parse_qs(result.query, True)
         if url.find('news-list-for-best-channel') > -1:
             category = "推荐"
-        elif url.find('news-list-for-hot-channel') > -1 :
+        elif url.find('news-list-for-hot-channel') > -1:
             category = "要闻"
-        elif url.find('news-list-for-channel') > -1 :
+        elif url.find('news-list-for-channel') > -1:
             channel_id = params['channel_id'][0]
             if channel_id == "21044074964":
                 category = "美图"
@@ -165,23 +166,23 @@ class i1NewsParse(BaseParse):
                 category = "视频"
             elif channel_id == "21044074756":
                 category = "图片"
-            else :
+            else:
                 print(url)
-                return  
-        else: 
+                return
+        else:
             print(url)
-            return  
+            return
         crawltime = strjson['time']
-        #获取data
+        # 获取data
         data = strjson['data']
-        data=json.loads(data)
+        data = json.loads(data)
         list = data['result']
-        datalen=len(list)
-        for y,x in enumerate(list):
-            if category == "要闻" or category == "图片":  
+        datalen = len(list)
+        for y, x in enumerate(list):
+            if category == "要闻" or category == "图片":
                 if datalen == y + 1:
                     continue
             elif category == "视频" or category == "美图":
-                if y==0:
-                    continue  
-            self.Analysis_ydzx(x,category,crawltime,y)
+                if y == 0:
+                    continue
+            self.Analysis_ydzx(x, category, crawltime, y)
