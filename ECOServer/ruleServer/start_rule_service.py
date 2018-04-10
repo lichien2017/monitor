@@ -2,13 +2,11 @@ from analysis.rule_level0_service import RuleServiceLevel0
 from analysis.rule_level0_service import RuleServiceLevel1
 import threading
 import hashlib
-
-from scrapyServer.config import ConfigHelper
+import time
+from config import ConfigHelper
 
 ruleServiceLevel0 = RuleServiceLevel0(ConfigHelper.load_rule_time)
-ruleServiceLevel0.load_rules(0)
 ruleServiceLevel1 = RuleServiceLevel1(ConfigHelper.load_rule_time)
-ruleServiceLevel1.load_rules(1)
 
 def reload_rule():
     ruleServiceLevel0.load_rules(0)

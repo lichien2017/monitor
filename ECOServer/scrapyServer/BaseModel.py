@@ -5,7 +5,7 @@ import threadpool
 import sys
 from time import sleep
 from pymongo import MongoClient
-from config import ConfigHelper
+from scrapyServer.config import ConfigHelper
 
 
 #消息队列
@@ -44,10 +44,10 @@ class BaseParse(object):
         #插入数据库
         my_originnews.save(sdata)
         # 把数据分发给打标服务，服务分为两类，一类基础服务（0），一类高级服务（1）
-        # Rule0server.execute_all(articleid)
-        # Rule1server.add_resource_to_all_queue(articleid)
-        queue = MyQueue(db=ConfigHelper.redisdb, host=ConfigHelper.redisip)
-        queue.push(ConfigHelper.analysis_msgqueue,articleid)
+        Rule0server.execute_all(articleid)
+        Rule1server.add_resource_to_all_queue(articleid)
+        # queue = MyQueue(db=ConfigHelper.redisdb, host=ConfigHelper.redisip)
+        # queue.push(ConfigHelper.analysis_msgqueue,articleid)
     #每个App解析方法重载该方法
     def tryparse(self,str):
         None
@@ -104,10 +104,10 @@ class MainControl(object):
         self.pool = threadpool.ThreadPool(poolsize)
         self.confpath = confpath
         self.sleeptime = sleeptime
-        # global Rule0server
-        # global Rule1server
-        # Rule0server = rule0server
-        # Rule1server = rule1server
+        global Rule0server
+        global Rule1server
+        Rule0server = rule0server
+        Rule1server = rule1server
 
     #获取配置文件的数据（需要监控的app参数）
     def getconfdatas(self):

@@ -1,5 +1,5 @@
 # coding=utf-8
-from BaseModel import BaseParse
+from scrapyServer.BaseModel import BaseParse
 import urllib.parse
 import json
 import requests

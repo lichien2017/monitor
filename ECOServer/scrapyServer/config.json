@@ -1,41 +1,41 @@
 [
   {
-    "modname": "ToutiaoModel",
+    "modname": "scrapyServer.ToutiaoModel",
     "classname": "ToutiaoParse",
     "queuename": "origin:snssdk"
   },
   {
-    "modname": "i163NewsModel",
+    "modname": "scrapyServer.i163NewsModel",
     "classname": "WYNewsParse",
     "queuename": "origin:163sdk"
   },
   {
-    "modname": "BaiDuModel",
+    "modname": "scrapyServer.BaiDuModel",
     "classname": "BaiDuParse",
     "queuename": "origin:bdsdk"
   },
   {
-    "modname": "i1NewsModel",
+    "modname": "scrapyServer.i1NewsModel",
     "classname": "i1NewsParse",
     "queuename": "origin:ydsdk"
   },
   {
-    "modname": "TianTianModel",
+    "modname": "scrapyServer.TianTianModel",
     "classname": "TianTianParse",
     "queuename": "origin:ttsdk"
   },
   {
-    "modname": "SohuModel",
+    "modname": "scrapyServer.SohuModel",
     "classname": "SohuParse",
     "queuename": "origin:shsdk"
   },
   {
-    "modname": "TencentModel",
+    "modname": "scrapyServer.TencentModel",
     "classname": "TencentParse",
     "queuename": "origin:tensdk"
   },
   {
-    "modname": "FenHModel",
+    "modname": "scrapyServer.FenHModel",
     "classname": "FenHParse",
     "queuename": "origin:fhsdk"
   }

@@ -6,22 +6,23 @@ import sys
 import threading
 
 from scrapyServer.config import ConfigHelper
-# from analysis.rule_level0_service import RuleServiceLevel0
-# from analysis.rule_level0_service import RuleServiceLevel1
-#
-#
-# ruleServiceLevel0 = RuleServiceLevel0(ConfigHelper.load_rule_time)
+from analysis.rule_level0_service import RuleServiceLevel0
+from analysis.rule_level0_service import RuleServiceLevel1
+
+
+ruleServiceLevel0 = RuleServiceLevel0(ConfigHelper.load_rule_time)
 # ruleServiceLevel0.load_rules(0)
-# ruleServiceLevel1 = RuleServiceLevel1(ConfigHelper.load_rule_time)
+ruleServiceLevel1 = RuleServiceLevel1(ConfigHelper.load_rule_time)
 # ruleServiceLevel1.load_rules(1)
-#
-# def reload_rule():
-#     ruleServiceLevel0.load_rules(0)
-#     ruleServiceLevel1.load_rules(1)
-#     timer = threading.Timer(ConfigHelper.load_rule_time,reload_rule)
-#     timer.start()
+
+def reload_rule():
+    ruleServiceLevel0.load_rules(0)
+    ruleServiceLevel1.load_rules(1)
+    timer = threading.Timer(ConfigHelper.load_rule_time,reload_rule)
+    timer.start()
 
 if __name__ == "__main__":
+    reload_rule()
     parser = argparse.ArgumentParser()
     # Optional arguments: input file.
     parser.add_argument(
@@ -57,5 +58,5 @@ if __name__ == "__main__":
 
     print(args)
 
-    control = MainControl(args.input_file, args.sleeptime, args.number)
+    control = MainControl(args.input_file, args.sleeptime, args.number,ruleServiceLevel0,ruleServiceLevel1)
     control.startthread()
