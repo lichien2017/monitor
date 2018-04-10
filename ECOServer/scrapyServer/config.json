@@ -1,0 +1,42 @@
+[
+  {
+    "modname": "ToutiaoModel",
+    "classname": "ToutiaoParse",
+    "queuename": "origin:snssdk"
+  },
+  {
+    "modname": "i163NewsModel",
+    "classname": "WYNewsParse",
+    "queuename": "origin:163sdk"
+  },
+  {
+    "modname": "BaiDuModel",
+    "classname": "BaiDuParse",
+    "queuename": "origin:bdsdk"
+  },
+  {
+    "modname": "i1NewsModel",
+    "classname": "i1NewsParse",
+    "queuename": "origin:ydsdk"
+  },
+  {
+    "modname": "TianTianModel",
+    "classname": "TianTianParse",
+    "queuename": "origin:ttsdk"
+  },
+  {
+    "modname": "SohuModel",
+    "classname": "SohuParse",
+    "queuename": "origin:shsdk"
+  },
+  {
+    "modname": "TencentModel",
+    "classname": "TencentParse",
+    "queuename": "origin:tensdk"
+  },
+  {
+    "modname": "FenHModel",
+    "classname": "FenHParse",
+    "queuename": "origin:fhsdk"
+  }
+]
