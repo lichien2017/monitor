@@ -87,7 +87,7 @@ class RuleServiceLevel1:
     # 将消息发送给相关的规则处理服务
     def add_resource_to_all_queue(self,resource_id):
         for class_name in self._rule_class:
-            class_name.add_resource_to_queue(resource_id) #动态调用类的静态方法
+            class_name.add_resource_to_queue(resource_id,class_name.__name__) #动态调用类的静态方法
             # getattr(class_name, "add_resource_to_queue")(resource_id)
 
 if __name__ == "__main__":

@@ -3,7 +3,7 @@ from threading import Thread
 import redis
 
 from analysis.rule import Rule
-from ruleServer.config import ConfigHelper
+from scrapyServer.config import ConfigHelper
 
 pool = redis.ConnectionPool(host=ConfigHelper.redisip, port=6379, db=ConfigHelper.redisdb)
 redis_server = redis.StrictRedis(connection_pool=pool)
@@ -18,17 +18,19 @@ class XueXingBaoLiRule(Rule,Thread):
 
     def run(self):
         while not self.thread_stop:
-            item = redis_server.brpop("XueXingBaoLiRule:queue")
+            item = self._redis_server.brpop(self.__name__ + ":queue")
             print(item)
             res_id = item[1].decode("utf-8")
-            print("XueXingBaoLiRule 获取到数据:%s" % (res_id))
+            print("%s 获取到数据:%s" % (self.__name__,res_id))
             resource = self._get_resource(res_id)
             if resource !=None :
-                print("XueXingBaoLiRule 获取到数据:%s" % (resource))
+                print("%s 获取到数据:%s" % (self.__name__,resource))
+                self.execute_other(res_id,resource)
+
 
     @staticmethod
-    def add_resource_to_queue(resource_id):
+    def add_resource_to_queue(resource_id,class_name):
         # 插入消息队列
         print('XueXingBaoLiRule add_resource_to_queue :' + resource_id)
-        redis_server.lpush("XueXingBaoLiRule:queue",resource_id)
+        redis_server.lpush(class_name + ":queue",resource_id)
 

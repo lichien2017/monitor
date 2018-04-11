@@ -1,8 +1,10 @@
 #-*- coding: UTF-8 -*-
 import pymongo
 
-from ruleServer.config import ConfigHelper
-
+from scrapyServer.config import ConfigHelper
+import redis
+import hashlib
+import os
 
 class Rule:
     _mongodb_client = None
@@ -11,6 +13,10 @@ class Rule:
     _extra_data = None
     _mongodb_tablename = None
     _level = 0
+
+    __pool = redis.ConnectionPool(host=ConfigHelper.redisip, port=6379, db=ConfigHelper.redisdb)
+    _redis_server = redis.StrictRedis(connection_pool=__pool)
+
     def __init__(self,level,mongodb_table,res_columns=None,extra_data = None):
         if res_columns != None :
             self._res_columns = res_columns.split('|')
@@ -22,6 +28,10 @@ class Rule:
             self._mongodb_tablename = mongodb_table
         self._level = level
         self._mongodb_client = pymongo.MongoClient(ConfigHelper.mongodbip, 27017)
+        # 定义与原子服务通讯的消息队列名称
+        self.queue_name_text = self.__name__ + ":text"
+        self.queue_name_image = self.__name__ + ":image"
+        self.queue_name_video = self.__name__ + ":video"
 
     def _get_resource(self,resouce_id):
         self._mongodb = self._mongodb_client['crawlnews']
@@ -45,7 +55,59 @@ class Rule:
                     return
 
     def execute_other(self,res_id,resource,extra=None):
-        print('其他处理方式')
+        print('其他处理方式') # 但是这里不需要实现，由各实现类的线程函数直接处理了，如果实现了，那实质上是同步调用方式
+        if resource == None :
+            return
+        title = resource["title"]
+        description = resource["description"]
+        content = resource["content"]
+        logo = resource["logo"].split(",")
+        images = resource["gallary"].split(",")
+        sub_job = "sendjob:%s:%s" % (self.__name__,res_id) #子任务消息key
+        normal_msg = {"id":sub_job,"seq":"","data":[],"resdata":"","resp":"%s:%s"%(self.__name__,res_id)}
+        # title标签
+        self._redis_server.hset(sub_job,"title",-1)
+        normal_msg["seq"] = "title"
+        normal_msg["data"] = [title]
+        normal_msg["resdata"] = "%s,title" % (res_id)
+        print("title package:",normal_msg)
+        self._redis_server.lpush(self.queue_name_text,normal_msg)
+        # description标签
+        self._redis_server.hset(sub_job, "description", -1)
+        normal_msg["seq"] = "description"
+        normal_msg["data"] = [description]
+        normal_msg["resdata"] = "%s,description" % (res_id)
+        print("description package:", normal_msg)
+        self._redis_server.lpush(self.queue_name_text, normal_msg)
+        # content标签
+        self._redis_server.hset(sub_job, "content", -1)
+        normal_msg["seq"] = "content"
+        normal_msg["data"] = [content]
+        normal_msg["resdata"] = "%s,content" % (res_id)
+        print("content package:", normal_msg)
+        self._redis_server.lpush(self.queue_name_text, normal_msg)
+        index = 1
+
+        # 创建image
+        # 图片保存路径
+        media_savepath = "%s/%s" % (ConfigHelper.analysis_savepath,res_id)
+        self._check_dir(media_savepath)
+        for x in logo :
+            self._redis_server.hset(sub_job, index, -1)
+            normal_msg["seq"] = index
+            normal_msg["data"] = [x,"%s/%s"%(ConfigHelper.download_savepath,self.get_md5(x)),"%s/%s" % (media_savepath,self.get_md5(x))]
+            normal_msg["resdata"] = "%s,%d" % (res_id,index)
+            index=index +1
+            self._redis_server.lpush(self.queue_name_image, normal_msg)
+
+        for x in images :
+            self._redis_server.hset(sub_job, index, -1)
+            normal_msg["seq"] = index
+            normal_msg["data"] = [x, "%s/%s" % (ConfigHelper.download_savepath, self.get_md5(x)),
+                                  "%s/%s" % (media_savepath, self.get_md5(x))]
+            normal_msg["resdata"] = "%s,%d" % (res_id, index)
+            index=index +1
+            self._redis_server.lpush(self.queue_name_image, normal_msg)
 
     def execute(self,resource_id,extra=None):
         print("规则:%s,正在处理:resource_id=%s" % (self.__class__.__name__,resource_id))
@@ -59,6 +121,17 @@ class Rule:
                 else:
                     self.execute_other(resource_id,resource,extra)
         return 0
+
+
+    def _check_dir(self,dir):
+        if not os.path.exists(dir):
+            os.makedirs(dir)
+
+    def get_md5(self,src):
+        m = hashlib.md5()
+        m.update(src.encode("utf-8"))
+        # print(m.hexdigest())
+        return m.hexdigest()
 
     @staticmethod
     def add_resource_to_queue(resource_id):

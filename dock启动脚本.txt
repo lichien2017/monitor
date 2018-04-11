@@ -48,7 +48,7 @@ docker run --name mysql-container -v /home/tymx/Documents/mysqldata:/var/lib/mys
 
 
 图片下载服务
-docker run --restart="always" -itd --name imagedownload -v /home/tymx/Documents/DockerContainer/ECOServer:/usr/local/imagedownload -v /mnt/download_media:/usr/local/imagedownload/files --link redis-container:redisdb --link mongo-container:mongodb tymx/mediadownload:v1
+docker run --restart="always" -itd --name imagedownload -v /home/tymx/Documents/DockerContainer/ECOServer:/usr/local/imagedownload -v /mnt/download_media:/usr/local/imagedownload/downloadServer/files --link redis-container:redisdb --link mongo-container:mongodb tymx/mediadownload:v1
 
 curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST -d "{\"tag\":\"今日头条\",\"msg\":\"这是一条push消息\",\"time\":1111111111111,\"imgfile\":\"11111.jpg\"}" http://192.168.10.52:3000/push
 
@@ -88,6 +88,6 @@ Http method:POST
 {"mq":"x1","seq":x2,"data":x3,"resid":x4,"resp":"x5"}
 x1--用于记录子任务状态的缓存hashset
 X2--子任务序号，从1开始编号
-x3--需要解析的数据内容，json格式[],如果是文本则可能[文本];如果是图片则[图片url,数据中心地址,处理后保存地址]
+x3--需要解析的数据内容，json格式[],如果是文本则可能[文本，标示];如果是图片则[图片url,数据中心地址,处理后保存地址]
 X4--资源的id
 X5--子任务状态修改完后，通知处理程序，向"recvjob:"+x5的消息队列中插入一个值（resid）
