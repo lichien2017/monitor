@@ -34,6 +34,7 @@ class Rule:
         self.queue_name_video = self.__class__.__name__ + ":video"
 
     def _get_resource(self,resouce_id):
+        print("_get_resource:%s" % resouce_id)
         self._mongodb = self._mongodb_client['crawlnews']
         rows = self._mongodb.originnews.find({"identity":resouce_id})
         if rows == None or rows.count() == 0:
@@ -113,7 +114,9 @@ class Rule:
         print("规则:%s,正在处理:resource_id=%s" % (self.__class__.__name__,resource_id))
         resource = self._get_resource(resource_id)
         if resource != None:
+            print("资源找到了，检查结果表中是否存在数据")
             table = self._mongodb[self._mongodb_tablename]
+            print(table)
             rows = table.find({"res_id": resource_id})
             if rows.count() == 0:  # 如果不存在数据表中，则开始判断是否能匹配上规则
                 if self._level == 0 :
