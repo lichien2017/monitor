@@ -31,6 +31,6 @@ class XueXingBaoLiRule(Rule,Thread):
     @staticmethod
     def add_resource_to_queue(resource_id,class_name):
         # 插入消息队列
-        print('XueXingBaoLiRule add_resource_to_queue :' + resource_id)
+        print("add_resource_to_queue :%s" % (resource_id))
         redis_server.lpush(class_name + ":queue",resource_id)
 

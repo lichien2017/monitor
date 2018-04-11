@@ -16,6 +16,7 @@ if __name__ == "__main__":
     ruleServiceLevel0.load_rules(0)
     ruleServiceLevel1 = RuleServiceLevel1(ConfigHelper.load_rule_time)
     ruleServiceLevel1.load_rules(1)
+    ruleServiceLevel1.execute_all()
     parser = argparse.ArgumentParser()
     # Optional arguments: input file.
     parser.add_argument(

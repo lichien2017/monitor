@@ -92,7 +92,7 @@ class Rule:
         # 创建image
         # 图片保存路径
         media_savepath = "%s/%s" % (ConfigHelper.analysis_savepath,res_id)
-        self._check_dir(media_savepath)
+        # self._check_dir(media_savepath)
         for x in logo :
             self._redis_server.hset(sub_job, index, -1)
             normal_msg["seq"] = index
@@ -137,7 +137,7 @@ class Rule:
         return m.hexdigest()
 
     @staticmethod
-    def add_resource_to_queue(resource_id):
+    def add_resource_to_queue(resource_id,name):
         # 插入消息队列
         print('Rule add_resource_to_queue :'+resource_id)
 
