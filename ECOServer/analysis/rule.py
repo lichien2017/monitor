@@ -36,7 +36,7 @@ class Rule:
     def _get_resource(self,resouce_id):
         print("_get_resource:%s" % resouce_id)
         self._mongodb = self._mongodb_client['crawlnews']
-        rows = self._mongodb.originnews.find({"identity":resouce_id})
+        rows = self._mongodb.originnews.find({"identity":"%s" % (resouce_id)})
         if rows == None or rows.count() == 0:
             return None
         print(rows)
