@@ -65,7 +65,7 @@ class Rule:
         logo = resource["logo"].split(",")
         images = resource["gallary"].split(",")
         sub_job = "sendjob:%s:%s" % (self.__class__.__name__,res_id) #子任务消息key
-        normal_msg = {"id":sub_job,"seq":"","data":[],"resdata":"","resp":"recvjob:%s" %(self.__class__.__name__)}
+        normal_msg = {"id":sub_job,"seq":"","data":[],"threshold":extra,"resdata":"","resp":"recvjob:%s" %(self.__class__.__name__)}
         # title标签
         self._redis_server.hset(sub_job,"title",-1)
         normal_msg["seq"] = "title"
@@ -96,7 +96,7 @@ class Rule:
         for x in logo :
             self._redis_server.hset(sub_job, index, -1)
             normal_msg["seq"] = index
-            normal_msg["data"] = [x,"%s/%s"%(ConfigHelper.download_savepath,self.get_md5(x)),"%s/%s" % (media_savepath,self.get_md5(x)),extra]
+            normal_msg["data"] = [x,"%s/%s"%(ConfigHelper.download_savepath,self.get_md5(x)),"%s/%s" % (media_savepath,self.get_md5(x))]
             normal_msg["resdata"] = "%s" % (res_id)
             index=index +1
             self._redis_server.lpush(self.queue_name_image, normal_msg)
@@ -105,7 +105,7 @@ class Rule:
             self._redis_server.hset(sub_job, index, -1)
             normal_msg["seq"] = index
             normal_msg["data"] = [x, "%s/%s" % (ConfigHelper.download_savepath, self.get_md5(x)),
-                                  "%s/%s" % (media_savepath, self.get_md5(x)),extra]
+                                  "%s/%s" % (media_savepath, self.get_md5(x))]
             normal_msg["resdata"] = "%s" % (res_id)
             index=index +1
             self._redis_server.lpush(self.queue_name_image, normal_msg)
