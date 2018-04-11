@@ -29,9 +29,9 @@ class Rule:
         self._level = level
         self._mongodb_client = pymongo.MongoClient(ConfigHelper.mongodbip, 27017)
         # 定义与原子服务通讯的消息队列名称
-        self.queue_name_text = self.__name__ + ":text"
-        self.queue_name_image = self.__name__ + ":image"
-        self.queue_name_video = self.__name__ + ":video"
+        self.queue_name_text = self.__class__.__name__ + ":text"
+        self.queue_name_image = self.__class__.__name__ + ":image"
+        self.queue_name_video = self.__class__.__name__ + ":video"
 
     def _get_resource(self,resouce_id):
         self._mongodb = self._mongodb_client['crawlnews']
@@ -63,8 +63,8 @@ class Rule:
         content = resource["content"]
         logo = resource["logo"].split(",")
         images = resource["gallary"].split(",")
-        sub_job = "sendjob:%s:%s" % (self.__name__,res_id) #子任务消息key
-        normal_msg = {"id":sub_job,"seq":"","data":[],"resdata":"","resp":"%s:%s"%(self.__name__,res_id)}
+        sub_job = "sendjob:%s:%s" % (self.__class__.__name__,res_id) #子任务消息key
+        normal_msg = {"id":sub_job,"seq":"","data":[],"resdata":"","resp":"%s:%s"%(self.__class__.__name__,res_id)}
         # title标签
         self._redis_server.hset(sub_job,"title",-1)
         normal_msg["seq"] = "title"

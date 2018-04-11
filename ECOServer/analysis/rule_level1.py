@@ -18,13 +18,13 @@ class XueXingBaoLiRule(Rule,Thread):
 
     def run(self):
         while not self.thread_stop:
-            item = self._redis_server.brpop(self.__name__ + ":queue")
+            item = self._redis_server.brpop(self.__class__.__name__ + ":queue")
             print(item)
             res_id = item[1].decode("utf-8")
-            print("%s 获取到数据:%s" % (self.__name__,res_id))
+            print("%s 获取到数据:%s" % (self.__class__.__name__,res_id))
             resource = self._get_resource(res_id)
             if resource !=None :
-                print("%s 获取到数据:%s" % (self.__name__,resource))
+                print("%s 获取到数据:%s" % (self.__class__.__name__,resource))
                 self.execute_other(res_id,resource)
 
 
