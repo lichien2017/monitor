@@ -85,11 +85,13 @@ class DeviceRunner():
     #     stdout, stderr = screenExecute.communicate()
 
     def _running(self):
-        # # 打开App
+        # 调高亮度
+        self.adbClient.luminance(150)
+        # 打开App
         result = self._launch_app(self._settings["categroy"] + "/" + self._settings["activity"])
         if result !=0:
             return False
-        #等待应用启动
+        # 等待应用启动
         self._waitting(self._settings["setuptime"])
         # 点击
         self._click(self._settings["clickpoint"])
@@ -120,6 +122,8 @@ class DeviceRunner():
             self._runner_log["screenshot"+str(i)] = file_name
         # 关闭应用
         self.adbClient.stopActivity(self._settings["categroy"])
+        # 调低亮度
+        self.adbClient.luminance(5)
         return True
     #
     # 下面是工具函数

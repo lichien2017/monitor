@@ -202,6 +202,15 @@ class AdbClient:
             raise RuntimeError(out)
 
 
+    def luminance(self,luminancenum):
+        cmd = 'settings put system screen_brightness ' +luminancenum
+        out = self.shell(cmd)
+        if re.search(r"(Error type)|(Error: )|(Cannot find 'App')", out, re.IGNORECASE | re.MULTILINE):
+            raise RuntimeError(out)
+
+
+
+
     def takeSnapshot(self, reconnect=False):
         '''
         Takes a snapshot of the device and return it as a PIL Image.
