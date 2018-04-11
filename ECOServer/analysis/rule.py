@@ -39,7 +39,7 @@ class Rule:
         rows = self._mongodb.originnews.find({"identity":resouce_id})
         if rows == None or rows.count() == 0:
             return None
-        # print(rows)
+        print(rows)
         return rows[0]
 
     def _level0_execute(self,res_id,resource,extra=None):
