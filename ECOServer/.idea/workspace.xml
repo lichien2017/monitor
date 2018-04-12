@@ -3,8 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="3a9f1209-bf27-4831-8365-62528b80939a" name="Default" comment="docker">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/analysis/__init__.py" afterPath="$PROJECT_DIR$/analysis/__init__.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/analysis/rule_level1.py" afterPath="$PROJECT_DIR$/analysis/rule_level1.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/analysis/rule_level0_service.py" afterPath="$PROJECT_DIR$/analysis/rule_level0_service.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../dock启动脚本.txt" afterPath="$PROJECT_DIR$/../dock启动脚本.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../monkeyrunner/ecological/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../monkeyrunner/ecological/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../nodejsqueue/redisService/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../nodejsqueue/redisService/.idea/workspace.xml" />
@@ -36,8 +35,8 @@
       <file leaf-file-name="rule_level0.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/analysis/rule_level0.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="7" column="17" lean-forward="true" selection-start-line="7" selection-start-column="17" selection-end-line="7" selection-end-column="17" />
+            <state relative-caret-position="255">
+              <caret line="17" column="43" lean-forward="true" selection-start-line="17" selection-start-column="43" selection-end-line="17" selection-end-column="43" />
               <folding />
             </state>
           </provider>
@@ -46,7 +45,7 @@
       <file leaf-file-name="rule.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/analysis/rule.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="257">
+            <state relative-caret-position="2760">
               <caret line="184" column="100" lean-forward="false" selection-start-line="184" selection-start-column="77" selection-end-line="184" selection-end-column="100" />
               <folding>
                 <element signature="e#23#37#0" expanded="true" />
@@ -58,7 +57,7 @@
       <file leaf-file-name="rule_level1.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/analysis/rule_level1.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="84">
+            <state relative-caret-position="-322">
               <caret line="16" column="33" lean-forward="true" selection-start-line="16" selection-start-column="33" selection-end-line="16" selection-end-column="33" />
               <folding>
                 <element signature="e#0#28#0" expanded="true" />
@@ -79,16 +78,17 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="rule_level0_service.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="rule_level0_service.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/analysis/rule_level0_service.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="148">
-              <caret line="36" column="49" lean-forward="false" selection-start-line="36" selection-start-column="49" selection-end-line="36" selection-end-column="49" />
+            <state relative-caret-position="588">
+              <caret line="61" column="14" lean-forward="true" selection-start-line="61" selection-start-column="14" selection-end-line="61" selection-end-column="14" />
               <folding>
                 <element signature="e#44#60#0" expanded="true" />
-                <element signature="e#1427#2973#0" expanded="false" />
-                <marker date="1523414292550" expanded="true" signature="758:803" ph="select * fro... analysis_rules" />
-                <marker date="1523414292550" expanded="true" signature="1991:2036" ph="select * fro... analysis_rules" />
+                <marker date="1523526278983" expanded="true" signature="758:803" ph="select * fro... analysis_rules" />
+                <marker date="1523526278983" expanded="true" signature="758:820" ph="select * fro... analysis_rules" />
+                <marker date="1523526278983" expanded="true" signature="2008:2053" ph="select * fro... analysis_rules" />
+                <marker date="1523526278983" expanded="true" signature="2008:2070" ph="select * fro... analysis_rules" />
               </folding>
             </state>
           </provider>
@@ -136,11 +136,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BaseModel.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="BaseModel.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scrapyServer/BaseModel.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="94" column="0" lean-forward="true" selection-start-line="94" selection-start-column="0" selection-end-line="94" selection-end-column="0" />
+            <state relative-caret-position="398">
+              <caret line="96" column="5" lean-forward="true" selection-start-line="96" selection-start-column="5" selection-end-line="96" selection-end-column="5" />
               <folding />
             </state>
           </provider>
@@ -206,7 +206,6 @@
         <option value="$PROJECT_DIR$/requirements.txt" />
         <option value="$PROJECT_DIR$/ruleServer/config.ini" />
         <option value="$PROJECT_DIR$/mysqldb/mysql_helper.py" />
-        <option value="$PROJECT_DIR$/analysis/rule_level0_service.py" />
         <option value="$PROJECT_DIR$/flowcontrol.py" />
         <option value="$PROJECT_DIR$/scrapyServer/config.ini" />
         <option value="$PROJECT_DIR$/scrapyServer/config_local.ini" />
@@ -214,6 +213,7 @@
         <option value="$PROJECT_DIR$/scrapyServer/config.py" />
         <option value="$PROJECT_DIR$/analysis/rule_level1.py" />
         <option value="$PROJECT_DIR$/analysis/__init__.py" />
+        <option value="$PROJECT_DIR$/analysis/rule_level0_service.py" />
       </list>
     </option>
   </component>
@@ -881,7 +881,14 @@
       <option name="project" value="LOCAL" />
       <updated>1523522768793</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="优化level1">
+      <created>1523525247733</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1523525247733</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -943,27 +950,11 @@
     <MESSAGE value="增加数据分析模块" />
     <MESSAGE value="增加色情规则" />
     <MESSAGE value="docker" />
-    <option name="LAST_COMMIT_MESSAGE" value="docker" />
+    <MESSAGE value="优化level1" />
+    <option name="LAST_COMMIT_MESSAGE" value="优化level1" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/analysis/rule.py</url>
-          <line>84</line>
-          <option name="timeStamp" value="43" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/analysis/rule.py</url>
-          <line>81</line>
-          <option name="timeStamp" value="44" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/analysis/rule.py</url>
-          <line>71</line>
-          <option name="timeStamp" value="45" />
-        </line-breakpoint>
-      </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
@@ -1366,37 +1357,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/analysis/rule_level0.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="17" lean-forward="true" selection-start-line="7" selection-start-column="17" selection-end-line="7" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/analysis/rule_level0_service.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="148">
-          <caret line="36" column="49" lean-forward="false" selection-start-line="36" selection-start-column="49" selection-end-line="36" selection-end-column="49" />
-          <folding>
-            <element signature="e#44#60#0" expanded="true" />
-            <element signature="e#1427#2973#0" expanded="false" />
-            <marker date="1523414292550" expanded="true" signature="758:803" ph="select * fro... analysis_rules" />
-            <marker date="1523414292550" expanded="true" signature="1991:2036" ph="select * fro... analysis_rules" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/analysis/rule.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="257">
-          <caret line="184" column="100" lean-forward="false" selection-start-line="184" selection-start-column="77" selection-end-line="184" selection-end-column="100" />
-          <folding>
-            <element signature="e#23#37#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/analysis/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="165">
@@ -1407,9 +1367,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/scrapyServer/BaseModel.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="398">
+          <caret line="96" column="5" lean-forward="true" selection-start-line="96" selection-start-column="5" selection-end-line="96" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/analysis/rule_level1.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="84">
+        <state relative-caret-position="-322">
           <caret line="16" column="33" lean-forward="true" selection-start-line="16" selection-start-column="33" selection-end-line="16" selection-end-column="33" />
           <folding>
             <element signature="e#0#28#0" expanded="true" />
@@ -1417,11 +1385,35 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/scrapyServer/BaseModel.py">
+    <entry file="file://$PROJECT_DIR$/analysis/rule.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="94" column="0" lean-forward="true" selection-start-line="94" selection-start-column="0" selection-end-line="94" selection-end-column="0" />
+        <state relative-caret-position="2760">
+          <caret line="184" column="100" lean-forward="false" selection-start-line="184" selection-start-column="77" selection-end-line="184" selection-end-column="100" />
+          <folding>
+            <element signature="e#23#37#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/analysis/rule_level0.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" column="43" lean-forward="true" selection-start-line="17" selection-start-column="43" selection-end-line="17" selection-end-column="43" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/analysis/rule_level0_service.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="588">
+          <caret line="61" column="14" lean-forward="true" selection-start-line="61" selection-start-column="14" selection-end-line="61" selection-end-column="14" />
+          <folding>
+            <element signature="e#44#60#0" expanded="true" />
+            <marker date="1523526278983" expanded="true" signature="758:803" ph="select * fro... analysis_rules" />
+            <marker date="1523526278983" expanded="true" signature="758:820" ph="select * fro... analysis_rules" />
+            <marker date="1523526278983" expanded="true" signature="2008:2053" ph="select * fro... analysis_rules" />
+            <marker date="1523526278983" expanded="true" signature="2008:2070" ph="select * fro... analysis_rules" />
+          </folding>
         </state>
       </provider>
     </entry>
