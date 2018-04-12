@@ -72,35 +72,46 @@ class Rule:
         print('其他处理方式') # 但是这里不需要实现，由各实现类的线程函数直接处理了，如果实现了，那实质上是同步调用方式
         if resource == None :
             return
-        title = resource["title"]
-        description = resource["description"]
-        content = resource["content"]
+        # title = resource["title"]
+        # description = resource["description"]
+        # content = resource["content"]
         logo = resource["logo"].split(",")
         images = resource["gallary"].split(",")
         sub_job = self.build_sub_job_id(res_id) #"sendjob:%s:%s" % (self.__class__.__name__,res_id) #子任务消息key
 
         normal_msg = self.build_post_msg(sub_job,extra) #{"id":sub_job,"seq":"","data":[],"threshold":threshold,"resdata":"","resp":"recvjob:%s" %(self.__class__.__name__)}
-        # title标签
-        self._redis_server.hset(sub_job,"title",-1)
-        normal_msg["seq"] = "title"
-        normal_msg["data"] = [title]
-        normal_msg["resdata"] = "%s" % (res_id)
-        print("title package:",normal_msg)
-        self._redis_server.lpush(self.queue_name_text,json.dumps(normal_msg))
-        # description标签
-        self._redis_server.hset(sub_job, "description", -1)
-        normal_msg["seq"] = "description"
-        normal_msg["data"] = [description]
-        normal_msg["resdata"] = "%s" % (res_id)
-        print("description package:", normal_msg)
-        self._redis_server.lpush(self.queue_name_text, json.dumps(normal_msg))
-        # content标签
-        self._redis_server.hset(sub_job, "content", -1)
-        normal_msg["seq"] = "content"
-        normal_msg["data"] = [content]
-        normal_msg["resdata"] = "%s" % (res_id)
-        print("content package:", normal_msg)
-        self._redis_server.lpush(self.queue_name_text, json.dumps(normal_msg))
+
+        # 处理文字字段，需要匹配的
+        if self._res_columns !=None and len(self._res_columns)>0 :
+            for col in self._res_columns :
+                self._redis_server.hset(sub_job, col, -1)
+                normal_msg["seq"] = col
+                normal_msg["data"] = [resource[col]]
+                normal_msg["resdata"] = "%s" % (res_id)
+                print("title package:", normal_msg)
+                self._redis_server.lpush(self.queue_name_text, json.dumps(normal_msg))
+        # # title标签
+        # self._redis_server.hset(sub_job,"title",-1)
+        # normal_msg["seq"] = "title"
+        # normal_msg["data"] = [title]
+        # normal_msg["resdata"] = "%s" % (res_id)
+        # print("title package:",normal_msg)
+        # self._redis_server.lpush(self.queue_name_text,json.dumps(normal_msg))
+        # # description标签
+        # self._redis_server.hset(sub_job, "description", -1)
+        # normal_msg["seq"] = "description"
+        # normal_msg["data"] = [description]
+        # normal_msg["resdata"] = "%s" % (res_id)
+        # print("description package:", normal_msg)
+        # self._redis_server.lpush(self.queue_name_text, json.dumps(normal_msg))
+        # # content标签
+        # self._redis_server.hset(sub_job, "content", -1)
+        # normal_msg["seq"] = "content"
+        # normal_msg["data"] = [content]
+        # normal_msg["resdata"] = "%s" % (res_id)
+        # print("content package:", normal_msg)
+        # self._redis_server.lpush(self.queue_name_text, json.dumps(normal_msg))
+
         index = 1
 
         # 创建image
