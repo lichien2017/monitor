@@ -5,7 +5,7 @@ from scrapyServer.config import ConfigHelper
 import redis
 import hashlib
 import os
-
+import json
 class Rule:
     _mongodb_client = None
     _mongodb = None
@@ -72,21 +72,21 @@ class Rule:
         normal_msg["data"] = [title]
         normal_msg["resdata"] = "%s" % (res_id)
         print("title package:",normal_msg)
-        self._redis_server.lpush(self.queue_name_text,normal_msg)
+        self._redis_server.lpush(self.queue_name_text,json.dumps(normal_msg))
         # description标签
         self._redis_server.hset(sub_job, "description", -1)
         normal_msg["seq"] = "description"
         normal_msg["data"] = [description]
         normal_msg["resdata"] = "%s" % (res_id)
         print("description package:", normal_msg)
-        self._redis_server.lpush(self.queue_name_text, normal_msg)
+        self._redis_server.lpush(self.queue_name_text, json.dumps(normal_msg))
         # content标签
         self._redis_server.hset(sub_job, "content", -1)
         normal_msg["seq"] = "content"
         normal_msg["data"] = [content]
         normal_msg["resdata"] = "%s" % (res_id)
         print("content package:", normal_msg)
-        self._redis_server.lpush(self.queue_name_text, normal_msg)
+        self._redis_server.lpush(self.queue_name_text, json.dumps(normal_msg))
         index = 1
 
         # 创建image
@@ -99,7 +99,7 @@ class Rule:
             normal_msg["data"] = [x,"%s/%s"%(ConfigHelper.download_savepath,self.get_md5(x)),"%s/%s" % (media_savepath,self.get_md5(x))]
             normal_msg["resdata"] = "%s" % (res_id)
             index=index +1
-            self._redis_server.lpush(self.queue_name_image, normal_msg)
+            self._redis_server.lpush(self.queue_name_image, json.dumps(normal_msg))
 
         for x in images :
             self._redis_server.hset(sub_job, index, -1)
@@ -108,7 +108,7 @@ class Rule:
                                   "%s/%s" % (media_savepath, self.get_md5(x))]
             normal_msg["resdata"] = "%s" % (res_id)
             index=index +1
-            self._redis_server.lpush(self.queue_name_image, normal_msg)
+            self._redis_server.lpush(self.queue_name_image, json.dumps(normal_msg))
 
     def execute(self,resource_id,extra=None):
         print("规则:%s,正在处理:resource_id=%s" % (self.__class__.__name__,resource_id))

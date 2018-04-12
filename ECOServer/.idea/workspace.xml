@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3a9f1209-bf27-4831-8365-62528b80939a" name="Default" comment="docker">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/scrapyServer/config_local.ini" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/analysis/rule.py" afterPath="$PROJECT_DIR$/analysis/rule.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/scrapyServer/config.py" afterPath="$PROJECT_DIR$/scrapyServer/config.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../dock启动脚本.txt" afterPath="$PROJECT_DIR$/../dock启动脚本.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../monkeyrunner/ecological/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../monkeyrunner/ecological/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../nodejsqueue/redisService/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../nodejsqueue/redisService/.idea/workspace.xml" />
@@ -47,8 +45,8 @@
       <file leaf-file-name="rule.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/analysis/rule.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="67" column="64" lean-forward="false" selection-start-line="67" selection-start-column="55" selection-end-line="67" selection-end-column="64" />
+            <state relative-caret-position="1276">
+              <caret line="112" column="45" lean-forward="true" selection-start-line="112" selection-start-column="45" selection-end-line="112" selection-end-column="45" />
               <folding>
                 <element signature="e#23#37#0" expanded="true" />
               </folding>
@@ -196,10 +194,10 @@
         <option value="$PROJECT_DIR$/analysis/rule_level0_service.py" />
         <option value="$PROJECT_DIR$/flowcontrol.py" />
         <option value="$PROJECT_DIR$/analysis/rule_level1.py" />
-        <option value="$PROJECT_DIR$/analysis/rule.py" />
         <option value="$PROJECT_DIR$/scrapyServer/config.ini" />
         <option value="$PROJECT_DIR$/scrapyServer/config_local.ini" />
         <option value="$PROJECT_DIR$/scrapyServer/config.py" />
+        <option value="$PROJECT_DIR$/analysis/rule.py" />
       </list>
     </option>
   </component>
@@ -797,7 +795,14 @@
       <option name="project" value="LOCAL" />
       <updated>1523422589260</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="docker">
+      <created>1523439233462</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1523439233462</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -1204,7 +1209,7 @@
         <state relative-caret-position="343">
           <caret line="23" column="7" lean-forward="true" selection-start-line="23" selection-start-column="7" selection-end-line="23" selection-end-column="7" />
           <folding>
-            <element signature="e#76#90#0" expanded="true" />
+            <element signature="e#76#90#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1309,8 +1314,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/analysis/rule.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="67" column="64" lean-forward="false" selection-start-line="67" selection-start-column="55" selection-end-line="67" selection-end-column="64" />
+        <state relative-caret-position="1276">
+          <caret line="112" column="45" lean-forward="true" selection-start-line="112" selection-start-column="45" selection-end-line="112" selection-end-column="45" />
           <folding>
             <element signature="e#23#37#0" expanded="true" />
           </folding>
