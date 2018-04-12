@@ -9,5 +9,5 @@ VERSION = tuple(map(int, __version__.split('.')))
 
 
 __all__ = [
-    'RuleFactory', 'ColumnRule','KeyWordRule','XueXingBaoLiRule'
+    'RuleFactory', 'ColumnRule','KeyWordRule','XueXingBaoLiRule','SexyRule'
 ]
