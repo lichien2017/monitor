@@ -47,7 +47,7 @@ class BaseParse(object):
         Rule0server.execute_all(articleid)
         Rule1server.add_resource_to_all_queue(articleid)
         queue = MyQueue(db=ConfigHelper.redisdb, host=ConfigHelper.redisip)
-        queue.push(ConfigHelper.analysis_msgqueue,articleid)
+        queue.push(ConfigHelper.download_msgqueue,articleid)
     #每个App解析方法重载该方法
     def tryparse(self,str):
         None
