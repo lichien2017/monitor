@@ -1,5 +1,6 @@
 #-*- coding: UTF-8 -*-
 from analysis.rule import Rule
+from analysis.rule_level1 import BaseLevel1Rule
 from analysis.rule import RuleFactory
 from analysis.rule_level0 import ColumnRule
 from analysis.rule_level0 import KeyWordRule
@@ -10,5 +11,5 @@ VERSION = tuple(map(int, __version__.split('.')))
 
 
 __all__ = [
-    'RuleFactory', 'ColumnRule','KeyWordRule','XueXingBaoLiRule','SexyRule'
+    'RuleFactory', 'ColumnRule','KeyWordRule','BaseLevel1Rule','XueXingBaoLiRule','SexyRule'
 ]
