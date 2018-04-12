@@ -118,6 +118,9 @@ class Rule:
         # 图片保存路径
         media_savepath = "%s/%s" % (ConfigHelper.analysis_savepath,res_id)
         # self._check_dir(media_savepath)
+
+        logo = [x for x in logo if x != '' and (x.startswith("http://") or x.startswith("https://"))]
+
         for x in logo :
             self._redis_server.hset(sub_job, index, -1)
             normal_msg["seq"] = index
@@ -126,6 +129,7 @@ class Rule:
             index=index +1
             self._redis_server.lpush(self.queue_name_image, json.dumps(normal_msg))
 
+        images = [x for x in images if x != '' and (x.startswith("http://") or x.startswith("https://"))]
         for x in images :
             self._redis_server.hset(sub_job, index, -1)
             normal_msg["seq"] = index
