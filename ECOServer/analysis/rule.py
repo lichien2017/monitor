@@ -55,14 +55,14 @@ class Rule:
                     table.insert({"res_id": res_id})
                     return
     # 创建子任务id
-    def build_sub_job_id(self):
+    def build_sub_job_id(self,res_id):
         sub_job_id = "sendjob:%s:%s" % (self.__class__.__name__, res_id)  # 子任务消息key
         return sub_job_id
 
     # 构建消息包
     def build_post_msg(self,sub_job_id,extra):
         threshold = 0.5
-        if extra !=None and extra.count()>0 :
+        if extra !=None and len(extra)>0 :
             threshold = float(extra[0])
         normal_msg = {"id": sub_job_id, "seq": "", "data": [], "threshold": threshold, "resdata": "",
          "resp": "recvjob:%s" % (self.__class__.__name__)}
@@ -77,12 +77,9 @@ class Rule:
         content = resource["content"]
         logo = resource["logo"].split(",")
         images = resource["gallary"].split(",")
-        sub_job = self.build_sub_job_id() #"sendjob:%s:%s" % (self.__class__.__name__,res_id) #子任务消息key
-        threshold = 0.5
-        if extra.count() > 0 :
-            threshold = float(extra[0])
+        sub_job = self.build_sub_job_id(res_id) #"sendjob:%s:%s" % (self.__class__.__name__,res_id) #子任务消息key
 
-        normal_msg = self.build_post_msg(sub_job) #{"id":sub_job,"seq":"","data":[],"threshold":threshold,"resdata":"","resp":"recvjob:%s" %(self.__class__.__name__)}
+        normal_msg = self.build_post_msg(sub_job,extra) #{"id":sub_job,"seq":"","data":[],"threshold":threshold,"resdata":"","resp":"recvjob:%s" %(self.__class__.__name__)}
         # title标签
         self._redis_server.hset(sub_job,"title",-1)
         normal_msg["seq"] = "title"
