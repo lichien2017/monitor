@@ -54,6 +54,19 @@ class Rule:
                     table = self._mongodb[self._mongodb_tablename]
                     table.insert({"res_id": res_id})
                     return
+    # 创建子任务id
+    def build_sub_job_id(self):
+        sub_job_id = "sendjob:%s:%s" % (self.__class__.__name__, res_id)  # 子任务消息key
+        return sub_job_id
+
+    # 构建消息包
+    def build_post_msg(self,sub_job_id,extra):
+        threshold = 0.5
+        if extra !=None and extra.count()>0 :
+            threshold = float(extra[0])
+        normal_msg = {"id": sub_job_id, "seq": "", "data": [], "threshold": threshold, "resdata": "",
+         "resp": "recvjob:%s" % (self.__class__.__name__)}
+        return normal_msg
 
     def execute_other(self,res_id,resource,extra=None):
         print('其他处理方式') # 但是这里不需要实现，由各实现类的线程函数直接处理了，如果实现了，那实质上是同步调用方式
@@ -64,8 +77,12 @@ class Rule:
         content = resource["content"]
         logo = resource["logo"].split(",")
         images = resource["gallary"].split(",")
-        sub_job = "sendjob:%s:%s" % (self.__class__.__name__,res_id) #子任务消息key
-        normal_msg = {"id":sub_job,"seq":"","data":[],"threshold":extra,"resdata":"","resp":"recvjob:%s" %(self.__class__.__name__)}
+        sub_job = self.build_sub_job_id() #"sendjob:%s:%s" % (self.__class__.__name__,res_id) #子任务消息key
+        threshold = 0.5
+        if extra.count() > 0 :
+            threshold = float(extra[0])
+
+        normal_msg = self.build_post_msg(sub_job) #{"id":sub_job,"seq":"","data":[],"threshold":threshold,"resdata":"","resp":"recvjob:%s" %(self.__class__.__name__)}
         # title标签
         self._redis_server.hset(sub_job,"title",-1)
         normal_msg["seq"] = "title"
