@@ -4,6 +4,7 @@ from analysis.rule import RuleFactory
 from analysis.rule_level0 import ColumnRule
 from analysis.rule_level0 import KeyWordRule
 from analysis.rule_level1 import XueXingBaoLiRule
+from analysis.rule_level1 import SexyRule
 __version__ = '1.0.0'
 VERSION = tuple(map(int, __version__.split('.')))
 
