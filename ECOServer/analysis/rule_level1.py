@@ -11,7 +11,7 @@ class XueXingBaoLiRule(Rule,Thread):
 
     def __init__(self,settings):
         Thread.__init__(self)
-        Rule.__init__(self,settings["level"],settings["mongodb_tablename"],settings["extra_rule_data"])
+        Rule.__init__(self,settings["level"],settings["mongodb_tablename"],None,settings["extra_rule_data"])
         self._settings = settings
         self.interval = 1
         self.thread_stop = False
