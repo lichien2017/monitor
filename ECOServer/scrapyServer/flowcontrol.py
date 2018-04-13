@@ -4,6 +4,7 @@ import BaseModel
 import argparse
 import sys
 import threading
+import redis
 sys.path.append("..")
 
 from scrapyServer.config import ConfigHelper
@@ -23,6 +24,17 @@ def reload_rule():
     timer.start()
 
 if __name__ == "__main__":
+
+    pool = redis.ConnectionPool(host=ConfigHelper.redisip, port=6379, db=ConfigHelper.redisdb)
+    redis_server = redis.StrictRedis(connection_pool=pool)
+    sub_job = "sendjob:SexyRule:1597605967290372"
+    hset_keys = redis_server.hkeys(sub_job)
+    for key in hset_keys:
+        rel = redis_server.hget(sub_job, key)
+        rel2 = int(rel.decode("utf-8"))
+        print("ret = %d" % rel2)
+        rel1 = rel2
+
     reload_rule()
     parser = argparse.ArgumentParser()
     # Optional arguments: input file.

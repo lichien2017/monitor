@@ -33,11 +33,14 @@ class BaseLevel1Rule(Rule,Thread):
             item = self._redis_server.rpop("recvjob:%s" % (self.__class__.__name__))
             if item !=None :
                 print(item)
+                #print(self._mongodb_tablename)
                 res_id = item.decode("utf-8")
                 sub_job = "sendjob:%s:%s" % (self.__class__.__name__,res_id) #子任务消息key
                 hset_keys = self._redis_server.hkeys(sub_job)
                 for key in hset_keys :
                     rel = self._redis_server.hget(sub_job,key)
+                    rel = int(rel.decode("utf-8"))
+                    print ("ret = %d" % rel)
                     if rel == 1 :
                         # 只要有一个为1，表示规则匹配成功，插入数据库
                         table = self._mongodb[self._mongodb_tablename]
