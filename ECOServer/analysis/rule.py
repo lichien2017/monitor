@@ -64,7 +64,7 @@ class Rule:
         threshold = 0.5
         if extra !=None and len(extra)>0 :
             threshold = float(extra[0])
-        normal_msg = {"id": sub_job_id, "seq": "", "data": [], "threshold": threshold, "resdata": "",
+        normal_msg = {"id": sub_job_id, "seq": 1, "data": [], "threshold": threshold, "resdata": "",
          "resp": "recvjob:%s" % (self.__class__.__name__)}
         return normal_msg
 
@@ -126,8 +126,8 @@ class Rule:
             normal_msg["seq"] = index
             normal_msg["data"] = [x,"%s/%s"%(ConfigHelper.download_savepath,self.get_md5(x)),"%s/%s" % (media_savepath,self.get_md5(x))]
             normal_msg["resdata"] = "%s" % (res_id)
-            index=index +1
             self._redis_server.lpush(self.queue_name_image, json.dumps(normal_msg))
+            index += 1
 
         images = [x for x in images if x != '' and (x.startswith("http://") or x.startswith("https://"))]
         for x in images :
@@ -136,8 +136,8 @@ class Rule:
             normal_msg["data"] = [x, "%s/%s" % (ConfigHelper.download_savepath, self.get_md5(x)),
                                   "%s/%s" % (media_savepath, self.get_md5(x))]
             normal_msg["resdata"] = "%s" % (res_id)
-            index=index +1
             self._redis_server.lpush(self.queue_name_image, json.dumps(normal_msg))
+            index += 1
 
     def execute(self,resource_id,extra=None):
         print("规则:%s,正在处理:resource_id=%s" % (self.__class__.__name__,resource_id))

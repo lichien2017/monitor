@@ -3,8 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="3a9f1209-bf27-4831-8365-62528b80939a" name="Default" comment="docker">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/scrapyServer/BaseModel.py" afterPath="$PROJECT_DIR$/scrapyServer/BaseModel.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/scrapyServer/config_local.ini" afterPath="$PROJECT_DIR$/scrapyServer/config_local.ini" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/analysis/rule.py" afterPath="$PROJECT_DIR$/analysis/rule.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../dock启动脚本.txt" afterPath="$PROJECT_DIR$/../dock启动脚本.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../monkeyrunner/ecological/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../monkeyrunner/ecological/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../nodejsqueue/redisService/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../nodejsqueue/redisService/.idea/workspace.xml" />
@@ -43,11 +42,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="rule.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="rule.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/analysis/rule.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1996">
-              <caret line="136" column="9" lean-forward="false" selection-start-line="136" selection-start-column="9" selection-end-line="136" selection-end-column="9" />
+            <state relative-caret-position="-569">
+              <caret line="69" column="0" lean-forward="true" selection-start-line="69" selection-start-column="0" selection-end-line="69" selection-end-column="0" />
               <folding>
                 <element signature="e#23#37#0" expanded="true" />
               </folding>
@@ -75,7 +74,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="config.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="config.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scrapyServer/config.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="105">
@@ -198,11 +197,11 @@
         <option value="$PROJECT_DIR$/analysis/rule_level1.py" />
         <option value="$PROJECT_DIR$/analysis/__init__.py" />
         <option value="$PROJECT_DIR$/analysis/rule_level0_service.py" />
-        <option value="$PROJECT_DIR$/analysis/rule.py" />
         <option value="$PROJECT_DIR$/scrapyServer/config.ini" />
         <option value="$PROJECT_DIR$/scrapyServer/config_local.ini" />
         <option value="$PROJECT_DIR$/scrapyServer/BaseModel.py" />
         <option value="$PROJECT_DIR$/scrapyServer/config.py" />
+        <option value="$PROJECT_DIR$/analysis/rule.py" />
       </list>
     </option>
   </component>
@@ -933,7 +932,14 @@
       <option name="project" value="LOCAL" />
       <updated>1523529412842</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="docker">
+      <created>1523529684977</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1523529684977</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -1318,7 +1324,7 @@
         <state relative-caret-position="165">
           <caret line="11" column="0" lean-forward="true" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
           <folding>
-            <element signature="e#23#53#0" expanded="true" />
+            <element signature="e#23#53#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1403,16 +1409,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/analysis/rule.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1996">
-          <caret line="136" column="9" lean-forward="false" selection-start-line="136" selection-start-column="9" selection-end-line="136" selection-end-column="9" />
-          <folding>
-            <element signature="e#23#37#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/downloadServer/config.ini">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
@@ -1458,6 +1454,16 @@
         <state relative-caret-position="105">
           <caret line="8" column="35" lean-forward="false" selection-start-line="8" selection-start-column="35" selection-end-line="8" selection-end-column="35" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/analysis/rule.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-569">
+          <caret line="69" column="0" lean-forward="true" selection-start-line="69" selection-start-column="0" selection-end-line="69" selection-end-column="0" />
+          <folding>
+            <element signature="e#23#37#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
