@@ -36,11 +36,11 @@ class Rule:
     def _get_resource(self,resouce_id):
         print("_get_resource:%s" % resouce_id)
         self._mongodb = self._mongodb_client['crawlnews']
-        rows = self._mongodb.originnews.find({"identity":"%s" % (resouce_id)})
-        if rows == None or rows.count() == 0:
+        res = self._mongodb.originnews.find_one({"identity":"%s" % (resouce_id)})
+        if res == None :
             return None
-        print(rows)
-        return rows[0]
+        print(res)
+        return res
 
     def _level0_execute(self,res_id,resource,extra=None):
         if self._res_columns == None or self._extra_data == None :

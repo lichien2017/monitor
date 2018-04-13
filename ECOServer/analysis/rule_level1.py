@@ -37,15 +37,25 @@ class BaseLevel1Rule(Rule,Thread):
                 res_id = item.decode("utf-8")
                 sub_job = "sendjob:%s:%s" % (self.__class__.__name__,res_id) #子任务消息key
                 hset_keys = self._redis_server.hkeys(sub_job)
+                remove_flag = 1 # 是否删除标示
+                inserted = 0 # 可以插入数据库
                 for key in hset_keys :
                     rel = self._redis_server.hget(sub_job,key)
                     rel = int(rel.decode("utf-8"))
                     print ("ret = %d" % rel)
-                    if rel == 1 :
+                    if rel == 1 and inserted == 0:
                         # 只要有一个为1，表示规则匹配成功，插入数据库
                         table = self._mongodb[self._mongodb_tablename]
-                        table.insert({"res_id": res_id})
-                        break
+                        item = table.find_one({"res_id": res_id})
+                        if item == None :
+                            table.insert({"res_id": res_id})
+                        inserted = 1
+                    if rel == -1 :
+                        remove_flag = 0
+
+                if remove_flag == 1:
+                    self._redis_server.delete(sub_job)
+
             time.sleep(1)
 
 
