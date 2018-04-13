@@ -61,3 +61,7 @@ class XueXingBaoLiRule(BaseLevel1Rule):
 class SexyRule(BaseLevel1Rule):
     def __init__(self, settings):
         BaseLevel1Rule.__init__(self, settings)
+#政治有害
+class PoliticalRule(BaseLevel1Rule):
+    def __init__(self, settings):
+        BaseLevel1Rule.__init__(self, settings)
