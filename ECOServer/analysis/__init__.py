@@ -7,10 +7,13 @@ from analysis.rule_level0 import KeyWordRule
 from analysis.rule_level1 import XueXingBaoLiRule
 from analysis.rule_level1 import SexyRule
 from analysis.rule_level1 import PoliticalRule
+from analysis.rule_level1 import ZongJiaoRule
+from analysis.rule_level1 import BiaoTiDangRule
 __version__ = '1.0.0'
 VERSION = tuple(map(int, __version__.split('.')))
 
 
 __all__ = [
-    'RuleFactory', 'ColumnRule','KeyWordRule','BaseLevel1Rule','XueXingBaoLiRule','SexyRule','PoliticalRule'
+    'RuleFactory', 'ColumnRule','KeyWordRule','BaseLevel1Rule','XueXingBaoLiRule','SexyRule','PoliticalRule',
+    'ZongJiaoRule','BiaoTiDangRule'
 ]
