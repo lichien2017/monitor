@@ -27,7 +27,7 @@ class RuleServiceLevel0:
         # 创建游标
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
         # 执行SQL，并返回收影响行数
-        row_count = cursor.execute("select * from analysis_rules where level = %s", (level))
+        row_count = cursor.execute("select * from analysis_rules where level = %s and isonline = 1", (level))
         self._rule_instance[:] = []
         # 获取所有数据
         result = cursor.fetchone()
@@ -62,7 +62,7 @@ class RuleServiceLevel1:
         # 创建游标
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
         # 执行SQL，并返回收影响行数
-        row_count = cursor.execute("select * from analysis_rules where level = %s", (level))
+        row_count = cursor.execute("select * from analysis_rules where level = %s and isonline = 1", (level))
         self._rule_class[:] = []
         # 获取所有数据
         result = cursor.fetchone()

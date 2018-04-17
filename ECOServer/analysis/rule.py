@@ -5,7 +5,8 @@ from scrapyServer.config import ConfigHelper
 import redis
 import hashlib
 import os
-
+import json
+import time
 class Rule:
     _mongodb_client = None
     _mongodb = None
@@ -26,6 +27,8 @@ class Rule:
             self._mongodb_tablename = self.__class__.__name__;
         else:
             self._mongodb_tablename = mongodb_table
+        # 每次添加插入到当天的数据表中，所以需要在名字加上当天日期 time.strftime('%Y%m%d',time.localtime(time.time()))
+        self._mongodb_tablename = self._mongodb_tablename + time.strftime('%Y%m%d',time.localtime(time.time()))
         self._level = level
         self._mongodb_client = pymongo.MongoClient(ConfigHelper.mongodbip, 27017)
         # 定义与原子服务通讯的消息队列名称
@@ -36,11 +39,11 @@ class Rule:
     def _get_resource(self,resouce_id):
         print("_get_resource:%s" % resouce_id)
         self._mongodb = self._mongodb_client['crawlnews']
-        rows = self._mongodb.originnews.find({"identity":"%s" % (resouce_id)})
-        if rows == None or rows.count() == 0:
+        res = self._mongodb.originnews.find_one({"identity":"%s" % (resouce_id)})
+        if res == None :
             return None
-        print(rows)
-        return rows[0]
+        print(res)
+        return res
 
     def _level0_execute(self,res_id,resource,extra=None):
         if self._res_columns == None or self._extra_data == None :
@@ -54,61 +57,90 @@ class Rule:
                     table = self._mongodb[self._mongodb_tablename]
                     table.insert({"res_id": res_id})
                     return
+    # 创建子任务id
+    def build_sub_job_id(self,res_id):
+        sub_job_id = "sendjob:%s:%s" % (self.__class__.__name__, res_id)  # 子任务消息key
+        return sub_job_id
+
+    # 构建消息包
+    def build_post_msg(self,sub_job_id,extra):
+        threshold = 0.5
+        if extra !=None and len(extra)>0 :
+            threshold = float(extra[0])
+        normal_msg = {"id": sub_job_id, "seq": 1, "data": [], "threshold": threshold, "resdata": "",
+         "resp": "recvjob:%s" % (self.__class__.__name__)}
+        return normal_msg
 
     def execute_other(self,res_id,resource,extra=None):
         print('其他处理方式') # 但是这里不需要实现，由各实现类的线程函数直接处理了，如果实现了，那实质上是同步调用方式
         if resource == None :
             return
-        title = resource["title"]
-        description = resource["description"]
-        content = resource["content"]
+        # title = resource["title"]
+        # description = resource["description"]
+        # content = resource["content"]
         logo = resource["logo"].split(",")
         images = resource["gallary"].split(",")
-        sub_job = "sendjob:%s:%s" % (self.__class__.__name__,res_id) #子任务消息key
-        normal_msg = {"id":sub_job,"seq":"","data":[],"resdata":"","resp":"recvjob:%s" %(self.__class__.__name__)}
-        # title标签
-        self._redis_server.hset(sub_job,"title",-1)
-        normal_msg["seq"] = "title"
-        normal_msg["data"] = [title]
-        normal_msg["resdata"] = "%s" % (res_id)
-        print("title package:",normal_msg)
-        self._redis_server.lpush(self.queue_name_text,normal_msg)
-        # description标签
-        self._redis_server.hset(sub_job, "description", -1)
-        normal_msg["seq"] = "description"
-        normal_msg["data"] = [description]
-        normal_msg["resdata"] = "%s" % (res_id)
-        print("description package:", normal_msg)
-        self._redis_server.lpush(self.queue_name_text, normal_msg)
-        # content标签
-        self._redis_server.hset(sub_job, "content", -1)
-        normal_msg["seq"] = "content"
-        normal_msg["data"] = [content]
-        normal_msg["resdata"] = "%s" % (res_id)
-        print("content package:", normal_msg)
-        self._redis_server.lpush(self.queue_name_text, normal_msg)
+        sub_job = self.build_sub_job_id(res_id) #"sendjob:%s:%s" % (self.__class__.__name__,res_id) #子任务消息key
+
+        normal_msg = self.build_post_msg(sub_job,extra) #{"id":sub_job,"seq":"","data":[],"threshold":threshold,"resdata":"","resp":"recvjob:%s" %(self.__class__.__name__)}
+
+        # 处理文字字段，需要匹配的
+        if self._res_columns !=None and len(self._res_columns)>0 :
+            for col in self._res_columns :
+                self._redis_server.hset(sub_job, col, -1)
+                normal_msg["seq"] = col
+                normal_msg["data"] = [resource[col]]
+                normal_msg["resdata"] = "%s" % (res_id)
+                print("title package:", normal_msg)
+                self._redis_server.lpush(self.queue_name_text, json.dumps(normal_msg))
+        # # title标签
+        # self._redis_server.hset(sub_job,"title",-1)
+        # normal_msg["seq"] = "title"
+        # normal_msg["data"] = [title]
+        # normal_msg["resdata"] = "%s" % (res_id)
+        # print("title package:",normal_msg)
+        # self._redis_server.lpush(self.queue_name_text,json.dumps(normal_msg))
+        # # description标签
+        # self._redis_server.hset(sub_job, "description", -1)
+        # normal_msg["seq"] = "description"
+        # normal_msg["data"] = [description]
+        # normal_msg["resdata"] = "%s" % (res_id)
+        # print("description package:", normal_msg)
+        # self._redis_server.lpush(self.queue_name_text, json.dumps(normal_msg))
+        # # content标签
+        # self._redis_server.hset(sub_job, "content", -1)
+        # normal_msg["seq"] = "content"
+        # normal_msg["data"] = [content]
+        # normal_msg["resdata"] = "%s" % (res_id)
+        # print("content package:", normal_msg)
+        # self._redis_server.lpush(self.queue_name_text, json.dumps(normal_msg))
+
         index = 1
 
         # 创建image
         # 图片保存路径
         media_savepath = "%s/%s" % (ConfigHelper.analysis_savepath,res_id)
         # self._check_dir(media_savepath)
+
+        logo = [x for x in logo if x != '' and (x.startswith("http://") or x.startswith("https://"))]
+
         for x in logo :
             self._redis_server.hset(sub_job, index, -1)
             normal_msg["seq"] = index
-            normal_msg["data"] = [x,"%s/%s"%(ConfigHelper.download_savepath,self.get_md5(x)),"%s/%s" % (media_savepath,self.get_md5(x)),extra]
+            normal_msg["data"] = [x,"%s/%s"%(ConfigHelper.download_savepath,self.get_md5(x)),"%s/%s" % (media_savepath,self.get_md5(x))]
             normal_msg["resdata"] = "%s" % (res_id)
-            index=index +1
-            self._redis_server.lpush(self.queue_name_image, normal_msg)
+            self._redis_server.lpush(self.queue_name_image, json.dumps(normal_msg))
+            index += 1
 
+        images = [x for x in images if x != '' and (x.startswith("http://") or x.startswith("https://"))]
         for x in images :
             self._redis_server.hset(sub_job, index, -1)
             normal_msg["seq"] = index
             normal_msg["data"] = [x, "%s/%s" % (ConfigHelper.download_savepath, self.get_md5(x)),
-                                  "%s/%s" % (media_savepath, self.get_md5(x)),extra]
+                                  "%s/%s" % (media_savepath, self.get_md5(x))]
             normal_msg["resdata"] = "%s" % (res_id)
-            index=index +1
-            self._redis_server.lpush(self.queue_name_image, normal_msg)
+            self._redis_server.lpush(self.queue_name_image, json.dumps(normal_msg))
+            index += 1
 
     def execute(self,resource_id,extra=None):
         print("规则:%s,正在处理:resource_id=%s" % (self.__class__.__name__,resource_id))
