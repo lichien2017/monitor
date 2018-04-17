@@ -1,31 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="04593bd9-c59e-4eba-8486-3175425859ad" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/uploads/1522318407568.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/uploads/1522723712266.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/uploads/1522723712467.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/uploads/1522723803284.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/uploads/1522723803960.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/uploads/1522727371208.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/uploads/1523438382281.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/uploads/1523438395056.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/uploads/1523438398940.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/uploads/1523438403363.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/uploads/1523438411649.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/uploads/1523438412224.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/uploads/1523438420201.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/uploads/1523438428183.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/uploads/1523438505309.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/uploads/1523438518562.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/uploads/1523438526406.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/uploads/1523438534359.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/uploads/1523438986726.png" />
-      <change beforePath="$PROJECT_DIR$/.idea/ecological.iml" afterPath="$PROJECT_DIR$/.idea/ecological.iml" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+    <list default="true" id="04593bd9-c59e-4eba-8486-3175425859ad" name="Default" comment="新增关闭应用函数">
+      <change beforePath="" afterPath="$PROJECT_DIR$/uploads/1" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/adbclient.py" afterPath="$PROJECT_DIR$/adbclient.py" />
-      <change beforePath="$PROJECT_DIR$/config.ini" afterPath="$PROJECT_DIR$/config.ini" />
       <change beforePath="$PROJECT_DIR$/device/runner.py" afterPath="$PROJECT_DIR$/device/runner.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -41,11 +20,35 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="runner.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="runner.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/device/runner.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-208">
-              <caret line="40" column="18" lean-forward="false" selection-start-line="40" selection-start-column="6" selection-end-line="40" selection-end-column="18" />
+            <state relative-caret-position="72">
+              <caret line="196" column="15" lean-forward="true" selection-start-line="196" selection-start-column="15" selection-end-line="196" selection-end-column="15" />
+              <folding>
+                <element signature="e#32#43#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="adbclient.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/adbclient.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="144">
+              <caret line="220" column="12" lean-forward="true" selection-start-line="220" selection-start-column="12" selection-end-line="220" selection-end-column="12" />
+              <folding>
+                <element signature="e#7344#10630#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="requirements.txt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/requirements.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="144">
+              <caret line="8" column="17" lean-forward="true" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
               <folding />
             </state>
           </provider>
@@ -83,8 +86,8 @@
         <option value="$PROJECT_DIR$/run.sh" />
         <option value="$PROJECT_DIR$/requirements.txt" />
         <option value="$PROJECT_DIR$/config.ini" />
-        <option value="$PROJECT_DIR$/adbclient.py" />
         <option value="$PROJECT_DIR$/device/runner.py" />
+        <option value="$PROJECT_DIR$/adbclient.py" />
       </list>
     </option>
   </component>
@@ -95,9 +98,10 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="y" value="23" />
-    <option name="width" value="1280" />
-    <option name="height" value="900" />
+    <option name="x" value="167" />
+    <option name="y" value="24" />
+    <option name="width" value="937" />
+    <option name="height" value="696" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -117,7 +121,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -130,11 +133,27 @@
               <item name="ecological" type="462c0819:PsiDirectoryNode" />
               <item name="device" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="ecological" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+            </path>
+            <path>
+              <item name="ecological" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="&lt; Python 2.7 &gt;" type="70bed36:NamedLibraryElementNode" />
+            </path>
+            <path>
+              <item name="ecological" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="&lt; Python 2.7 &gt;" type="70bed36:NamedLibraryElementNode" />
+              <item name="python2.7" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
       <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -535,21 +554,22 @@
     </history-entry>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1280" height="900" extended-state="0" />
+    <frame x="167" y="24" width="937" height="696" extended-state="0" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31400967" sideWeight="0.503125" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32850242" sideWeight="0.490625" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32850242" sideWeight="0.48828125" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32743362" sideWeight="0.490625" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26611957" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32850242" sideWeight="0.48828125" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.234375" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2561366" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="SciView" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31400967" sideWeight="0.496875" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -578,12 +598,12 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/adbclient.py</url>
-          <line>205</line>
+          <line>207</line>
           <option name="timeStamp" value="22" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/device/runner.py</url>
-          <line>88</line>
+          <line>92</line>
           <option name="timeStamp" value="23" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -597,7 +617,7 @@
           <option name="timeStamp" value="27" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="28" />
+      <option name="time" value="29" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -606,7 +626,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="435">
           <caret line="30" column="31" lean-forward="true" selection-start-line="30" selection-start-column="31" selection-end-line="30" selection-end-column="31" />
-          <folding />
+          <folding>
+            <element signature="e#32#43#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -656,7 +678,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="315">
           <caret line="22" column="23" lean-forward="true" selection-start-line="22" selection-start-column="23" selection-end-line="22" selection-end-column="23" />
-          <folding />
+          <folding>
+            <element signature="e#32#43#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -691,7 +715,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
           <caret line="20" column="19" lean-forward="true" selection-start-line="20" selection-start-column="19" selection-end-line="20" selection-end-column="19" />
-          <folding />
+          <folding>
+            <element signature="e#32#43#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -746,13 +772,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/requirements.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="16" column="13" lean-forward="false" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/device/group.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="600">
@@ -763,14 +782,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file:///System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/unittest/loader.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="253" column="0" lean-forward="false" selection-start-line="253" selection-start-column="0" selection-end-line="253" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file:///System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/unittest/loader.py" />
     <entry file="file://$PROJECT_DIR$/testadb.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="406">
@@ -779,22 +791,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/adbclient.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="547">
-          <caret line="223" column="16" lean-forward="true" selection-start-line="223" selection-start-column="16" selection-end-line="223" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Library/Python/2.7/lib/python/site-packages/PIL/Image.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="1926" column="0" lean-forward="false" selection-start-line="1926" selection-start-column="0" selection-end-line="1926" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/Library/Python/2.7/lib/python/site-packages/PIL/Image.py" />
     <entry file="file://$PROJECT_DIR$/group_controller.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
@@ -815,15 +812,34 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/requirements.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="8" column="17" lean-forward="true" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/device/runner.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-208">
-          <caret line="40" column="18" lean-forward="false" selection-start-line="40" selection-start-column="6" selection-end-line="40" selection-end-column="18" />
-          <folding />
+        <state relative-caret-position="72">
+          <caret line="196" column="15" lean-forward="true" selection-start-line="196" selection-start-column="15" selection-end-line="196" selection-end-column="15" />
+          <folding>
+            <element signature="e#32#43#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/adbclient.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="220" column="12" lean-forward="true" selection-start-line="220" selection-start-column="12" selection-end-line="220" selection-end-column="12" />
+          <folding>
+            <element signature="e#7344#10630#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>

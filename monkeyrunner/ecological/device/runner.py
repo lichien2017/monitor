@@ -16,7 +16,7 @@ import re
 import unittest
 import os
 import subprocess
-import image
+import png
 try:
     sys.path.insert(0, os.path.join(os.environ['ANDROID_VIEW_CLIENT_HOME'], 'src'))
 except:
@@ -86,7 +86,7 @@ class DeviceRunner():
 
     def _running(self):
         # 调高亮度
-        self.adbClient.luminance(150)
+        self.adbClient.luminance('150')
         # 打开App
         result = self._launch_app(self._settings["categroy"] + "/" + self._settings["activity"])
         if result !=0:
@@ -194,11 +194,13 @@ class DeviceRunner():
     #截屏，返回文件名和完整文件路径
     def _take_photo(self):
         # 截图上传
-        image = self.adbClient.takeSnapshot()
+        image = self.adbClient.newtakeSnapshot()
         t = str(int(round(time.time() * 1000)))
         file_name = t + ".png"
         full_file_name = self._cur_file_dir() + "/uploads/" + file_name
-        image.save(full_file_name)
+        image.write(full_file_name)
+
+
         # t = str(int(round(time.time() * 1000)))
         # file_name = t + ".png"
         # full_file_name = self._cur_file_dir() + "/uploads/" + file_name

@@ -44,6 +44,8 @@ import time
 import re
 import os
 import platform
+import png
+
 
 
 
@@ -208,7 +210,37 @@ class AdbClient:
         if re.search(r"(Error type)|(Error: )|(Cannot find 'App')", out, re.IGNORECASE | re.MULTILINE):
             raise RuntimeError(out)
 
+    def newtakeSnapshot(self):
+        # ALTERNATIVE_METHOD: screencap
+        print >> sys.stderr, "=====================>"
+        received = self.shell('/system/bin/screencap -p').replace("\r\n", "\n")
+        #print received
+        if not received:
+            raise RuntimeError('"/system/bin/screencap -p" result was empty')
+        stream = StringIO.StringIO(received)
+        try:
+           image = Image.save(stream)
 
+        except IOError, ex:
+            print >> sys.stderr, ex
+            print >> sys.stderr, repr(stream)
+            print >> sys.stderr, repr(received)
+            raise RuntimeError('Cannot convert stream to image: ' + ex.message)
+
+        # Just in case let's get the real image size
+
+        # (w, h) = image.size
+        # # if w == self.display['height'] and h == self.display['width']:
+        # if 'orientation' in self.display:
+        #     r = (0, 90, 180, -90)[self.display['orientation']]
+        # else:
+        #     r = 90
+        # image = image.rotate(r, expand=1).resize((h, w))
+
+        # if PROFILE:
+        #     profileEnd()
+        return p1
+        # return None
 
 
     def takeSnapshot(self, reconnect=False):
