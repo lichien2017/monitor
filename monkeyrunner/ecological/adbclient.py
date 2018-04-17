@@ -212,12 +212,14 @@ class AdbClient:
     def newtakeSnapshot(self):
         # ALTERNATIVE_METHOD: screencap
         print >> sys.stderr, "=====================>"
-        received = self.shell('/system/bin/screencap -p').replace("\r\n", "\n")
-        #print received
+        received = self.shell('/system/bin/screencap -p',"flag")
+        print received
         if not received:
             raise RuntimeError('"/system/bin/screencap -p" result was empty')
-        stream = StringIO.StringIO(received)
+        # stream = StringIO.StringIO(received)
+        return received
         # try:
+
         #    image = Image.open(stream)
         #
         # except IOError, ex:
@@ -238,8 +240,8 @@ class AdbClient:
 
         # if PROFILE:
         #     profileEnd()
-        return stream
-        # return None
+        # return stream
+
 
 
     def takeSnapshot(self, reconnect=False):
@@ -641,7 +643,7 @@ class AdbClient:
         self.socket = AdbClient.connect(self.hostname, self.port, self.timeout)
         return devices
 
-    def shell(self, cmd=None):
+    def shell(self, cmd=None,flag = None):
         self.lock.acquire()
 
         if DEBUG_SHELL:
@@ -667,7 +669,10 @@ class AdbClient:
                 self.__setTransport()
 
             self.lock.release()
-            return ''.join(chunks)
+            if flag == None :
+                return ''.join(chunks)
+            else:
+                return chunks
         else:
             self.__send('shell:')
             # sin = self.socket.makefile("rw")

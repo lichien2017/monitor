@@ -201,8 +201,9 @@ class DeviceRunner():
         full_file_name = self._cur_file_dir() + "/uploads/" + file_name
         # image.write(full_file_name)
         with open(full_file_name, 'w') as fd:
-            image.seek(0)
-            copyfileobj(image, fd)
+            for line in image:
+                fd.write(line)
+            # copyfileobj(image, fd)
 
         # t = str(int(round(time.time() * 1000)))
         # file_name = t + ".png"
