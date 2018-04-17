@@ -16,7 +16,8 @@ import re
 import unittest
 import os
 import subprocess
-import png
+from shutil import copyfileobj
+
 try:
     sys.path.insert(0, os.path.join(os.environ['ANDROID_VIEW_CLIENT_HOME'], 'src'))
 except:
@@ -198,8 +199,10 @@ class DeviceRunner():
         t = str(int(round(time.time() * 1000)))
         file_name = t + ".png"
         full_file_name = self._cur_file_dir() + "/uploads/" + file_name
-        image.write(full_file_name)
-
+        # image.write(full_file_name)
+        with open(full_file_name, 'w') as fd:
+            image.seek(0)
+            copyfileobj(image, fd)
 
         # t = str(int(round(time.time() * 1000)))
         # file_name = t + ".png"

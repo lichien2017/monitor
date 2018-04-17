@@ -44,8 +44,7 @@ import time
 import re
 import os
 import platform
-import png
-
+# from wand.image import Image
 
 
 
@@ -218,14 +217,14 @@ class AdbClient:
         if not received:
             raise RuntimeError('"/system/bin/screencap -p" result was empty')
         stream = StringIO.StringIO(received)
-        try:
-           image = Image.save(stream)
-
-        except IOError, ex:
-            print >> sys.stderr, ex
-            print >> sys.stderr, repr(stream)
-            print >> sys.stderr, repr(received)
-            raise RuntimeError('Cannot convert stream to image: ' + ex.message)
+        # try:
+        #    image = Image.open(stream)
+        #
+        # except IOError, ex:
+        #     print >> sys.stderr, ex
+        #     print >> sys.stderr, repr(stream)
+        #     print >> sys.stderr, repr(received)
+        #     raise RuntimeError('Cannot convert stream to image: ' + ex.message)
 
         # Just in case let's get the real image size
 
@@ -239,7 +238,7 @@ class AdbClient:
 
         # if PROFILE:
         #     profileEnd()
-        return p1
+        return stream
         # return None
 
 
@@ -255,7 +254,7 @@ class AdbClient:
         if not PIL_AVAILABLE:
             try:
                 global Image
-                from PIL import Image
+                from wand.image import Image
                 PIL_AVAILABLE = True
             except:
                 raise Exception("You have to install PIL to use takeSnapshot()")
