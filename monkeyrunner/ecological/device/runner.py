@@ -98,9 +98,8 @@ class DeviceRunner():
         if result !=0:
             return False
         # 生成guid
-        print uuid.uuid1()
-        myuuid = uuid.uuid1();
-        self._runner_log["id"] = myuuid;
+        self.myuuid = uuid.uuid1();
+        self._runner_log["id"] = self.myuuid;
         # 等待应用启动
         self._waitting(self._settings["setuptime"])
         # 点击
@@ -126,7 +125,7 @@ class DeviceRunner():
         self._runner_log = {self._settings["reference"]}
         self._write_to_mongodb()  # 将日志写入mongodb
         for i in range(1, 4):
-            self._runner_log["id"] = myuuid;
+            self._runner_log["id"] = self.myuuid;
             # 下拉以前先记录当前的时间
             self._runner_log["time"] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
             # 上拉
