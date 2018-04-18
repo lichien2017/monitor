@@ -9,7 +9,8 @@ import datetime
 import hashlib
 import uuid
 import sys
-
+from util.log import Logger
+log = Logger()
 
 class BaiDuParse(BaseParse):
     # 解析百度新闻
@@ -38,7 +39,7 @@ class BaiDuParse(BaseParse):
             elif ctag == "置顶":
                 tab = ctag
         except:
-            print("无标签")
+            log.debug("无标签")
         title = data['title']
         abstract = data['abs']
         url = data['url']
@@ -57,7 +58,7 @@ class BaiDuParse(BaseParse):
             elif corner_type == "image":
                 restype = 2
         except:
-            print("非视频/图片资讯")
+            log.debug("非视频/图片资讯")
         if restype != 3:
             content_data = data['content']
             for c in content_data:
@@ -67,7 +68,7 @@ class BaiDuParse(BaseParse):
                     content += c['data'] + "<br/>"
         crawltimestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(crawltime / 1000))
         publish_timestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(int(publish_time) / 1000))
-        print(title)
+        log.debug(title)
         # 判断列表封面图末尾是否为，若是则进行删除
         logolen = len(logo)
         if logolen > 0:

@@ -9,7 +9,8 @@ import datetime
 import hashlib
 import uuid
 import sys
-
+from util.log import Logger
+log = Logger()
 class ToutiaoParse(BaseParse):
     # def __init__(self,name):
     #     BaseModel.BaseParse.__init__(self,name)

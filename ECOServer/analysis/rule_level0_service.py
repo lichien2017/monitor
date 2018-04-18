@@ -10,19 +10,20 @@ import pymysql
 from analysis.rule import RuleFactory
 from mysqldb.mysql_helper import MySQLHelper
 
-
+from util.log import Logger
+log = Logger()
 class RuleServiceLevel0:
     timer = None
     def __init__(self,refresh_rule_time=5):
         self._rule_instance = []
-        print("RuleServiceLevel0")
+        log.debug("RuleServiceLevel0")
         self.refresh_rule_time = refresh_rule_time
         timer = threading.Timer(refresh_rule_time,self.load_rules)
         timer.start()
 
     #加载规则配置
     def load_rules(self,level = 0):
-        print('RuleServiceLevel0 load_rules enter')
+        log.debug('RuleServiceLevel0 load_rules enter')
         conn = MySQLHelper.pool_connection.get_connection()
         # 创建游标
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
@@ -52,12 +53,12 @@ class RuleServiceLevel1:
         self._rule_class = []
         self._settings = []
         self.load_rule_time = load_rule_time
-        print("RuleServiceLevel1")
+        log.debug("RuleServiceLevel1")
         timer = threading.Timer(self.load_rule_time,self.load_rules)
         timer.start()
     #加载规则配置
     def load_rules(self,level = 1):
-        print('RuleServiceLevel1 load_rules enter')
+        log.debug('RuleServiceLevel1 load_rules enter')
         conn = MySQLHelper.pool_connection.get_connection()
         # 创建游标
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
@@ -91,9 +92,9 @@ class RuleServiceLevel1:
             # getattr(class_name, "add_resource_to_queue")(resource_id)
 
 if __name__ == "__main__":
-    print('RuleServiceLevel1')
+    log.debug('RuleServiceLevel1')
     rule_service_level = RuleServiceLevel1()
     rule_service_level.load_rules()
     rule_service_level.execute_all()
 
-    print('RuleServiceLevel1')
+    log.debug('RuleServiceLevel1')

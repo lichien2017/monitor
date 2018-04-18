@@ -7,7 +7,8 @@ from time import sleep
 from pymongo import MongoClient
 from scrapyServer.config import ConfigHelper
 
-
+from util.log import Logger
+log = Logger()
 #消息队列
 class MyQueue(object):
     def __init__(self,db=7, host='localhost'):
@@ -71,15 +72,15 @@ def flowparse(confdata):
     #create BaseParse by reflact
     #parser = BaseParse(confdata["parsername"])
     # confdata = confobj["conf"]
-    print('the confdata is:', confdata)
+    log.debug('the confdata is:', confdata)
 
     amod = __import__(confdata["modname"], fromlist=True)
     #amod = __import__("ToutiaoModel", fromlist=True)
-    print('imported modname')
+    log.debug('imported modname')
     aclass = getattr(amod, confdata["classname"])
     parser = aclass(confdata["classname"])
 
-    print('created confdata')
+    log.debug('created confdata')
     queue = MyQueue(db=ConfigHelper.redisdb,host=ConfigHelper.redisip)
     while(True):
         #print('step 0')
@@ -87,7 +88,7 @@ def flowparse(confdata):
         #print('step 1')
 
         if (datastr == None):
-            print("has no data")
+            log.debug("has no data")
             break
 
         data = parser.tryparse(datastr)
