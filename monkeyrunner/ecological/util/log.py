@@ -4,6 +4,7 @@
 '''
 
 import logging.handlers
+import os
 
 class Logger(logging.Logger):
     def __init__(self, filename=None):
@@ -11,6 +12,9 @@ class Logger(logging.Logger):
         # 日志文件名
         if filename is None:
             filename = './logs/pt.log'
+
+        if not os.path.exists("./logs") :
+            os.makedirs("./logs")
         self.filename = filename
 
         # 创建一个handler，用于写入日志文件 (每天生成1个，保留30天的日志)
