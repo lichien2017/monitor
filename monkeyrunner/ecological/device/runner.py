@@ -97,6 +97,8 @@ class DeviceRunner():
         result = self._launch_app(self._settings["categroy"] + "/" + self._settings["activity"])
         if result !=0:
             return False
+        # app唯一标识
+        self._runner_log = {"tag": self._settings["tag"]}
         # 生成guid
         self.myuuid = uuid.uuid1();
         self._runner_log["id"] = self.myuuid;
@@ -119,12 +121,14 @@ class DeviceRunner():
         self._runner_log["screenshot"] = file_name
         # 屏幕数
         self._runner_log["screen"] = "1"
-        # app唯一标识
-        self._runner_log = {"tag": self._settings["tag"]}
         # 栏目唯一标识
         self._runner_log = {"reference": self._settings["reference"]}
         self._write_to_mongodb()  # 将日志写入mongodb
         for i in range(1, 4):
+            _tmp_log = self._runner_log
+            del _tmp_log
+            # app唯一标识
+            self._runner_log = {"tag": self._settings["tag"]}
             self._runner_log["id"] = self.myuuid;
             # 下拉以前先记录当前的时间
             self._runner_log["time"] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
@@ -139,8 +143,6 @@ class DeviceRunner():
             self._runner_log["screenshot"+str(i)] = file_name
             # 屏幕数
             self._runner_log["screen"] = str(i +1)
-            # app唯一标识
-            self._runner_log = {"tag": self._settings["tag"]}
             # 栏目唯一标识
             self._runner_log = {"reference": self._settings["reference"]}
             self._write_to_mongodb()  # 将日志写入mongodb
