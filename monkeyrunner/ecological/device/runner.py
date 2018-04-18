@@ -18,6 +18,7 @@ import os
 import subprocess
 from shutil import copyfileobj
 from util.log import Logger
+import uuid
 
 #初始化日志
 log = Logger()
@@ -48,6 +49,8 @@ class DeviceRunner():
     _runner_log = None
     _mongodb_client = None
     adbClient = None;
+    myuuid = None;
+
 
 
     def __init__(self,deviceid,settings):
@@ -76,10 +79,8 @@ class DeviceRunner():
         log.debug('App(%s), in Device(%s) Time:%s,is running !\n' % (self._settings["categroy"],self._settings["tag"], time.ctime()))
         _tmp_log = self._runner_log
         del _tmp_log
-        self._runner_log = {"tag": self._settings["tag"]}
         if self._running() == False:  # 如果设备没有准备好
             return False
-        self._write_to_mongodb()  # 将日志写入mongodb
         # self._waitting(self._settings["repeattime"])  # 重启脚本时间间隔，改为由父线程控制
         return True
 
@@ -96,6 +97,11 @@ class DeviceRunner():
         result = self._launch_app(self._settings["categroy"] + "/" + self._settings["activity"])
         if result !=0:
             return False
+        # app唯一标识
+        self._runner_log = {"tag": self._settings["tag"]}
+        # 生成guid
+        self.myuuid = uuid.uuid1();
+        self._runner_log["sessionId"] = "%s" % self.myuuid;
         # 等待应用启动
         self._waitting(self._settings["setuptime"])
         # 点击
@@ -103,7 +109,7 @@ class DeviceRunner():
         # 等待数据加载完成
         self._waitting(self._settings["sleeptime"])
         # 下拉以前先记录当前的时间
-        self._runner_log["time0"] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        self._runner_log["time"] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         # 下拉
         self._drag(self._settings["startpoint"], self._settings["endpoint"])
         # 等待数据加载完成
@@ -112,10 +118,20 @@ class DeviceRunner():
         file_name,full_file_name = self._take_photo()
         # 上传图片文件
         self._upload_screenshot(full_file_name)
-        self._runner_log["screenshot0"] = file_name
+        self._runner_log["screenshot"] = file_name
+        # 屏幕数
+        self._runner_log["screen"] = "1"
+        # 栏目唯一标识
+        self._runner_log["reference"] = self._settings["reference"]
+        self._write_to_mongodb()  # 将日志写入mongodb
         for i in range(1, 4):
+            _tmp_log = self._runner_log
+            del _tmp_log
+            # app唯一标识
+            self._runner_log = {"tag": self._settings["tag"]}
+            self._runner_log["sessionId"] = "%s" % self.myuuid;
             # 下拉以前先记录当前的时间
-            #self._runner_log["time"+str(i)] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+            self._runner_log["time"] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
             # 上拉
             self._dragup(self._settings["startpoint"], self._settings["endpoint"])
             # 等待
@@ -124,7 +140,12 @@ class DeviceRunner():
             file_name, full_file_name = self._take_photo()
             # 上传图片文件
             self._upload_screenshot(full_file_name)
-            #self._runner_log["screenshot"+str(i)] = file_name
+            self._runner_log["screenshot"] = file_name
+            # 屏幕数
+            self._runner_log["screen"] = str(i +1)
+            # 栏目唯一标识
+            self._runner_log["reference"] = self._settings["reference"]
+            self._write_to_mongodb()  # 将日志写入mongodb
         # 关闭应用
         self.adbClient.stopActivity(self._settings["categroy"])
         # 调低亮度
