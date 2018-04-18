@@ -101,7 +101,7 @@ class DeviceRunner():
         self._runner_log = {"tag": self._settings["tag"]}
         # 生成guid
         self.myuuid = uuid.uuid1();
-        self._runner_log["id"] = self.myuuid;
+        self._runner_log["sessionId"] = self.myuuid;
         # 等待应用启动
         self._waitting(self._settings["setuptime"])
         # 点击
