@@ -7,6 +7,12 @@ import redis
 import configparser
 import json
 import sys
+
+from util.log import Logger
+
+#初始化日志
+log = Logger()
+
 reload(sys)
 sys.setdefaultencoding('utf8')
 class DeviceGroupController:
@@ -22,7 +28,7 @@ class DeviceGroupController:
         self._redis_server = redis.StrictRedis(connection_pool=pool)
 
     def start(self):
-        print('DeviceGroupController start')
+        log.debug('DeviceGroupController start')
         self._redis_subscript()
 
     def _redis_subscript(self):
@@ -42,17 +48,17 @@ class DeviceGroupController:
     def _get_default_settings(self):
         data = self._redis_server.get(self._msg_channel) #这里获取最新的配置信息
         if(data != None):
-            print("get_default_settings 获取到的默认配置:"+data.decode("utf-8"))
+            log.debug("get_default_settings 获取到的默认配置:"+data.decode("utf-8"))
             settings = json.loads(data.decode("utf-8"))
             self._start_all_group_thread(settings)
         else:
-            print("获取到的默认配置失败，等待控制信号")
+            log.debug("获取到的默认配置失败，等待控制信号")
 
 
     def _parse_redis_message(self,msg):#数据解包，需要多少runner工作，每个runner的消息对队列标示
-        print("main_parse_redis_message")
+        log.debug("main_parse_redis_message")
         data = json.loads(msg.decode("utf-8")) #消息数据部分
-        print(data)
+        log.debug(data)
         if data['type'] == 'START':  # 启动
             sub_data = data['data']
             self._start_all_group_thread(sub_data)  # 解析数据包
@@ -67,7 +73,7 @@ class DeviceGroupController:
 
 
     def _start_all_group_thread(self,settings):#数据解包，需要多少runner工作，每个runner的消息对队列标示
-        print("_start_all_group_thread")
+        log.debug("_start_all_group_thread")
         if settings == None:
             return
         self._groups[:] = []   #清空数据

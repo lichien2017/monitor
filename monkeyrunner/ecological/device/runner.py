@@ -17,6 +17,10 @@ import unittest
 import os
 import subprocess
 from shutil import copyfileobj
+from util.log import Logger
+
+#初始化日志
+log = Logger()
 
 try:
     sys.path.insert(0, os.path.join(os.environ['ANDROID_VIEW_CLIENT_HOME'], 'src'))
@@ -69,7 +73,7 @@ class DeviceRunner():
 
 
     def run(self):  # Overwrite run() method, put what you want the thread do here
-        print('App(%s), in Device(%s) Time:%s,is running !\n' % (self._settings["categroy"],self._settings["tag"], time.ctime()))
+        log.debug('App(%s), in Device(%s) Time:%s,is running !\n' % (self._settings["categroy"],self._settings["tag"], time.ctime()))
         _tmp_log = self._runner_log
         del _tmp_log
         self._runner_log = {"tag": self._settings["tag"]}
@@ -138,18 +142,18 @@ class DeviceRunner():
     #上传图片文件
     def _upload_screenshot(self,full_file_name):
         cmd = r'curl -F "uploadfile=@'+full_file_name+'" '+self._settings["imgserver"]
-        print(cmd)
+        log.debug(cmd)
         resultOk,error = self._execute_cmd(cmd)
-        print(resultOk)
-        print(error)
+        log.debug(resultOk)
+        log.debug(error)
         response = json.loads(resultOk)
         if response["status"] == "success":
             cmd = r'rm -f ' + full_file_name
-            print(cmd)
+            log.debug(cmd)
             self._execute_cmd(cmd)
             return True
         else:
-            print('上传结果：'+response)
+            log.debug('上传结果：'+response)
             return False
 
     def _waitting(self, second):
@@ -231,4 +235,4 @@ class DeviceRunner():
             return os.path.dirname(path)
 
     def to_string(self):
-        print('Thread Object(%s), Time:%s\n' % (self._settings["tag"], time.ctime()))
+        log.debug('Thread Object(%s), Time:%s\n' % (self._settings["tag"], time.ctime()))

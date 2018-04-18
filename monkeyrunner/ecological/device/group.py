@@ -9,9 +9,13 @@ import json
 import time
 from threading import Thread
 from device.runner import DeviceRunner
+from util.log import Logger
 import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
+
+log = Logger()
+
 class DeviceGroup(Thread):
     _device_id = ""                                            #设备的唯一标示
     _repeat_time = 5
@@ -29,7 +33,7 @@ class DeviceGroup(Thread):
     def run(self):  # Overwrite run() method, put what you want the thread do here
         if (self._runner_settings!=None):   #如果配置信息不为空时，直接启动相关线程，否则监听消息端口等待命令
             while not self.thread_stop :
-                print("DeviceID(%s) is running" % self._device_id)
+                log.debug("DeviceID(%s) is running" % self._device_id)
                 self._msg_channel = "%s:%s" % ('groupchannel', self._device_id)  # 当前分组的控制消息队列
                 for runner in self._runner_settings:
                     try:
@@ -47,7 +51,7 @@ class DeviceGroup(Thread):
                     except Exception as ex:
                         print(ex)
                     self._waitting(self._repeat_time)  # 重启脚本时间间隔
-        print("DeviceID(%s) is stop" % self._device_id)
+        log.debug("DeviceID(%s) is stop" % self._device_id)
         # else:
         #     self._redis_subscript()            #阻塞主线程，等待控制命令
         # print('end device_group')
