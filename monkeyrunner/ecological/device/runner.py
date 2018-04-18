@@ -129,7 +129,7 @@ class DeviceRunner():
             del _tmp_log
             # app唯一标识
             self._runner_log = {"tag": self._settings["tag"]}
-            self._runner_log["sessionId"] = self.myuuid;
+            self._runner_log["sessionId"] = "%s" % self.myuuid;
             # 下拉以前先记录当前的时间
             self._runner_log["time"] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
             # 上拉

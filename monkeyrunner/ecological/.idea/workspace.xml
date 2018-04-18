@@ -21,8 +21,8 @@
       <file leaf-file-name="runner.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/device/runner.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="293">
-              <caret line="103" column="47" lean-forward="false" selection-start-line="103" selection-start-column="47" selection-end-line="103" selection-end-column="47" />
+            <state relative-caret-position="75">
+              <caret line="131" column="44" lean-forward="false" selection-start-line="131" selection-start-column="44" selection-end-line="131" selection-end-column="44" />
               <folding>
                 <element signature="e#32#43#0" expanded="true" />
               </folding>
@@ -586,7 +586,14 @@
       <option name="project" value="LOCAL" />
       <updated>1524036983796</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="更改log真的真的是最终完成版了">
+      <created>1524037216318</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1524037216318</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -714,7 +721,8 @@
     <MESSAGE value="更改log完成版" />
     <MESSAGE value="更改log最终完成版" />
     <MESSAGE value="更改log真的是最终完成版了" />
-    <option name="LAST_COMMIT_MESSAGE" value="更改log真的是最终完成版了" />
+    <MESSAGE value="更改log真的真的是最终完成版了" />
+    <option name="LAST_COMMIT_MESSAGE" value="更改log真的真的是最终完成版了" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -935,8 +943,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/device/runner.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="293">
-          <caret line="103" column="47" lean-forward="false" selection-start-line="103" selection-start-column="47" selection-end-line="103" selection-end-column="47" />
+        <state relative-caret-position="75">
+          <caret line="131" column="44" lean-forward="false" selection-start-line="131" selection-start-column="44" selection-end-line="131" selection-end-column="44" />
           <folding>
             <element signature="e#32#43#0" expanded="true" />
           </folding>
