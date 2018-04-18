@@ -122,7 +122,7 @@ class DeviceRunner():
         # 屏幕数
         self._runner_log["screen"] = "1"
         # 栏目唯一标识
-        self._runner_log = {"reference": self._settings["reference"]}
+        self._runner_log["reference"] = self._settings["reference"]
         self._write_to_mongodb()  # 将日志写入mongodb
         for i in range(1, 4):
             _tmp_log = self._runner_log
@@ -144,7 +144,7 @@ class DeviceRunner():
             # 屏幕数
             self._runner_log["screen"] = str(i +1)
             # 栏目唯一标识
-            self._runner_log = {"reference": self._settings["reference"]}
+            self._runner_log["reference"] = self._settings["reference"]
             self._write_to_mongodb()  # 将日志写入mongodb
         # 关闭应用
         self.adbClient.stopActivity(self._settings["categroy"])
