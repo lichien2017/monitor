@@ -111,7 +111,7 @@ class DeviceRunner():
         self._runner_log["screenshot0"] = file_name
         for i in range(1, 4):
             # 下拉以前先记录当前的时间
-            self._runner_log["time"+str(i)] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+            #self._runner_log["time"+str(i)] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
             # 上拉
             self._dragup(self._settings["startpoint"], self._settings["endpoint"])
             # 等待
@@ -120,7 +120,7 @@ class DeviceRunner():
             file_name, full_file_name = self._take_photo()
             # 上传图片文件
             self._upload_screenshot(full_file_name)
-            self._runner_log["screenshot"+str(i)] = file_name
+            #self._runner_log["screenshot"+str(i)] = file_name
         # 关闭应用
         self.adbClient.stopActivity(self._settings["categroy"])
         # 调低亮度
