@@ -124,7 +124,7 @@ class DeviceRunner():
         # 关闭应用
         self.adbClient.stopActivity(self._settings["categroy"])
         # 调低亮度
-        self.adbClient.luminance(5)
+        self.adbClient.luminance('5')
         return True
     #
     # 下面是工具函数
