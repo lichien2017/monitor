@@ -140,7 +140,7 @@ class DeviceRunner():
             file_name, full_file_name = self._take_photo()
             # 上传图片文件
             self._upload_screenshot(full_file_name)
-            self._runner_log["screenshot"+str(i)] = file_name
+            self._runner_log["screenshot"] = file_name
             # 屏幕数
             self._runner_log["screen"] = str(i +1)
             # 栏目唯一标识
