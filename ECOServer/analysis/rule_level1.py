@@ -4,6 +4,8 @@ import redis
 import time
 from analysis.rule import Rule
 from scrapyServer.config import ConfigHelper
+from util.log import Logger
+log = Logger()
 
 pool = redis.ConnectionPool(host=ConfigHelper.redisip, port=6379, db=ConfigHelper.redisdb)
 redis_server = redis.StrictRedis(connection_pool=pool)
@@ -24,15 +26,15 @@ class BaseLevel1Rule(Rule,Thread):
             if item != None :
                 print(item)
                 res_id = item.decode("utf-8")
-                print("%s 获取到数据:%s" % (self.__class__.__name__,res_id))
+                log.debug("%s 获取到数据:%s" % (self.__class__.__name__,res_id))
                 resource = self._get_resource(res_id)
                 if resource !=None :
-                    print("%s 获取到数据:%s" % (self.__class__.__name__,resource))
+                    log.debug("%s 获取到数据:%s" % (self.__class__.__name__,resource))
                     self.execute_other(res_id,resource,self._extra_data) #扩展数据里面可能是阈值
 
             item = self._redis_server.rpop("recvjob:%s" % (self.__class__.__name__))
             if item !=None :
-                print(item)
+                log.debug(item)
                 #print(self._mongodb_tablename)
                 res_id = item.decode("utf-8")
                 sub_job = "sendjob:%s:%s" % (self.__class__.__name__,res_id) #子任务消息key
@@ -62,7 +64,7 @@ class BaseLevel1Rule(Rule,Thread):
     @staticmethod
     def add_resource_to_queue(resource_id,class_name):
         # 插入消息队列
-        print("add_resource_to_queue :%s" % (resource_id))
+        log.debug("add_resource_to_queue :%s" % (resource_id))
         redis_server.lpush(class_name + ":queue",resource_id)
 
 #血腥暴力

@@ -9,7 +9,8 @@ import datetime
 import hashlib
 import uuid
 import sys
-
+from util.log import Logger
+log = Logger()
 class TianTianParse(BaseParse):
 
     #解析天天快报

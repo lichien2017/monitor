@@ -7,6 +7,10 @@ import hashlib
 import os
 import json
 import time
+
+from util.log import Logger
+log = Logger()
+
 class Rule:
     _mongodb_client = None
     _mongodb = None
@@ -37,21 +41,21 @@ class Rule:
         self.queue_name_video = self.__class__.__name__ + ":video"
 
     def _get_resource(self,resouce_id):
-        print("_get_resource:%s" % resouce_id)
+        log.debug("_get_resource:%s" % resouce_id)
         self._mongodb = self._mongodb_client['crawlnews']
         res = self._mongodb.originnews.find_one({"identity":"%s" % (resouce_id)})
         if res == None :
             return None
-        print(res)
+        log.debug(res)
         return res
 
     def _level0_execute(self,res_id,resource,extra=None):
         if self._res_columns == None or self._extra_data == None :
-            print("_level0_execute 函数没有可用的数据执行")
+            log.debug("_level0_execute 函数没有可用的数据执行")
             return
         for col in self._res_columns :
             for keyword in self._extra_data :
-                print("%s列的数据'%s'是否包含关键字'%s'" % (col,resource[col],keyword))
+                log.debug("%s列的数据'%s'是否包含关键字'%s'" % (col,resource[col],keyword))
                 if resource[col] == keyword or resource[col].find(keyword) >=0:  # 匹配关键字
                     # 关键字匹配上了，插入到对应的数据表格中
                     table = self._mongodb[self._mongodb_tablename]
@@ -72,7 +76,7 @@ class Rule:
         return normal_msg
 
     def execute_other(self,res_id,resource,extra=None):
-        print('其他处理方式') # 但是这里不需要实现，由各实现类的线程函数直接处理了，如果实现了，那实质上是同步调用方式
+        log.debug('其他处理方式') # 但是这里不需要实现，由各实现类的线程函数直接处理了，如果实现了，那实质上是同步调用方式
         if resource == None :
             return
         # title = resource["title"]
@@ -143,12 +147,12 @@ class Rule:
             index += 1
 
     def execute(self,resource_id,extra=None):
-        print("规则:%s,正在处理:resource_id=%s" % (self.__class__.__name__,resource_id))
+        log.debug("规则:%s,正在处理:resource_id=%s" % (self.__class__.__name__,resource_id))
         resource = self._get_resource(resource_id)
         if resource != None:
-            print("资源找到了，检查结果表中是否存在数据")
+            log.debug("资源找到了，检查结果表中是否存在数据")
             table = self._mongodb[self._mongodb_tablename]
-            print(table)
+            log.debug(table)
             rows = table.find({"res_id": resource_id})
             if rows.count() == 0:  # 如果不存在数据表中，则开始判断是否能匹配上规则
                 if self._level == 0 :
@@ -176,10 +180,10 @@ class Rule:
 class RuleFactory:
     @staticmethod
     def get_class(settings):
-        print("module:"+settings["imp_python_module"])
+        log.debug("module:"+settings["imp_python_module"])
         ip_module = __import__(settings["imp_python_module"])
         # dir()查看模块属性
-        print(dir(ip_module))
+        log.debug(dir(ip_module))
         # 使用getattr()获取imp_module的类
         obj_class = getattr(ip_module, settings["imp_python_class"])
         return obj_class
