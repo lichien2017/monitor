@@ -24,7 +24,7 @@ class BaseLevel1Rule(Rule,Thread):
         while not self.thread_stop:
             item = self._redis_server.rpop(self.__class__.__name__ + ":queue")
             if item != None :
-                print(item)
+                log.debug(item)
                 res_id = item.decode("utf-8")
                 log.debug("%s 获取到数据:%s" % (self.__class__.__name__,res_id))
                 resource = self._get_resource(res_id)
@@ -44,13 +44,13 @@ class BaseLevel1Rule(Rule,Thread):
                 for key in hset_keys :
                     rel = self._redis_server.hget(sub_job,key)
                     rel = int(rel.decode("utf-8"))
-                    print ("ret = %d" % rel)
+                    log.debug("ret = %d" % rel)
                     if rel == 1 and inserted == 0:
                         # 只要有一个为1，表示规则匹配成功，插入数据库
                         table = self._mongodb[self._mongodb_tablename]
-                        item = table.find_one({"res_id": res_id})
+                        item = table.find_one({"res_id": "%s" % res_id})
                         if item == None :
-                            table.insert({"res_id": res_id})
+                            table.insert({"res_id": "%s" % res_id})
                         inserted = 1
                     if rel == -1 :
                         remove_flag = 0
@@ -90,3 +90,27 @@ class ZongJiaoRule(BaseLevel1Rule):
 class BiaoTiDangRule(BaseLevel1Rule):
     def __init__(self, settings):
         BaseLevel1Rule.__init__(self, settings)
+
+# 政治有害
+class ScreenCapORCRule(BaseLevel1Rule):
+    def __init__(self, settings):
+        BaseLevel1Rule.__init__(self, settings)
+
+    def run(self):
+        while not self.thread_stop:
+            item = self._redis_server.rpop(self.__class__.__name__ + ":queue")
+            if item != None :
+                log.debug(item)
+                res_id = item.decode("utf-8")
+                log.debug("%s 获取到数据:%s" % (self.__class__.__name__,res_id))
+                resource = self._get_resource(res_id)
+                if resource !=None :
+                    log.debug("%s 获取到数据:%s" % (self.__class__.__name__,resource))
+                    table = self._mongodb[self._mongodb_tablename] #得到数据表对象
+                    item = table.find_one({"res_id": "%s" % res_id}) #是否
+                    if item == None:
+                        # 每天的数据表格中只保证有一条记录就行了，插入的数据格式
+                        # 包括 res_id,time,status,image
+                        time_str = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
+                        table.insert({"res_id": "%s" % res_id,"time":time_str,"status":0,"image":""})
+            time.sleep(1)
