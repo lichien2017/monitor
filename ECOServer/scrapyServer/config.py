@@ -6,7 +6,7 @@ class ConfigHelper:
     # mysqldb.logger.setLevel('DEBUG')
     __config = configparser.ConfigParser()
     localDir = os.path.dirname(__file__)
-    __config.read(localDir+"/config.ini")
+    __config.read(localDir+"/config_local.ini")
     mysql_ip = __config.get("mysql", "mysql_ip")
     mysql_user = __config.get("mysql", "mysql_user")
     mysql_pwd = __config.get("mysql", "mysql_pwd")

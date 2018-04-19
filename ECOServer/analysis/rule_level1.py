@@ -2,8 +2,11 @@ from threading import Thread
 
 import redis
 import time
+import datetime
+
 from analysis.rule import Rule
 from scrapyServer.config import ConfigHelper
+from util.tymx_time import LocalTime
 from util.log import Logger
 log = Logger()
 
@@ -111,6 +114,8 @@ class ScreenCapORCRule(BaseLevel1Rule):
                     if item == None:
                         # 每天的数据表格中只保证有一条记录就行了，插入的数据格式
                         # 包括 res_id,time,status,image
-                        time_str = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
-                        table.insert({"res_id": "%s" % res_id,"time":time_str,"status":0,"image":""})
+                        local_time = LocalTime.now() #datetime.datetime.fromtimestamp(time.time())
+                        log.debug(local_time.strftime("%Y-%m-%d %H:%M:%S"))
+                        # time_str = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
+                        table.insert({"res_id": "%s" % res_id,"time":local_time.strftime("%Y-%m-%d %H:%M:%S"),"status":0,"image":"","screen_index":-1})
             time.sleep(1)

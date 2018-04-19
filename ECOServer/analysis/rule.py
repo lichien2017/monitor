@@ -7,7 +7,7 @@ import hashlib
 import os
 import json
 import time
-
+from util.tymx_time import LocalTime
 from util.log import Logger
 log = Logger()
 
@@ -32,7 +32,7 @@ class Rule:
         else:
             self._mongodb_tablename = mongodb_table
         # 每次添加插入到当天的数据表中，所以需要在名字加上当天日期 time.strftime('%Y%m%d',time.localtime(time.time()))
-        self._mongodb_tablename = self._mongodb_tablename + time.strftime('%Y%m%d',time.localtime(time.time()))
+        self._mongodb_tablename = self._mongodb_tablename + LocalTime.now().strftime('%Y%m%d')
         self._level = level
         self._mongodb_client = pymongo.MongoClient(ConfigHelper.mongodbip, 27017)
         # 定义与原子服务通讯的消息队列名称
