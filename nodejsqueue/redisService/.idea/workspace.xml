@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="89a870f0-d1fd-4fa2-85ee-8dcb485f225b" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/../../monkeyrunner/ecological/group_controller.py" afterPath="$PROJECT_DIR$/../../monkeyrunner/ecological/group_controller.py" />
+    <list default="true" id="89a870f0-d1fd-4fa2-85ee-8dcb485f225b" name="Default" comment="修改bug">
+      <change beforePath="" afterPath="$PROJECT_DIR$/../../ECOServer/screencap/__init__.py" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/../../ECOServer/screencap/screencap_match.py" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/../../ECOServer/screencap_match_main.py" />
+      <change beforePath="$PROJECT_DIR$/../../ECOServer/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../../ECOServer/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/../../ECOServer/analysis/rule_level1.py" afterPath="$PROJECT_DIR$/../../ECOServer/analysis/rule_level1.py" />
+      <change beforePath="$PROJECT_DIR$/../../ECOServer/scrapyServer/config.py" afterPath="$PROJECT_DIR$/../../ECOServer/scrapyServer/config.py" />
+      <change beforePath="$PROJECT_DIR$/../../dock启动脚本.txt" afterPath="$PROJECT_DIR$/../../dock启动脚本.txt" />
+      <change beforePath="$PROJECT_DIR$/../../monkeyrunner/ecological/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../../monkeyrunner/ecological/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/../Dockerfile" afterPath="$PROJECT_DIR$/../Dockerfile" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -23,23 +31,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="index.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/routes/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1905">
-              <caret line="127" column="44" lean-forward="true" selection-start-line="127" selection-start-column="44" selection-end-line="127" selection-end-column="44" />
+            <state relative-caret-position="54">
+              <caret line="25" column="15" lean-forward="false" selection-start-line="25" selection-start-column="15" selection-end-line="25" selection-end-column="15" />
               <folding>
-                <marker date="1521776112620" expanded="true" signature="4710:5289" ph="..." />
+                <marker date="1522665773253" expanded="true" signature="4710:5289" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="rule.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="rule.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/../../anyproxy4_x/rulefiles/rule.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1073">
-              <caret line="72" column="8" lean-forward="true" selection-start-line="72" selection-start-column="8" selection-end-line="72" selection-end-column="8" />
+            <state relative-caret-position="270">
+              <caret line="18" column="8" lean-forward="false" selection-start-line="18" selection-start-column="8" selection-end-line="18" selection-end-column="8" />
               <folding />
             </state>
           </provider>
@@ -78,8 +86,8 @@
       <file leaf-file-name="Dockerfile" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../Dockerfile">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="10" column="0" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+            <state relative-caret-position="180">
+              <caret line="12" column="0" lean-forward="false" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -97,8 +105,8 @@
         <option value="$PROJECT_DIR$/../../anyproxy4_x/Dockerfile" />
         <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/../Dockerfile" />
-        <option value="$PROJECT_DIR$/../../anyproxy4_x/rulefiles/rule.js" />
         <option value="$PROJECT_DIR$/routes/index.js" />
+        <option value="$PROJECT_DIR$/../../anyproxy4_x/rulefiles/rule.js" />
       </list>
     </option>
   </component>
@@ -133,7 +141,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -141,11 +149,26 @@
               <item name="redisService" type="b2602c69:ProjectViewProjectNode" />
               <item name="redisService" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="redisService" type="b2602c69:ProjectViewProjectNode" />
+              <item name="redisService" type="462c0819:PsiDirectoryNode" />
+              <item name="routes" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="redisService" type="b2602c69:ProjectViewProjectNode" />
+              <item name="redisService" type="462c0819:PsiDirectoryNode" />
+              <item name="uploads" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="redisService" type="b2602c69:ProjectViewProjectNode" />
+              <item name="redisService" type="462c0819:PsiDirectoryNode" />
+              <item name="views" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -263,6 +286,15 @@
       <workItem from="1521525153538" duration="1276000" />
       <workItem from="1521687788093" duration="188000" />
       <workItem from="1521775224295" duration="3121000" />
+      <workItem from="1522288769761" duration="5000" />
+      <workItem from="1522314653610" duration="648000" />
+      <workItem from="1522665726656" duration="325000" />
+      <workItem from="1523520231788" duration="313000" />
+      <workItem from="1523875995851" duration="399000" />
+      <workItem from="1523945944161" duration="454000" />
+      <workItem from="1523969832912" duration="442000" />
+      <workItem from="1524018164681" duration="815000" />
+      <workItem from="1524121965226" duration="533000" />
     </task>
     <task id="LOCAL-00001" summary="1、增加mongodb模块&#10;2、增加图片上传服务、通知数据上传服务、applist服务">
       <created>1521188281059</created>
@@ -369,22 +401,49 @@
       <option name="project" value="LOCAL" />
       <updated>1521450344313</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="修改bug">
+      <created>1522314769529</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1522314769529</updated>
+    </task>
+    <task id="LOCAL-00017" summary="修改bug">
+      <created>1522665793944</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1522665793945</updated>
+    </task>
+    <task id="LOCAL-00018" summary="修改bug">
+      <created>1524122387228</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1524122387228</updated>
+    </task>
+    <task id="LOCAL-00019" summary="修改bug">
+      <created>1524122935188</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1524122935188</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="39430000" />
+    <option name="totallyTimeSpent" value="43364000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
-    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24305555" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24305555" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28" sideWeight="0.50277776" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28470588" sideWeight="0.51944447" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36051503" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28470588" sideWeight="0.48055556" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -421,14 +480,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/node_modules/mongodb/lib/mongo_client.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7185">
-          <caret line="479" column="17" lean-forward="false" selection-start-line="479" selection-start-column="17" selection-end-line="479" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/express/lib/router/route.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1995">
@@ -466,7 +517,7 @@
         <state relative-caret-position="330">
           <caret line="22" column="42" lean-forward="false" selection-start-line="22" selection-start-column="42" selection-end-line="22" selection-end-column="42" />
           <folding>
-            <marker date="1521776112620" expanded="true" signature="4710:5289" ph="..." />
+            <marker date="1522665773253" expanded="true" signature="4710:5289" ph="..." />
           </folding>
         </state>
       </provider>
@@ -516,7 +567,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1521776112620" expanded="true" signature="4710:5289" ph="..." />
+            <marker date="1522665773253" expanded="true" signature="4710:5289" ph="..." />
           </folding>
         </state>
       </provider>
@@ -566,7 +617,7 @@
         <state relative-caret-position="465">
           <caret line="66" column="32" lean-forward="false" selection-start-line="66" selection-start-column="32" selection-end-line="66" selection-end-column="32" />
           <folding>
-            <marker date="1521776112620" expanded="true" signature="4710:5289" ph="..." />
+            <marker date="1522665773253" expanded="true" signature="4710:5289" ph="..." />
           </folding>
         </state>
       </provider>
@@ -599,7 +650,7 @@
         <state relative-caret-position="315">
           <caret line="56" column="0" lean-forward="false" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
           <folding>
-            <marker date="1521776112620" expanded="true" signature="4710:5289" ph="..." />
+            <marker date="1522665773253" expanded="true" signature="4710:5289" ph="..." />
           </folding>
         </state>
       </provider>
@@ -625,7 +676,7 @@
         <state relative-caret-position="120">
           <caret line="8" column="42" lean-forward="false" selection-start-line="8" selection-start-column="42" selection-end-line="8" selection-end-column="42" />
           <folding>
-            <marker date="1521776112620" expanded="true" signature="4710:5289" ph="..." />
+            <marker date="1522665773253" expanded="true" signature="4710:5289" ph="..." />
           </folding>
         </state>
       </provider>
@@ -651,7 +702,7 @@
         <state relative-caret-position="120">
           <caret line="8" column="42" lean-forward="true" selection-start-line="8" selection-start-column="42" selection-end-line="8" selection-end-column="42" />
           <folding>
-            <marker date="1521776112620" expanded="true" signature="4710:5289" ph="..." />
+            <marker date="1522665773253" expanded="true" signature="4710:5289" ph="..." />
           </folding>
         </state>
       </provider>
@@ -677,7 +728,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1521776112620" expanded="true" signature="4710:5289" ph="..." />
+            <marker date="1522665773253" expanded="true" signature="4710:5289" ph="..." />
           </folding>
         </state>
       </provider>
@@ -755,8 +806,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../Dockerfile">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="0" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+        <state relative-caret-position="180">
+          <caret line="12" column="0" lean-forward="false" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -790,11 +841,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/express/lib/router/route.js">
+    <entry file="file://$PROJECT_DIR$/node_modules/express/lib/router/layer.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1995">
-          <caret line="139" column="0" lean-forward="false" selection-start-line="139" selection-start-column="0" selection-end-line="139" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="182">
+          <caret line="98" column="0" lean-forward="false" selection-start-line="98" selection-start-column="0" selection-end-line="98" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uploads/1">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -806,28 +863,29 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/express/lib/router/layer.js">
+    <entry file="file://$PROJECT_DIR$/node_modules/express/lib/router/route.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="182">
-          <caret line="98" column="0" lean-forward="false" selection-start-line="98" selection-start-column="0" selection-end-line="98" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../anyproxy4_x/rulefiles/rule.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1073">
-          <caret line="72" column="8" lean-forward="true" selection-start-line="72" selection-start-column="8" selection-end-line="72" selection-end-column="8" />
+        <state relative-caret-position="1995">
+          <caret line="139" column="0" lean-forward="false" selection-start-line="139" selection-start-column="0" selection-end-line="139" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1905">
-          <caret line="127" column="44" lean-forward="true" selection-start-line="127" selection-start-column="44" selection-end-line="127" selection-end-column="44" />
+        <state relative-caret-position="54">
+          <caret line="25" column="15" lean-forward="false" selection-start-line="25" selection-start-column="15" selection-end-line="25" selection-end-column="15" />
           <folding>
-            <marker date="1521776112620" expanded="true" signature="4710:5289" ph="..." />
+            <marker date="1522665773253" expanded="true" signature="4710:5289" ph="..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../anyproxy4_x/rulefiles/rule.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" column="8" lean-forward="false" selection-start-line="18" selection-start-column="8" selection-end-line="18" selection-end-column="8" />
+          <folding />
         </state>
       </provider>
     </entry>
