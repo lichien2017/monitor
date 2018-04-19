@@ -21,6 +21,7 @@ module.exports = {
     //         console.log(e);//错误捕捉
     //     }
     // }
+    console.log(requestDetail)
     try{
         for(var i=0; i<ruler.length; i++)
         {
