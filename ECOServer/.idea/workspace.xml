@@ -2,15 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3a9f1209-bf27-4831-8365-62528b80939a" name="Default" comment="修改mongodb">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/screencap/__init__.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/screencap/screencap_match.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/screencap_match_main.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/util/tymx_time.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/analysis/rule.py" afterPath="$PROJECT_DIR$/analysis/rule.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/analysis/rule_level1.py" afterPath="$PROJECT_DIR$/analysis/rule_level1.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/scrapyServer/config.py" afterPath="$PROJECT_DIR$/scrapyServer/config.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/util/__init__.py" afterPath="$PROJECT_DIR$/util/__init__.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../dock启动脚本.txt" afterPath="$PROJECT_DIR$/../dock启动脚本.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../monkeyrunner/ecological/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../monkeyrunner/ecological/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../nodejsqueue/Dockerfile" afterPath="$PROJECT_DIR$/../nodejsqueue/Dockerfile" />
@@ -52,7 +45,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="rule.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="rule.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/analysis/rule.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="450">
@@ -60,16 +53,6 @@
               <folding>
                 <element signature="e#23#37#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="start_media_download_service.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/downloadServer/start_media_download_service.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-140">
-              <caret line="73" column="7" lean-forward="false" selection-start-line="73" selection-start-column="7" selection-end-line="73" selection-end-column="7" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -84,11 +67,43 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="connectionpool.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mysqldb/connectionpool.py">
+      <file leaf-file-name="requirements.txt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/requirements.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="23" column="7" lean-forward="true" selection-start-line="23" selection-start-column="7" selection-end-line="23" selection-end-column="7" />
+            <state relative-caret-position="180">
+              <caret line="12" column="22" lean-forward="false" selection-start-line="12" selection-start-column="22" selection-end-line="12" selection-end-column="22" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="screencap_match_main.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/screencap_match_main.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="240">
+              <caret line="16" column="0" lean-forward="true" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+              <folding>
+                <element signature="e#1#57#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="config.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/downloadServer/config.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="config.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/scrapyServer/config.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="105">
+              <caret line="8" column="35" lean-forward="true" selection-start-line="8" selection-start-column="35" selection-end-line="8" selection-end-column="35" />
               <folding />
             </state>
           </provider>
@@ -100,18 +115,6 @@
             <state relative-caret-position="-1250">
               <caret line="32" column="20" lean-forward="false" selection-start-line="32" selection-start-column="20" selection-end-line="32" selection-end-column="20" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="rule_level0.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/analysis/rule_level0.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="14" column="25" lean-forward="false" selection-start-line="14" selection-start-column="25" selection-end-line="14" selection-end-column="25" />
-              <folding>
-                <element signature="e#23#53#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -134,22 +137,6 @@
             <state relative-caret-position="225">
               <caret line="15" column="23" lean-forward="true" selection-start-line="15" selection-start-column="23" selection-end-line="15" selection-end-column="23" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="rule_level0_service.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/analysis/rule_level0_service.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="430">
-              <caret line="99" column="14" lean-forward="false" selection-start-line="99" selection-start-column="14" selection-end-line="99" selection-end-column="14" />
-              <folding>
-                <element signature="e#44#60#0" expanded="true" />
-                <marker date="1524020995200" expanded="true" signature="808:853" ph="select * fro... analysis_rules" />
-                <marker date="1524020995200" expanded="true" signature="808:870" ph="select * fro... analysis_rules" />
-                <marker date="1524020995200" expanded="true" signature="2066:2111" ph="select * fro... analysis_rules" />
-                <marker date="1524020995200" expanded="true" signature="2066:2128" ph="select * fro... analysis_rules" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -218,7 +205,6 @@
         <option value="$PROJECT_DIR$/analysis/rule_level0_service.py" />
         <option value="$PROJECT_DIR$/analysis/__init__.py" />
         <option value="$PROJECT_DIR$/flowcontrol.py" />
-        <option value="$PROJECT_DIR$/scrapyServer/config.py" />
         <option value="$PROJECT_DIR$/screencap_match.py" />
         <option value="$PROJECT_DIR$/screencap_match_main.py" />
         <option value="$PROJECT_DIR$/screencap/__init__.py" />
@@ -227,6 +213,7 @@
         <option value="$PROJECT_DIR$/analysis/rule.py" />
         <option value="$PROJECT_DIR$/screencap/screencap_match.py" />
         <option value="$PROJECT_DIR$/util/tymx_time.py" />
+        <option value="$PROJECT_DIR$/scrapyServer/config.py" />
       </list>
     </option>
   </component>
@@ -308,6 +295,20 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="scrapyServer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ECOServer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ECOServer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="ruleServer" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -323,20 +324,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="logs" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ECOServer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ECOServer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="downloadServer" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -691,13 +678,6 @@
       <option name="presentableId" value="Default" />
       <updated>1522928047005</updated>
     </task>
-    <task id="LOCAL-00003" summary="修改为正式环境的配置">
-      <created>1523330861183</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1523330861183</updated>
-    </task>
     <task id="LOCAL-00004" summary="修改启动方式">
       <created>1523340153575</created>
       <option name="number" value="00004" />
@@ -1034,22 +1014,29 @@
       <option name="project" value="LOCAL" />
       <updated>1524043847486</updated>
     </task>
-    <option name="localTasksCounter" value="52" />
+    <task id="LOCAL-00052" summary="修改时区问题&#10;增加ocr">
+      <created>1524134520360</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1524134520360</updated>
+    </task>
+    <option name="localTasksCounter" value="53" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27825466" sideWeight="0.49333334" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27825466" sideWeight="0.49333334" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3994374" sideWeight="0.50858366" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36746988" sideWeight="0.49427754" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32891566" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32891566" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32891566" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24964234" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3060241" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31084338" sideWeight="0.4914163" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31084338" sideWeight="0.4914163" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26752505" sideWeight="0.50666666" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -1102,7 +1089,8 @@
     <MESSAGE value="增加宗教和标题党规则" />
     <MESSAGE value="增加日志模块" />
     <MESSAGE value="增加屏幕截图规则" />
-    <option name="LAST_COMMIT_MESSAGE" value="增加屏幕截图规则" />
+    <MESSAGE value="修改时区问题&#10;增加ocr" />
+    <option name="LAST_COMMIT_MESSAGE" value="修改时区问题&#10;增加ocr" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1139,7 +1127,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/scrapyServer/TencentModel1.py" />
     <entry file="file://$PROJECT_DIR$/scrapyServer/TianTianModel1.py" />
     <entry file="file://$PROJECT_DIR$/scrapyServer/ToutiaoModel1.py" />
     <entry file="file://$PROJECT_DIR$/downloadServer/Dockerfile">
@@ -1300,14 +1287,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/requirements.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" column="22" lean-forward="false" selection-start-line="12" selection-start-column="22" selection-end-line="12" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/flowcontrol.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="705">
@@ -1315,14 +1294,6 @@
           <folding>
             <element signature="e#16#62#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scrapyServer/config.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="8" column="41" lean-forward="false" selection-start-line="8" selection-start-column="41" selection-end-line="8" selection-end-column="41" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1352,14 +1323,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/screencap_match_main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="0" lean-forward="true" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///usr/local/Cellar/python/3.6.4_4/Frameworks/Python.framework/Versions/3.6/lib/python3.6/threading.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="165">
@@ -1373,7 +1336,7 @@
         <state relative-caret-position="-1055">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#1943#1988#0" expanded="true" />
+            <element signature="e#1943#1988#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1383,7 +1346,7 @@
         <state relative-caret-position="15">
           <caret line="1" column="36" lean-forward="false" selection-start-line="1" selection-start-column="36" selection-end-line="1" selection-end-column="36" />
           <folding>
-            <element signature="e#0#27#0" expanded="true" />
+            <element signature="e#0#27#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1485,6 +1448,40 @@
           <folding>
             <element signature="e#23#37#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/requirements.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" column="22" lean-forward="false" selection-start-line="12" selection-start-column="22" selection-end-line="12" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/screencap_match_main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="16" column="0" lean-forward="true" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+          <folding>
+            <element signature="e#1#57#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/downloadServer/config.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scrapyServer/config.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="8" column="35" lean-forward="true" selection-start-line="8" selection-start-column="35" selection-end-line="8" selection-end-column="35" />
+          <folding />
         </state>
       </provider>
     </entry>
