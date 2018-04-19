@@ -15,6 +15,8 @@ log = Logger()
 
 time_format = "%Y-%m-%d %H:%M:%S"
 interval = 10 #10分钟间隔
+DAYS = 0 # 与今天的差异，0 标示处理当天，-1标示处理前一天
+
 
 pool = redis.ConnectionPool(host=ConfigHelper.redisip, port=6379, db=ConfigHelper.redisdb)
 redis_server = redis.StrictRedis(connection_pool=pool)
@@ -52,7 +54,7 @@ class ScreenCaptureMatch(Thread):
         log.debug(query)
 
         now = LocalTime.now()  # datetime.datetime.now()
-        date = now + datetime.timedelta(days=-1)
+        date = now + datetime.timedelta(days=DAYS)
         log.debug(date.strftime("%Y%m%d"))
         collection = self._database["runner_logs"+ date.strftime("%Y%m%d")]
         cursor = collection.find(query)
@@ -108,7 +110,7 @@ class ScreenCaptureMatch(Thread):
     def send_data(self):
         #local_time = LocalTime.now() #datetime.datetime.fromtimestamp(time.time())
         now = LocalTime.now() #datetime.datetime.now()
-        date = now + datetime.timedelta(days=-1)
+        date = now + datetime.timedelta(days=DAYS)
         log.debug(date.strftime("%Y%m%d"))
 
         collection = self._database["screencapocr" + date.strftime("%Y%m%d")]
