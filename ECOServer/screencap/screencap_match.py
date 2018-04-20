@@ -151,7 +151,7 @@ class ScreenCaptureMatch(Thread):
                 u"$set":
                     {
                         u"image": item["img"],
-                        u"seq" : item["seq"]
+                        u"screen_index" : item["seq"]
                     }
             }
             # query["_id"]["$in"].append(_id)
