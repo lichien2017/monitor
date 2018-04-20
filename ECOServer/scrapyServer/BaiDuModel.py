@@ -113,7 +113,7 @@ class BaiDuParse(BaseParse):
         elif url.find('api/medianewslist') > -1:
             category = "图片"
         else:
-            print(url)
+            log.debug(url)
             return
         crawltime = strjson['time']
         # 获取data

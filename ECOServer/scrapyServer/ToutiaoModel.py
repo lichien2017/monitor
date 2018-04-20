@@ -35,7 +35,7 @@ class ToutiaoParse(BaseParse):
         try:
             abstract = data['abstract']#摘要
         except:
-            print("无摘要")
+            log.debug("无摘要")
         seq = y+1#排序
         keywords = ""#关键字
         gallary = ""#图片资讯图片地址
@@ -51,7 +51,7 @@ class ToutiaoParse(BaseParse):
             tab = data['label']
         except:
             tab = ""
-            print("非置顶文章")
+            log.debug("非置顶文章")
         try :
             url = data['display_url']#分享地址
         except:
@@ -61,17 +61,17 @@ class ToutiaoParse(BaseParse):
                 try:
                     url = data['url']#分享地址
                 except:
-                    print("无资讯地址")
+                    log.debug("无资讯地址")
         try:
             publish_time = data['publish_time']
         except:
-            print("无发布时间")
+            log.debug("无发布时间")
         #如果是美图栏目
         if category == "美图":
             try:
                 title = data['content']
             except:
-                print("无内容仅只有图片")
+                log.debug("无内容仅只有图片")
             articleid = data['group_id']#文章标识
             logo = data['large_image']['url']
             publish_time = data['create_time']
@@ -106,7 +106,7 @@ class ToutiaoParse(BaseParse):
             try:
                 title = data['title']
             except :
-                print("无标题")
+                log.debug("无标题")
             try:
                 articleid = data['group_id']#文章标识
             except :
@@ -123,13 +123,13 @@ class ToutiaoParse(BaseParse):
                                     logo+=j['url'] + ","
                                 gallary+=j['url'] + ","
                     except :
-                        print("大V资讯无图片")
+                        log.debug("大V资讯无图片")
                 except :
                     #若此资讯是广告，并无唯一标识，则生成一个唯一标识
                     if tab=="广告":
                         articleid=uuid.uuid1()#文章标识
                         IsArtID=True
-                    print("无唯一标识：")
+                    log.debug("无唯一标识：")
             #如果has_video=true 则为视频新闻
             if data['has_video'] == True:
                 restype = 3
@@ -137,29 +137,29 @@ class ToutiaoParse(BaseParse):
                  try:
                     keywords = data['keywords']#关键字
                  except :
-                    print("无关键字")
+                    log.debug("无关键字")
             try:
                 logo = data['middle_image']['url']
             except:
-                print("无封面图")
+                log.debug("无封面图")
         #如果文章标识为空，则跳出此循环
         if articleid == "":
             return
         try:
             source = data['source']
         except :
-            print("无来源")
+            log.debug("无来源")
         #是否为图片新闻
         try:
             gallary_flag = data['gallary_flag']
             if gallary_flag == 1:
                 restype = 2
         except:
-            print("非图片新闻")
+            log.debug("非图片新闻")
         try:
             hot = data['hot']#0 非热门 1 热门
         except:
-            print("非热门")
+            log.debug("非热门")
         if hot == 1:
             if tab == "":
                 tab = "热"
@@ -174,7 +174,7 @@ class ToutiaoParse(BaseParse):
                     if i['url']!="":
                         logo+=i['url'] + ","
             except:
-                print("只一张或没有图片")
+                log.debug("只一张或没有图片")
         if publish_time!="":
             publish_timestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(publish_time))
         crawltimestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(crawltime / 1000))
@@ -215,7 +215,7 @@ class ToutiaoParse(BaseParse):
                         for z in gallery:
                             gallary+=z['sub_image']['url'] + ","
                 except:
-                    print("内容暂无/图片取值错误")
+                    log.debug("内容暂无/图片取值错误")
         sdata={
             "title": title,
             "description": abstract,
@@ -265,7 +265,7 @@ class ToutiaoParse(BaseParse):
                 category = "问答"
             else:
                 category = "推荐"
-                print("无类型")
+                log.debug("无类型")
         if category != "两会" and category != "问答" and category != "热点" and category != "视频" and category != "小视频" and category != "推荐" and category != "图片" and category != "美图":
            return
         crawltime = strjson['time']

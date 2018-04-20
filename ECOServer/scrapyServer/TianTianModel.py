@@ -41,7 +41,7 @@ class TianTianParse(BaseParse):
         try:
             source = data['source']
         except:
-            print("无source")
+            log.debug("无source")
         abstract = data['abstract']
         articletype = data['articletype']
         try:
@@ -51,7 +51,7 @@ class TianTianParse(BaseParse):
                 if articletype == "100":
                      tab+="、专题"
         except:
-            print("非置顶资讯")
+            log.debug("非置顶资讯")
         if category=="热点":
             flag=data['flag']
             if flag=="17":
@@ -72,7 +72,7 @@ class TianTianParse(BaseParse):
                     if i != "":
                         logo+=i + ","
             except:
-                print("无图片")
+                log.debug("无图片")
         gallary_list = data['thumbnails_qqnews']
         for g in gallary_list:
             if g != "":
@@ -83,7 +83,7 @@ class TianTianParse(BaseParse):
                 if hasVideo == 1:
                     restype = 3
             except:
-                print("无hasVideo")
+                log.debug("无hasVideo")
         else:
              restype = 3
         if articletype == "12" or articletype == "1":#图文资讯
@@ -128,7 +128,7 @@ class TianTianParse(BaseParse):
                             try:
                                 gallary+=attribute[a]["murl"] + ","
                             except:
-                                print(json.dumps(attribute))
+                                log.debug(json.dumps(attribute))
                 if category == "问答":
                     headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0'}
                     news_detail_url = 'https://r.cnews.qq.com/getQQNewsComment'
@@ -156,13 +156,12 @@ class TianTianParse(BaseParse):
                                         try:
                                             gallary+=attribute[a]["murl"] + ","
                                         except:
-                                            print(json.dumps(attribute))
+                                            log.debug(json.dumps(attribute))
                         except:
                             None
 
         elif restype==3:
              content = data['video_channel']['video']['playurl']#视频地址
-        print(title)
         #判断列表封面图末尾是否为，若是则进行删除
         logolen = len(logo)
         if logolen > 0:
@@ -219,10 +218,10 @@ class TianTianParse(BaseParse):
             elif chlid == "kb_photo_news":
                 category = "图片"
             else:
-                print(post)
+                log.debug(post)
                 return
         else :
-             print(url)
+             log.debug(url)
              return
         crawltime = strjson['time']
         #获取data

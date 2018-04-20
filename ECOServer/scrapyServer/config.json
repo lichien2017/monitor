@@ -38,5 +38,10 @@
     "modname": "scrapyServer.FenHModel",
     "classname": "FenHParse",
     "queuename": "origin:fhsdk"
+  },
+  {
+    "modname": "scrapyServer.SinaModel",
+    "classname": "SinaParse",
+    "queuename": "origin:sinasdk"
   }
 ]
