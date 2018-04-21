@@ -5,8 +5,11 @@ import os
 import hashlib
 import pymongo
 import redis
+import time
 from config import ConfigHelper
+from util.log import Logger
 
+log = Logger()
 # 设定ThreadPoolExecutor 类最多使用几个线程
 MAX_WORKERS = 20
 # 图片保存地址
@@ -63,7 +66,7 @@ def download_many(cc_list):
             future = executor.submit(download_one, cc)
             to_do_map[future] = cc
             msg = 'Scheduled for {}: {}'
-            print(msg.format(cc, future))
+            log.debug(msg.format(cc, future))
 
         results = []
         for future in futures.as_completed(to_do_map):
@@ -76,10 +79,10 @@ def download_many(cc_list):
                 error_msg = ''
             if error_msg:
                 cc = to_do_map[future]  # <16>
-                print('*** Error for {}: {}'.format(cc, error_msg))
+                log.error('*** Error for {}: {}'.format(cc, error_msg))
             else:
                 msg = '{} result: {!r}'
-                print(msg.format(future, res))
+                log.debug(msg.format(future, res))
                 results.append(res)
 
     return len(results)
@@ -96,9 +99,9 @@ def get_resource(resouce_id):
 
 if __name__ == '__main__':
     while True :
-        res_id = redis_server.brpop(ConfigHelper.download_msgqueue)
+        res_id = redis_server.rpop(ConfigHelper.download_msgqueue)
         if res_id != None :
-           print(res_id)
+           log.debug(res_id)
            res = get_resource(res_id[1].decode("utf-8"))
            images = []
            if res !=None :
@@ -108,4 +111,5 @@ if __name__ == '__main__':
                images = logos + gallary
                images = [x for x in images if x != '' and (x.startswith("http://") or x.startswith("https://"))]
                download_many(images)
+        time.sleep(2)
 
