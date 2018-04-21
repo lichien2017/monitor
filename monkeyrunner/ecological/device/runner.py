@@ -19,6 +19,9 @@ import subprocess
 from shutil import copyfileobj
 from util.log import Logger
 import uuid
+import datetime
+import pytz
+
 
 #初始化日志
 log = Logger()
@@ -109,7 +112,8 @@ class DeviceRunner():
         # 等待数据加载完成
         self._waitting(self._settings["sleeptime"])
         # 下拉以前先记录当前的时间
-        self._runner_log["time"] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        tz = pytz.timezone('Asia/Shanghai')
+        self._runner_log["time"] = "%s" % datetime.datetime.now(tz);
         # 下拉
         self._drag(self._settings["startpoint"], self._settings["endpoint"])
         # 等待数据加载完成
@@ -131,7 +135,8 @@ class DeviceRunner():
             self._runner_log = {"tag": self._settings["tag"]}
             self._runner_log["sessionId"] = "%s" % self.myuuid;
             # 下拉以前先记录当前的时间
-            self._runner_log["time"] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+            tz = pytz.timezone('Asia/Shanghai')
+            self._runner_log["time"] = "%s" % datetime.datetime.now(tz);
             # 上拉
             self._dragup(self._settings["startpoint"], self._settings["endpoint"])
             # 等待
@@ -157,8 +162,11 @@ class DeviceRunner():
     #结果写入数据库
     def _write_to_mongodb(self):
         db = self._mongodb_client['crawlnews']
-        runner_logs = db["runner_logs"]
+        day = time.strftime("%Y%m%d", time.localtime())
+        runner_logs = db["runner_logs%s" % day]
         runner_logs.insert(self._runner_log)
+
+
 
     #上传图片文件
     def _upload_screenshot(self,full_file_name):
