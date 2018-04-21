@@ -3,19 +3,19 @@ from analysis.rule import Rule
 from util.log import Logger
 log = Logger()
 class ColumnRule(Rule):
-    def execute(self,resource_id,extra=None):
-        super().execute(resource_id,extra)
+    def execute(self,res_msg,extra=None):
+        super().execute(res_msg,extra)
 
     @staticmethod
-    def add_resource_to_queue(resource_id):
+    def add_resource_to_queue(res_msg):
         # 插入消息队列
         log.debug('kk')
 
 class KeyWordRule(Rule):
-    def execute(self,resource_id,extra=None):
-        super().execute(resource_id,extra)
+    def execute(self,res_msg,extra=None):
+        super().execute(res_msg,extra)
 
     @staticmethod
-    def add_resource_to_queue(resource_id):
+    def add_resource_to_queue(res_msg):
         # 插入消息队列
         log.debug('kk')

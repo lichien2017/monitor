@@ -7,9 +7,7 @@ import datetime
 import redis
 import json
 
-from util.tymx_time import LocalTime
-from scrapyServer.config import ConfigHelper
-from util.log import Logger
+from util import *
 
 log = Logger()
 
@@ -18,14 +16,14 @@ interval = 10 #10分钟间隔
 DAYS = 0 # 与今天的差异，0 标示处理当天，-1标示处理前一天
 
 
-pool = redis.ConnectionPool(host=ConfigHelper.redisip, port=6379, db=ConfigHelper.redisdb)
+pool = redis.ConnectionPool(host=ConfigHelper.redisip, port=ConfigHelper.redisport, db=ConfigHelper.redisdb)
 redis_server = redis.StrictRedis(connection_pool=pool)
 
 class ScreenCaptureMatch(Thread):
 
     def __init__(self):
         Thread.__init__(self)
-        self._client = MongoClient(ConfigHelper.mongodbip, 27017)
+        self._client = MongoClient(ConfigHelper.mongodbip, ConfigHelper.mongodbport)
         self._database = self._client["crawlnews"]
         self.thread_stop = False
         pass

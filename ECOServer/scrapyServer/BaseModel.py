@@ -5,14 +5,13 @@ import threadpool
 import sys
 from time import sleep
 from pymongo import MongoClient
-from scrapyServer.config import ConfigHelper
+from util import *
 
-from util.log import Logger
 log = Logger()
 #消息队列
 class MyQueue(object):
     def __init__(self,db=7, host='localhost'):
-        self.rcon = redis.Redis(host=host, port=6379, db=db)
+        self.rcon = redis.Redis(host=host, port=ConfigHelper.redisport, db=db)
         #print("db is:",db)
         # self.queue = queuename
 
@@ -31,9 +30,12 @@ class BaseParse(object):
 
     #插入mongodb
     def db(self,sdata,articleid,title):
-        conn = MongoClient(ConfigHelper.mongodbip, 27017)
-        db = conn.crawlnews  #连接crawlnews数据库
-        my_originnews = db.originnews
+        conn = MongoClient(ConfigHelper.mongodbip, ConfigHelper.mongodbport)
+
+        # 待插入数据的时期
+        record_date = LocalTime.get_local_date(sdata["crawltimestr"],"%Y-%m-%d %H:%M:%S")
+        db = conn["crawlnews"]  #连接crawlnews数据库 ,这里按月来分库
+        my_originnews = db["originnews"+record_date.strftime("%Y%m%d")]  # lzq 修改，把数据存入每天的分表
         #查询是否存在此唯一标识的数据
         artcount= my_originnews.find({"identity": str(articleid)}).count()
         if artcount>0:
@@ -45,8 +47,11 @@ class BaseParse(object):
         #插入数据库
         my_originnews.save(sdata)
         # 把数据分发给打标服务，服务分为两类，一类基础服务（0），一类高级服务（1）
-        Rule0server.execute_all(articleid)
-        Rule1server.add_resource_to_all_queue(articleid)
+        # 数据包里面要包含标示和日期，所以要重新构建包 lzq
+        msg = {"res_id":"%s"%articleid,"time":record_date.strftime("%Y%m%d")}
+        Rule0server.execute_all(json.dumps(msg)) # 插入的数据格式为json
+        Rule1server.add_resource_to_all_queue(json.dumps(msg))
+        #分发给下载资源服务
         queue = MyQueue(db=ConfigHelper.redisdb, host=ConfigHelper.redisip)
         queue.push(ConfigHelper.download_msgqueue,articleid)
     #每个App解析方法重载该方法
@@ -55,13 +60,7 @@ class BaseParse(object):
 
 #生成md5
 def genearteMD5(strs):
-    # 创建md5对象
-    hl = hashlib.md5()
-    # Tips
-    # 此处必须声明encode
-    # 否则报错为：hl.update(str) Unicode-objects must be encoded before hashing
-    hl.update(strs.encode("utf-8"))
-    return hl.hexdigest()
+    return Secret.md5(strs)
 
 #解析框架，做为线程池的处理函数流程
 #1、创建解析对象
@@ -72,15 +71,15 @@ def flowparse(confdata):
     #create BaseParse by reflact
     #parser = BaseParse(confdata["parsername"])
     # confdata = confobj["conf"]
-    log.debug('the confdata is:', confdata)
+    #log.debug('the confdata is:', confdata)
 
     amod = __import__(confdata["modname"], fromlist=True)
     #amod = __import__("ToutiaoModel", fromlist=True)
-    log.debug('imported modname')
+    #log.debug('imported modname')
     aclass = getattr(amod, confdata["classname"])
     parser = aclass(confdata["classname"])
 
-    log.debug('created confdata')
+    #log.debug('created confdata')
     queue = MyQueue(db=ConfigHelper.redisdb,host=ConfigHelper.redisip)
     while(True):
         #print('step 0')

@@ -15,3 +15,9 @@ class LocalTime:
         # print(local_dt)
         return local_dt
         pass
+
+    def yestoday(cls):
+        now = LocalTime.now()
+        yestoday = now + timedelta(days=-1)
+        return yestoday
+        pass

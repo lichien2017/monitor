@@ -44,9 +44,10 @@ class RuleServiceLevel0:
         timer.start()
 
     # 调用规则方法
-    def execute_all(self,resource_id):
+    # res_msg = {res_id:xxx,time:xxxx}
+    def execute_all(self,res_msg):
         for instance in self._rule_instance:
-            instance.execute(resource_id)
+            instance.execute(res_msg)
 
 class RuleServiceLevel1:
     def __init__(self,load_rule_time):
@@ -86,9 +87,9 @@ class RuleServiceLevel1:
             instance.start()
 
     # 将消息发送给相关的规则处理服务
-    def add_resource_to_all_queue(self,resource_id):
+    def add_resource_to_all_queue(self,res_msg):
         for class_name in self._rule_class:
-            class_name.add_resource_to_queue(resource_id,class_name.__name__) #动态调用类的静态方法
+            class_name.add_resource_to_queue(res_msg,class_name.__name__) #动态调用类的静态方法
             # getattr(class_name, "add_resource_to_queue")(resource_id)
 
 if __name__ == "__main__":

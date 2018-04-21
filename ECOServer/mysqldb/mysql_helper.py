@@ -1,5 +1,5 @@
 from mysqldb.connectionpool import ConnectionPool
-from scrapyServer.config import ConfigHelper
+from util.config import ConfigHelper
 
 
 class MySQLHelper:
