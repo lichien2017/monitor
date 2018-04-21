@@ -14,7 +14,9 @@ var router = express.Router();
 
 var debug = false;
 var redisIp ='redisdb';//container里面的redisdb名称
+var redisPort = 6379
 var mongodbIp = 'mongodb';//container里面的mongodb名称
+var mongodbPort = 27017
 var uploadpath = '/usr/local/nodejsqueue/redisService/uploads/';//图片保存路径
 
 if (debug){
@@ -23,7 +25,7 @@ if (debug){
     uploadpath =path.join(process.cwd() + "/../uploads");
 }
 
-var DB_CONN_STR = 'mongodb://'+mongodbIp+':27017/crawlnews';
+var DB_CONN_STR = 'mongodb://'+mongodbIp+':'+mongodbPort+'/crawlnews';
 /**
  * 测试地址
  */
@@ -262,7 +264,7 @@ function parseJsonDataAndSendToRedis(jsonObj) {
 
     var storeString = JSON.stringify(storeData);
 
-    var client  = redis.createClient('6379', redisIp);
+    var client  = redis.createClient(redisPort, redisIp);
 
     client.on('connect', function() {
         console.log('connected');
