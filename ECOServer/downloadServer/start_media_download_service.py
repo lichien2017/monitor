@@ -101,7 +101,7 @@ if __name__ == '__main__':
     while True :
         item = redis_server.rpop(ConfigHelper.download_msgqueue)
         if item != None :
-           log.debug(item)
+           log.debug(item.decode("utf-8"))
            res_msg = json.loads(item.decode("utf-8"))
            res = get_resource(res_msg)
            images = []
