@@ -8,7 +8,7 @@ import redis
 import time
 from config import ConfigHelper
 from log import Logger
-
+import json
 log = Logger()
 # 设定ThreadPoolExecutor 类最多使用几个线程
 MAX_WORKERS = 20
@@ -87,9 +87,9 @@ def download_many(cc_list):
 
     return len(results)
 
-def get_resource(resouce_id):
+def get_resource(res_msg):
     mongodb = mongodb_client['crawlnews']
-    rows = mongodb.originnews.find({"identity":resouce_id})
+    rows = mongodb["originnews"+res_msg["time"]].find({"identity":res_msg["res_id"]})
     if rows == None or rows.count() == 0:
         return None
     # print(rows)
@@ -99,10 +99,11 @@ def get_resource(resouce_id):
 
 if __name__ == '__main__':
     while True :
-        res_id = redis_server.rpop(ConfigHelper.download_msgqueue)
-        if res_id != None :
-           log.debug(res_id)
-           res = get_resource(res_id.decode("utf-8"))
+        item = redis_server.rpop(ConfigHelper.download_msgqueue)
+        if item != None :
+           log.debug(item)
+           res_msg = json.loads(item.decode("utf-8"))
+           res = get_resource(res_msg)
            images = []
            if res !=None :
                # 读取资源中的图片
