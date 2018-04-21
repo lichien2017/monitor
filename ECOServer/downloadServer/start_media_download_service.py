@@ -7,7 +7,7 @@ import pymongo
 import redis
 import time
 from config import ConfigHelper
-from util.log import Logger
+from log import Logger
 
 log = Logger()
 # 设定ThreadPoolExecutor 类最多使用几个线程
