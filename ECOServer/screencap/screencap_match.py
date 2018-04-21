@@ -70,10 +70,10 @@ class ScreenCaptureMatch(Thread):
 
         pass
 
-    def __get_resource(self,resouce_id):
+    def __get_resource(self,resouce_id,date):
         log.debug("_get_resource:%s" % resouce_id)
         self._database = self._client['crawlnews']
-        res = self._database.originnews.find_one({"identity":"%s" % (resouce_id)})
+        res = self._database["originnews"+date].find_one({"identity":"%s" % (resouce_id)})
         if res == None :
             return None
         log.debug(res)
@@ -119,7 +119,7 @@ class ScreenCaptureMatch(Thread):
         try:
             for item in screencap_cursor:
                 log.debug(item)
-                res = self.__get_resource(item["res_id"])  # 获取资源详情
+                res = self.__get_resource(item["res_id"],date.strftime("%Y%m%d"))  # 获取资源详情
                 pictures, seqs = self.queryPictures(item["time"])
                 if len(pictures) > 0:
                     self.write_to_queue(item["res_id"], res["title"], pictures, seqs)
