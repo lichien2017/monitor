@@ -102,7 +102,7 @@ if __name__ == '__main__':
         res_id = redis_server.rpop(ConfigHelper.download_msgqueue)
         if res_id != None :
            log.debug(res_id)
-           res = get_resource(res_id[1].decode("utf-8"))
+           res = get_resource(res_id.decode("utf-8"))
            images = []
            if res !=None :
                # 读取资源中的图片
