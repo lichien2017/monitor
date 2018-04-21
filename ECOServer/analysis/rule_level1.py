@@ -23,49 +23,59 @@ class BaseLevel1Rule(Rule,Thread):
         self.interval = 1
         self.thread_stop = False
 
+    def do_rule1(self):
+        # 不同规则从缓存中获取资源id进行处理
+        item = self._redis_server.rpop(self.__class__.__name__ + ":queue")
+        if item != None:
+            log.debug(item)  # msg = {"res_id":resource_id,"time":LocalTime.now_str()}
+            # res_id = item.decode("utf-8")
+            res_msg = json.loads(item)
+            log.debug("%s 获取到数据:%s" % (self.__class__.__name__, res_msg["res_id"]))
+            resource = self._get_resource(res_msg["res_id"], res_msg["time"])
+            if resource != None:
+                log.debug("%s 获取到数据:%s" % (self.__class__.__name__, resource))
+                self.execute_other(res_msg["res_id"], resource, res_msg["time"], self._extra_data)  # 扩展数据里面可能是阈值
+        pass
+    def do_recv(self):
+        item = self._redis_server.rpop("recvjob:%s" % (self.__class__.__name__))
+        if item != None:
+            log.debug(item)
+            # print(self._mongodb_tablename)
+            res_recv = item.decode("utf-8").split(",")  # res_id,time
+            sub_job = "sendjob:%s:%s" % (self.__class__.__name__, res_recv[0])  # 子任务消息key
+            log.debug(sub_job)
+            hset_keys = self._redis_server.hkeys(sub_job)
+            remove_flag = 1  # 是否删除标示
+            inserted = 0  # 可以插入数据库
+            for key in hset_keys:
+                rel = self._redis_server.hget(sub_job, key)
+                rel = int(rel.decode("utf-8"))
+                # log.debug("ret = %d" % rel)
+                if rel == 1 and inserted == 0:
+                    # 只要有一个为1，表示规则匹配成功，插入数据库
+                    log.debug(self._mongodb_tablename + res_recv[1])
+                    table = self._mongodb[self._mongodb_tablename + res_recv[1]]
+                    item = table.find_one({"res_id": "%s" % res_recv[0]})
+                    if item == None:
+                        table.insert({"res_id": "%s" % res_recv[0]})
+                    inserted = 1
+                if rel == -1:
+                    remove_flag = 0
+
+            if remove_flag == 1:
+                self._redis_server.delete(sub_job)
+        pass
+
     def run(self):
         while not self.thread_stop:
-            # 不同规则从缓存中获取资源id进行处理
-            item = self._redis_server.rpop(self.__class__.__name__ + ":queue")
-            if item != None :
-                log.debug(item) # msg = {"res_id":resource_id,"time":LocalTime.now_str()}
-                # res_id = item.decode("utf-8")
-                res_msg = json.loads(item)
-                log.debug("%s 获取到数据:%s" % (self.__class__.__name__,res_msg["res_id"]))
-                resource = self._get_resource(res_msg["res_id"],res_msg["time"])
-                if resource !=None :
-                    log.debug("%s 获取到数据:%s" % (self.__class__.__name__,resource))
-                    self.execute_other(res_msg["res_id"],resource,res_msg["time"],self._extra_data) #扩展数据里面可能是阈值
+            try:
+                # 不同规则从缓存中获取资源id进行处理
+                self.do_rule1()
+                self.do_recv()
+                time.sleep(1)
+            except Exception as e:
+                log.error(e)
 
-            item = self._redis_server.rpop("recvjob:%s" % (self.__class__.__name__))
-            if item !=None :
-                log.debug(item)
-                #print(self._mongodb_tablename)
-                res_recv = item.decode("utf-8").split(",") # res_id,time
-                sub_job = "sendjob:%s:%s" % (self.__class__.__name__,res_recv[0]) #子任务消息key
-                log.debug(sub_job)
-                hset_keys = self._redis_server.hkeys(sub_job)
-                remove_flag = 1 # 是否删除标示
-                inserted = 0 # 可以插入数据库
-                for key in hset_keys :
-                    rel = self._redis_server.hget(sub_job,key)
-                    rel = int(rel.decode("utf-8"))
-                    # log.debug("ret = %d" % rel)
-                    if rel == 1 and inserted == 0:
-                        # 只要有一个为1，表示规则匹配成功，插入数据库
-                        log.debug(self._mongodb_tablename+res_recv[1])
-                        table = self._mongodb[self._mongodb_tablename+res_recv[1]]
-                        item = table.find_one({"res_id": "%s" % res_recv[0]})
-                        if item == None :
-                            table.insert({"res_id": "%s" % res_recv[0]})
-                        inserted = 1
-                    if rel == -1 :
-                        remove_flag = 0
-
-                if remove_flag == 1:
-                    self._redis_server.delete(sub_job)
-
-            time.sleep(1)
 
 
     @staticmethod
