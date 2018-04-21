@@ -24,7 +24,7 @@ class Logger(logging.Logger):
 
         # 再创建一个handler，用于输出到控制台
         ch = logging.StreamHandler()
-        ch.setLevel(logging.DEBUG)
+        ch.setLevel(logging.INFO)
 
         # 定义handler的输出格式
         formatter = logging.Formatter('[%(asctime)s] - %(filename)s [Line:%(lineno)d] - [%(levelname)s]-[thread:%(thread)s]-[process:%(process)s] - %(message)s')
