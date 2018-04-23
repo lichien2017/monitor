@@ -40,7 +40,7 @@ class TianTianParse(BaseParse):
         try:
             source = data['source']
         except:
-            SingleLogger().debug("无source")
+            SingleLogger().log.debug("无source")
         abstract = data['abstract']
         articletype = data['articletype']
         try:
@@ -50,7 +50,7 @@ class TianTianParse(BaseParse):
                 if articletype == "100":
                      tab+="、专题"
         except:
-            SingleLogger().debug("非置顶资讯")
+            SingleLogger().log.debug("非置顶资讯")
         if category=="热点":
             flag=data['flag']
             if flag=="17":
@@ -71,7 +71,7 @@ class TianTianParse(BaseParse):
                     if i != "":
                         logo+=i + ","
             except:
-                SingleLogger().debug("无图片")
+                SingleLogger().log.debug("无图片")
         gallary_list = data['thumbnails_qqnews']
         for g in gallary_list:
             if g != "":
@@ -82,7 +82,7 @@ class TianTianParse(BaseParse):
                 if hasVideo == 1:
                     restype = 3
             except:
-                SingleLogger().debug("无hasVideo")
+                SingleLogger().log.debug("无hasVideo")
         else:
              restype = 3
         if articletype == "12" or articletype == "1":#图文资讯
@@ -127,7 +127,7 @@ class TianTianParse(BaseParse):
                             try:
                                 gallary+=attribute[a]["murl"] + ","
                             except:
-                                SingleLogger().debug(json.dumps(attribute))
+                                SingleLogger().log.debug(json.dumps(attribute))
                 if category == "问答":
                     headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0'}
                     news_detail_url = 'https://r.cnews.qq.com/getQQNewsComment'
@@ -155,7 +155,7 @@ class TianTianParse(BaseParse):
                                         try:
                                             gallary+=attribute[a]["murl"] + ","
                                         except:
-                                            SingleLogger().debug(json.dumps(attribute))
+                                            SingleLogger().log.debug(json.dumps(attribute))
                         except:
                             None
 
@@ -224,10 +224,10 @@ class TianTianParse(BaseParse):
                 category = "图片"
                 categorytag = self.categroytag["%s" % category]
             else:
-                SingleLogger().debug(post)
+                SingleLogger().log.debug(post)
                 return
         else :
-             SingleLogger().debug(url)
+             SingleLogger().log.debug(url)
              return
         crawltime = strjson['time']
         #获取data
