@@ -129,7 +129,9 @@ class ScreenCaptureMatch(Thread):
                     SingleLogger().log.debug("找到了图片，长度为:%d",len(pictures))
                     self.write_to_queue(item["res_id"], res["title"], pictures, seqs)
                     SingleLogger().log.debug("update screencap id = %s status=%d", item["_id"],1)
-                self.update_status(collection, item["_id"], 1)
+                    self.update_status(collection, item["_id"], 1)
+                else:
+                    self.update_status(collection, item["_id"], -1)
         finally:
             pass
             # self._client.close()
@@ -155,7 +157,8 @@ class ScreenCaptureMatch(Thread):
                 u"$set":
                     {
                         u"image": item["img"],
-                        u"screen_index" : item["seq"]
+                        u"screen_index" : item["seq"],
+                        u"status": 2
                     }
             }
             # query["_id"]["$in"].append(_id)
