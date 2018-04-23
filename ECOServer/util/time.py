@@ -8,11 +8,11 @@ class LocalTime:
     @classmethod
     def get_local_date(cls,date_str,format):
         date = datetime.strptime(date_str,format)
-        # dt = date.replace(tzinfo=timezone.utc)
-        # # print(dt)
-        # tzutc_8 = timezone(timedelta(hours=8))
-        # local_dt = dt.astimezone(tzutc_8)
-        return date
+        dt = date.replace(tzinfo=timezone.utc)
+        # print(dt)
+        tzutc_8 = timezone(timedelta(hours=8))
+        local_dt = dt.astimezone(tzutc_8)
+        return local_dt
         pass
     @classmethod
     def now_month_str(cls):

@@ -7,7 +7,7 @@ from time import sleep
 from pymongo import MongoClient
 from util import *
 
-log = Logger()
+# log = Logger()
 #消息队列
 class MyQueue(object):
     def __init__(self,db=7, host='localhost'):
@@ -37,6 +37,13 @@ class BaseParse(object):
 
         # 待插入数据的时期
         record_date = LocalTime.get_local_date(sdata["crawltimestr"],"%Y-%m-%d %H:%M:%S")
+        pub_date = LocalTime.get_local_date(sdata["pubtimestr"], "%Y-%m-%d %H:%M:%S")
+
+        record_date_utc = sdata["crawltimestr"]
+        # 时间修正一下，改为本地时间
+        sdata["crawltimestr"] = record_date.strftime("%Y-%m-%d %H:%M:%S")
+        sdata["pubtimestr"]= pub_date.strftime("%Y-%m-%d %H:%M:%S")
+
         db = conn["crawlnews"]  #连接crawlnews数据库 ,这里按月来分库
         my_originnews = db["originnews"+record_date.strftime("%Y%m%d")]  # lzq 修改，把数据存入每天的分表
         #查询是否存在此唯一标识的数据
@@ -51,7 +58,7 @@ class BaseParse(object):
         my_originnews.save(sdata)
         # 把数据分发给打标服务，服务分为两类，一类基础服务（0），一类高级服务（1）
         # 数据包里面要包含标示和日期，所以要重新构建包 lzq
-        msg = {"res_id":"%s"%articleid,"time":record_date.strftime("%Y%m%d")}
+        msg = {"res_id":"%s"%articleid,"time":record_date_utc}
         Rule0server.execute_all(json.dumps(msg)) # 插入的数据格式为json
         Rule1server.add_resource_to_all_queue(json.dumps(msg))
         #分发给下载资源服务
