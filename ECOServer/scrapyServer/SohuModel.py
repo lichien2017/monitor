@@ -9,8 +9,8 @@ import datetime
 import hashlib
 import uuid
 import sys
-from util.log import Logger
-log = Logger()
+from util.log import SingleLogger
+log = SingleLogger()
 
 class SohuParse(BaseParse):
 
@@ -40,30 +40,30 @@ class SohuParse(BaseParse):
         try:
             articleid = data['newsId']
         except:
-            log.debug("广告")
+            SingleLogger.log.debug("广告")
         try:
             title = data['title']
         except:
-            log.debug("无标题")
+            SingleLogger.log.debug("无标题")
         try:
             source = data['media']
         except:
-            log.debug("无来源")
+            SingleLogger.log.debug("无来源")
         try:
             abstract = data['description']
         except:
-            log.debug("无描述")
+            SingleLogger.log.debug("无描述")
         try:
             tab = data['recomReasons']
         except:
-            log.debug("无标签")
+            SingleLogger.log.debug("无标签")
         try:
             img_list = data['pics']
             for i in img_list:
                 if i != "":
                     logo+=i + ","
         except:
-            log.debug("无图片")
+            SingleLogger.log.debug("无图片")
         templateType=data['templateType']
         if templateType==14:
             IsArtID=True
@@ -78,7 +78,7 @@ class SohuParse(BaseParse):
             publish_time = data['time']
             publish_timestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(int(publish_time) / 1000))
         except:
-            log.debug("无时间")
+            SingleLogger.log.debug("无时间")
         crawltimestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(crawltime / 1000))
         news_detail_url = 'https://zcache.k.sohu.com/api/news/cdn/v5/article.go/' + str(articleid) + '/0/0/0/3/1/18/40/5/1/1/1522743246021.json'
         headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0'}
@@ -150,17 +150,17 @@ class SohuParse(BaseParse):
                 category = "推荐"
                 categorytag = self.categroytag["%s" % category]
             else:
-                log.debug(url)
+                SingleLogger.log.debug(url)
                 return
         elif url.find('v5/news.go') > -1:
             if channelId == "4313":
                 category = "两会"
                 categorytag = self.categroytag["%s" % category]
             else:
-                log.debug(url)
+                SingleLogger.log.debug(url)
                 return
         else:
-            log.debug(url)
+            SingleLogger.log.debug(url)
             return
         crawltime = strjson['time']
         #获取data
