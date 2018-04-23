@@ -19,7 +19,7 @@ class FenHParse(BaseParse):
         return detailJson
 
     #解析凤凰新闻
-    def Analysis_fenghuang(self,data,category,crawltime,y):
+    def Analysis_fenghuang(self,data,category,crawltime,y,categorytag):
         title = "" #标题
         abstract = "" #摘要
         articleid = "" #文章标识
@@ -232,7 +232,9 @@ class FenHParse(BaseParse):
             "keyword": "",
             "seq": seq,
             "identity": str(articleid),
-            "appname": "凤凰新闻",
+            "appname": self.appname,
+            "app_tag": self.apptag,
+            "category_tag":categorytag,
             "category": category,#栏目
             "restype": restype,#
             "gallary": gallary#里面的所有图片地址
@@ -251,16 +253,21 @@ class FenHParse(BaseParse):
         #区分栏目
         if url.find('api.3g.ifeng.com/get_pic_list?channel=news') > -1:
             category = "图片"
+            categorytag = self.categroytag["%s" % category]
         elif url.find('api.iclient.ifeng.com/ClientNews') > -1:
             category = params['id'][0]
             if category == "SYLB10,SYDT10,SYRECOMMEND" or category == "SYLB10,SYDT10":
                 category = "头条"
+                categorytag = self.categroytag["%s" % category]
             elif category == "RECOMVIDEO":
                 category = "视频"
+                categorytag = self.categroytag["%s" % category]
             elif category == "YAOWEN223":
                 category = "要闻"
+                categorytag = self.categroytag["%s" % category]
             elif category == "VIDEOSHORT":
                 category = "小视频"
+                categorytag = self.categroytag["%s" % category]
             else:
                 log.debug("有不正确的url1")
                 return
@@ -276,9 +283,9 @@ class FenHParse(BaseParse):
         if category == "图片":
             item = data['body']['item']
             for y, x in enumerate(item):
-                self.Analysis_fenghuang(x, category, crawltime, y)
+                self.Analysis_fenghuang(x, category, crawltime, y,categorytag)
         else:
             for y1, curobj1 in enumerate(data):
                 item = curobj1['item']
                 for y2, curobj2 in enumerate(item):
-                    self.Analysis_fenghuang(curobj2, category, crawltime, y2)
+                    self.Analysis_fenghuang(curobj2, category, crawltime, y2,categorytag)

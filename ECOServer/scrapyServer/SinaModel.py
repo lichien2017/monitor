@@ -15,7 +15,7 @@ log = Logger()
 
 class SinaParse(BaseParse):
     # 解析新浪新闻
-    def Analysis_sina(self,data,category, crawltime, y):
+    def Analysis_sina(self,data,category, crawltime, y,categorytag):
         '''
         try:
             date = time.strftime('%Y%m%d%H%M%S',time.localtime(time.time()))#当前时间
@@ -191,7 +191,9 @@ class SinaParse(BaseParse):
             "keyword": "",
             "seq": y + 1,  # 排序
             "identity": str(articleid),
-            "appname": "新浪新闻",
+            "appname": self.appname,
+            "app_tag": self.apptag,
+            "category_tag":categorytag,
             "category": category,  # 栏目
             "restype": restype,  #
             "gallary": gallary  # 里面的所有图片地址
@@ -259,12 +261,16 @@ class SinaParse(BaseParse):
         category = params['channel'][0]
         if category == "news_jingyao":
             category = "要闻"
+            categorytag = self.categroytag["%s" % category]
         elif category == "news_toutiao":
             category = "推荐"
+            categorytag = self.categroytag["%s" % category]
         elif category == "news_video":
             category = "视频"
+            categorytag = self.categroytag["%s" % category]
         elif category == "news_pic":
             category = "图片"
+            categorytag = self.categroytag["%s" % category]
         else:
             log.debug("有不正确的栏目")
             return
@@ -276,12 +282,12 @@ class SinaParse(BaseParse):
         if data['data']['feed'] and data['data']['feed'] != '':
             feed = data['data']['feed']
             for y1, curobj1 in enumerate(feed):
-                self.Analysis_sina(curobj1, category, crawltime, y1)
+                self.Analysis_sina(curobj1, category, crawltime, y1,categorytag)
         # ad
         try:
             if data['data']['ad']['feed'] and data['data']['ad']['feed'] != '':
                 ad = data['data']['ad']['feed']
                 for y2, curobj2 in enumerate(ad):
-                    self.Analysis_sina(curobj2, category, crawltime, y2)
+                    self.Analysis_sina(curobj2, category, crawltime, y2,categorytag)
         except:
             None

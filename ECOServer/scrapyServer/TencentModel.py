@@ -16,7 +16,7 @@ log = Logger()
 class TencentParse(BaseParse):
 
    #解析腾讯新闻
-    def Analysis_ten(self,data,category,crawltime,y):
+    def Analysis_ten(self,data,category,crawltime,y,categorytag):
         #data = json.loads(data)
         #标题
         title = ""
@@ -220,7 +220,9 @@ class TencentParse(BaseParse):
             "keyword": "",
             "seq": seq,
             "identity":str(articleid),
-            "appname": "腾讯资讯",
+            "appname": self.appname,
+            "app_tag": self.apptag,
+            "category_tag":categorytag,
             "category": category,#栏目
             "restype": restype,#
             "gallary": gallary#里面的所有图片地址
@@ -289,12 +291,16 @@ class TencentParse(BaseParse):
             category = params['chlid'][0]
             if category == "news_news_top":
                 category = "要闻"
+                categorytag = self.categroytag["%s" % category]
             elif category == "news_news_lianghui":
                 category = "两会"
+                categorytag = self.categroytag["%s" % category]
             elif category == "news_video_top":
                 category = "视频"
+                categorytag = self.categroytag["%s" % category]
             elif category == "news_video_main":
                 category = "图片"
+                categorytag = self.categroytag["%s" % category]
             else:
                 log.debug("不在4种类型之内")
                 return
@@ -318,4 +324,4 @@ class TencentParse(BaseParse):
         except:
             return
         for y, x in enumerate(list):
-            self.Analysis_ten(x, category, crawltime, y)
+            self.Analysis_ten(x, category, crawltime, y,categorytag)

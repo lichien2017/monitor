@@ -16,7 +16,7 @@ class ToutiaoParse(BaseParse):
     #     BaseModel.BaseParse.__init__(self,name)
 
     # 解析今日头条
-    def Analysis_sntt(self,x, category, crawltime, y):
+    def Analysis_sntt(self,x, category, crawltime, y,categorytag):
         data = x['content']
         #try:
         #    date = time.strftime('%Y%m%d%H%M%S',time.localtime(time.time()))#当前时间
@@ -232,7 +232,9 @@ class ToutiaoParse(BaseParse):
             "keyword": keywords,
             "seq": seq,
             "identity":str(articleid),
-            "appname": "今日头条",
+            "appname": self.appname,
+            "app_tag": self.apptag,
+            "category_tag":categorytag,
             "category": category,
             "restype": restype,
             "gallary": gallary
@@ -252,14 +254,19 @@ class ToutiaoParse(BaseParse):
             category = params['category'][0]
             if category == "news_hot":
                 category = "热点"
+                categorytag = self.categroytag["%s" % category]
             elif category == "hotsoon_video":
                 category = "小视频"
+                categorytag = self.categroytag["%s" % category]
             elif category == "video":
                 category = "视频"
+                categorytag = self.categroytag["%s" % category]
             elif category == "组图":
                 category = "图片"
+                categorytag = self.categroytag["%s" % category]
             elif category == "image_wonderful":
                 category = "美图"
+                categorytag = self.categroytag["%s" % category]
         except :
             if url.find('wenda/v1/native/feedbrow') > -1:
                 category = "问答"
@@ -274,5 +281,5 @@ class ToutiaoParse(BaseParse):
         data = json.loads(data)
         list = data['data']
         for y,x in enumerate(list):
-            self.Analysis_sntt(x,category,crawltime,y)
+            self.Analysis_sntt(x,category,crawltime,y,categorytag)
 

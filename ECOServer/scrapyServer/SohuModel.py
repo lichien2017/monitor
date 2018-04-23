@@ -15,7 +15,7 @@ log = Logger()
 class SohuParse(BaseParse):
 
     #解析搜狐新闻
-    def Analysis_shxw(self,data,category,crawltime,y):
+    def Analysis_shxw(self,data,category,crawltime,y,categorytag):
         #try:
         #    date = time.strftime('%Y%m%d%H%M%S',time.localtime(time.time()))#当前时间
         #    f = open("E:\\" + category + date + ".txt",'a')
@@ -124,7 +124,9 @@ class SohuParse(BaseParse):
             "keyword": "",
             "seq": seq,
             "identity":str(articleid),
-            "appname": "搜狐新闻",
+            "appname": self.appname,
+            "app_tag": self.apptag,
+            "category_tag": categorytag,
             "category": category,
             "restype": restype,
             "gallary": gallary
@@ -143,14 +145,17 @@ class SohuParse(BaseParse):
         if url.find('v6/news.go') > -1:
             if channelId == "1":
                 category ="要闻"
+                categorytag = self.categroytag["%s" % category]
             elif channelId == "13557":
                 category = "推荐"
+                categorytag = self.categroytag["%s" % category]
             else:
                 log.debug(url)
                 return
         elif url.find('v5/news.go') > -1:
             if channelId == "4313":
                 category = "两会"
+                categorytag = self.categroytag["%s" % category]
             else:
                 log.debug(url)
                 return
@@ -163,8 +168,8 @@ class SohuParse(BaseParse):
         data = json.loads(data)
         list = data['recommendArticles']
         for y,x in enumerate(list):
-            self.Analysis_shxw(x,category,crawltime,y)
+            self.Analysis_shxw(x,category,crawltime,y,categorytag)
         if category == "要闻":
             list = data['trainArticles']['trainList']
             for y,x in enumerate(list):
-                self.Analysis_shxw(x,category,crawltime,y)
+                self.Analysis_shxw(x,category,crawltime,y,categorytag)

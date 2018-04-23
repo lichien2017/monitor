@@ -14,7 +14,7 @@ log = Logger()
 
 class i1NewsParse(BaseParse):
     # 解析一点资讯
-    def Analysis_ydzx(self, data, category, crawltime, y):
+    def Analysis_ydzx(self, data, category, crawltime, y,categorytag):
         # try:
         #     date = time.strftime('%Y%m%d%H%M%S',time.localtime(time.time()))#当前时间
         #     f = open("E:\\" + category + date + ".txt",'a')
@@ -27,12 +27,12 @@ class i1NewsParse(BaseParse):
             if cardSubType == "special_topic":
                 documents_list = data['documents']
                 for d in documents_list:
-                    self.add_ydzx_db(d, category, crawltime, y)
+                    self.add_ydzx_db(d, category, crawltime, y,categorytag)
         except:
-            self.add_ydzx_db(data, category, crawltime, y)
+            self.add_ydzx_db(data, category, crawltime, y,categorytag)
 
     # 一点资讯插入数据库
-    def add_ydzx_db(self, data, category, crawltime, y):
+    def add_ydzx_db(self, data, category, crawltime, y,categorytag):
         seq = y + 1  # 排序
         title = ""  # 标题
         articleid = ""  # 文章标识
@@ -139,7 +139,9 @@ class i1NewsParse(BaseParse):
             "keyword": "",
             "seq": seq,
             "identity": str(articleid),
-            "appname": "一点资讯",
+             "appname": self.appname,
+            "app_tag": self.apptag,
+            "category_tag":categorytag,
             "category": category,
             "restype": restype,
             "gallary": gallary
@@ -156,16 +158,21 @@ class i1NewsParse(BaseParse):
         params = urllib.parse.parse_qs(result.query, True)
         if url.find('news-list-for-best-channel') > -1:
             category = "推荐"
+            categorytag = self.categroytag["%s" % category]
         elif url.find('news-list-for-hot-channel') > -1:
             category = "要闻"
+            categorytag = self.categroytag["%s" % category]
         elif url.find('news-list-for-channel') > -1:
             channel_id = params['channel_id'][0]
             if channel_id == "21044074964":
                 category = "美图"
+                categorytag = self.categroytag["%s" % category]
             elif channel_id == "21044074724":
                 category = "视频"
+                categorytag = self.categroytag["%s" % category]
             elif channel_id == "21044074756":
                 category = "图片"
+                categorytag = self.categroytag["%s" % category]
             else:
                 log.debug(url)
                 return
@@ -185,4 +192,4 @@ class i1NewsParse(BaseParse):
             elif category == "视频" or category == "美图":
                 if y == 0:
                     continue
-            self.Analysis_ydzx(x, category, crawltime, y)
+            self.Analysis_ydzx(x, category, crawltime, y,categorytag)

@@ -24,8 +24,11 @@ class MyQueue(object):
 
 #解析基类
 class BaseParse(object):
-    def __init__(self,name):
+    def __init__(self,name,appname,apptag,categroytag):
         self.name = name
+        self.appname = appname
+        self.apptag = apptag
+        self.categroytag = categroytag
         print(name)
 
     #插入mongodb
@@ -77,7 +80,7 @@ def flowparse(confdata):
     #amod = __import__("ToutiaoModel", fromlist=True)
     #log.debug('imported modname')
     aclass = getattr(amod, confdata["classname"])
-    parser = aclass(confdata["classname"])
+    parser = aclass(confdata["classname"],confdata["apppinfo"]["app_name"],confdata["apppinfo"]["app_tag"],confdata["apppinfo"]["categroy"])
 
     #log.debug('created confdata')
     queue = MyQueue(db=ConfigHelper.redisdb,host=ConfigHelper.redisip)

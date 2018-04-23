@@ -14,7 +14,7 @@ log = Logger()
 
 class BaiDuParse(BaseParse):
     # 解析百度新闻
-    def Analysis_bdxw(self, data, category, crawltime, y):
+    def Analysis_bdxw(self, data, category, crawltime, y, categorytag):
         # try:
         #    date = time.strftime('%Y%m%d%H%M%S',time.localtime(time.time()))#当前时间
         #    f = open("E:\\" + category + date + ".txt",'a')
@@ -91,7 +91,9 @@ class BaiDuParse(BaseParse):
             "keyword": "",
             "seq": seq,
             "identity": str(articleid),
-            "appname": "百度新闻",
+            "appname": self.appname,
+            "app_tag": self.apptag,
+            "category_tag":categorytag,
             "category": category,
             "restype": restype,
             "gallary": gallary
@@ -106,12 +108,16 @@ class BaiDuParse(BaseParse):
         url = strjson['url']
         if url.find('api/feed_feedlist') > -1:
             category = "推荐"
+            categorytag = self.categroytag["%s" % category]
         elif url.find('api/newchosenlist') > -1:
             category = "视频"
+            categorytag = self.categroytag["%s" % category]
         elif url.find('api/newslist') > -1:
             category = "两会"
+            categorytag = self.categroytag["%s" % category]
         elif url.find('api/medianewslist') > -1:
             category = "图片"
+            categorytag = self.categroytag["%s" % category]
         else:
             log.debug(url)
             return
@@ -123,10 +129,10 @@ class BaiDuParse(BaseParse):
         if category == "推荐":
             data = list['top']
             for y, x in enumerate(data):
-                self.Analysis_bdxw(x, category, crawltime, y)
+                self.Analysis_bdxw(x, category, crawltime, y,categorytag)
             data = list['news']
             for y, x in enumerate(data):
-                self.Analysis_bdxw(x, category, crawltime, y)
+                self.Analysis_bdxw(x, category, crawltime, y,categorytag)
         else:
             data = list['news']
             datalen = len(data)
@@ -135,4 +141,4 @@ class BaiDuParse(BaseParse):
                 if category == "图片":
                     if datalen == y + 1:
                         return
-                self.Analysis_bdxw(x, category, crawltime, y)
+                self.Analysis_bdxw(x, category, crawltime, y,categorytag)

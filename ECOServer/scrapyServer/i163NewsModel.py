@@ -14,7 +14,7 @@ log = Logger()
 
 class WYNewsParse(BaseParse):
     # 解析网易新闻
-    def Analysis_wyxw(self, data, category, crawltime, y):
+    def Analysis_wyxw(self, data, category, crawltime, y,categorytag):
         # try:
         #    date = time.strftime('%Y%m%d%H%M%S',time.localtime(time.time()))#当前时间
         #    f = open("E:\\" + category + date + ".txt",'a')
@@ -211,7 +211,9 @@ class WYNewsParse(BaseParse):
             "keyword": "",
             "seq": seq,
             "identity": str(articleid),
-            "appname": "网易新闻",
+            "appname": self.appname,
+            "app_tag": self.apptag,
+            "category_tag":categorytag,
             "category": category,
             "restype": restype,
             "gallary": gallary
@@ -232,25 +234,31 @@ class WYNewsParse(BaseParse):
                 category = params['from'][0]
                 if category == "toutiao":
                     category = "头条"
+                    categorytag = self.categroytag["%s" % category]
             except:
                 category = "热点"
+                categorytag = self.categroytag["%s" % category]
         elif url.find('recommend/getChanListNews') > -1:
             category = "视频"
+            categorytag = self.categroytag["%s" % category]
         elif url.find('recommend/getComRecNews') > -1:
             wdidstr = url.split('?')[0].split('/')
             wdid = wdidstr[5]
             category = "问吧"
+            categorytag = self.categroytag["%s" % category]
         elif url.find('recommend/useraction') > -1:
             if url.find('recommend/useraction?info=') > -1:
                 log.debug(url)
                 return
             category = "两会"
+            categorytag = self.categroytag["%s" % category]
         elif url.find('photo/api') > -1:
             # photo/api/set 为图片详情
             if url.find('photo/api/set') > -1:
                 log.debug(url)
                 return
             category = "图片"
+            categorytag = self.categroytag["%s" % category]
         else:
             return
         crawltime = strjson['time']
@@ -272,4 +280,4 @@ class WYNewsParse(BaseParse):
         elif category == "问吧":
             list = data[wdid]
         for y, x in enumerate(list):
-            self.Analysis_wyxw(x, category, crawltime, y)
+            self.Analysis_wyxw(x, category, crawltime, y,categorytag)

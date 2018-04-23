@@ -14,7 +14,7 @@ log = Logger()
 class TianTianParse(BaseParse):
 
     #解析天天快报
-    def Analysis_ttkb(self,data,category,crawltime,y):
+    def Analysis_ttkb(self,data,category,crawltime,y,categorytag):
         #try:
         #    date = time.strftime('%Y%m%d%H%M%S',time.localtime(time.time()))#当前时间
         #    f = open("E:\\" + category + date + ".txt",'a')
@@ -184,7 +184,9 @@ class TianTianParse(BaseParse):
             "keyword": "",
             "seq": seq,
             "identity":str(articleid),
-            "appname": "天天快报",
+            "appname": self.appname,
+            "app_tag": self.apptag,
+            "category_tag":categorytag,
             "category": category,
             "restype": restype,
             "gallary": gallary
@@ -209,14 +211,19 @@ class TianTianParse(BaseParse):
                     break
             if chlid == "kb_news_lianghui":
                 category = "两会"
+                categorytag = self.categroytag["%s" % category]
             elif chlid == "kb_video_news":
                 category = "视频"
+                categorytag = self.categroytag["%s" % category]
             elif chlid == "kb_news_hotnews":
                 category = "热点"
+                categorytag = self.categroytag["%s" % category]
             elif chlid == "kb_news_qna":
                 category = "问答"
+                categorytag = self.categroytag["%s" % category]
             elif chlid == "kb_photo_news":
                 category = "图片"
+                categorytag = self.categroytag["%s" % category]
             else:
                 log.debug(post)
                 return
@@ -229,4 +236,4 @@ class TianTianParse(BaseParse):
         data = json.loads(data)
         list = data['newslist']
         for y,x in enumerate(list):
-            self.Analysis_ttkb(x,category,crawltime,y)
+            self.Analysis_ttkb(x,category,crawltime,y,categorytag)
