@@ -97,7 +97,7 @@ def flowparse(confdata):
         #print('step 1')
 
         if (datastr == None):
-            log.debug("has no data")
+            SingleLogger().debug("has no data")
             break
 
         data = parser.tryparse(datastr)
