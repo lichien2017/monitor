@@ -2,46 +2,92 @@
   {
     "modname": "scrapyServer.ToutiaoModel",
     "classname": "ToutiaoParse",
-    "queuename": "origin:snssdk"
+    "queuename": "origin:snssdk",
+    "apppinfo":{
+      "app_name":"今日头条",
+      "app_tag":"snssdk",
+      "categroy":{"推荐":"推荐","热点":"热点","视频":"视频","问答":"问答","图片":"图片","小视频":"小视频","美图":"美图","两会":"两会"}
+    }
   },
   {
     "modname": "scrapyServer.i163NewsModel",
     "classname": "WYNewsParse",
-    "queuename": "origin:163sdk"
+    "queuename": "origin:163sdk",
+     "apppinfo":{
+      "app_name":"网易新闻",
+      "app_tag":"netease",
+      "categroy":{"头条":"头条","热点":"热点","视频":"视频","问吧":"问吧","图片":"图片"}
+    }
   },
   {
     "modname": "scrapyServer.BaiDuModel",
     "classname": "BaiDuParse",
-    "queuename": "origin:bdsdk"
+    "queuename": "origin:bdsdk",
+    "apppinfo":{
+      "app_name":"百度",
+      "app_tag":"baidu",
+      "categroy":{"推荐":"推荐","视频":"视频","图片":"图片","两会":"两会"}
+    }
   },
   {
     "modname": "scrapyServer.i1NewsModel",
     "classname": "i1NewsParse",
-    "queuename": "origin:ydsdk"
+    "queuename": "origin:ydsdk",
+    "apppinfo":{
+      "app_name":"一点资讯",
+      "app_tag":"yidian",
+      "categroy":{"推荐":"推荐","要闻":"要闻","视频":"视频","图片":"图片","美图":"美图"}
+    }
   },
   {
     "modname": "scrapyServer.TianTianModel",
     "classname": "TianTianParse",
-    "queuename": "origin:ttsdk"
+    "queuename": "origin:ttsdk",
+    "apppinfo":{
+      "app_name":"天天快报",
+      "app_tag":"tiantian",
+      "categroy":{"推荐":"推荐","热点":"热点","视频":"视频","问答":"问答","图片":"图片"}
+    }
   },
   {
     "modname": "scrapyServer.SohuModel",
     "classname": "SohuParse",
-    "queuename": "origin:shsdk"
+    "queuename": "origin:shsdk",
+     "apppinfo":{
+      "app_name":"搜狐新闻",
+      "app_tag":"sohu",
+      "categroy":{"推荐":"推荐","要闻":"要闻"}
+    }
   },
   {
     "modname": "scrapyServer.TencentModel",
     "classname": "TencentParse",
-    "queuename": "origin:tensdk"
+    "queuename": "origin:tensdk",
+    "apppinfo":{
+      "app_name":"腾讯新闻",
+      "app_tag":"tencent",
+      "categroy":{"要闻":"要闻","视频":"视频","图片":"图片","两会":"两会"}
+    }
   },
   {
     "modname": "scrapyServer.FenHModel",
     "classname": "FenHParse",
-    "queuename": "origin:fhsdk"
+    "queuename": "origin:fhsdk",
+    "apppinfo":{
+      "app_name":"凤凰新闻",
+      "app_tag":"ifeng",
+      "categroy":{"头条":"头条","视频":"视频","要闻":"要闻","图片":"图片","小视频":"小视频"}
+    }
   },
   {
     "modname": "scrapyServer.SinaModel",
     "classname": "SinaParse",
-    "queuename": "origin:sinasdk"
+    "queuename": "origin:sinasdk",
+    "apppinfo":{
+      "app_name":"新浪新闻",
+      "app_tag":"sina",
+      "categroy":{"推荐":"推荐","视频":"视频","要闻":"要闻","图片":"图片"}
+    }
   }
 ]
+
