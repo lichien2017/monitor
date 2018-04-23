@@ -33,7 +33,7 @@ class WYNewsParse(BaseParse):
         try:
             title = data['title']
         except:
-            SingleLogger().debug("无title")
+            SingleLogger().log.debug("无title")
         publish_time = ""  # 发布时间
         publish_timestr = ""  # 发布时间戳
         if category == "视频":
@@ -59,22 +59,22 @@ class WYNewsParse(BaseParse):
             try:
                 abstract = data['digest']
             except:
-                SingleLogger().debug("无digest")
+                SingleLogger().log.debug("无digest")
             try:
                 logo = data['imgsrc']
             except:
-                SingleLogger().debug("无imgsrc")
+                SingleLogger().log.debug("无imgsrc")
             try:
                 source = data['source']
             except:
-                SingleLogger().debug("无source")
+                SingleLogger().log.debug("无source")
             try:
                 if category == "问吧":
                     articleid = data['docid']
                 else:
                     articleid = data['id']
             except:
-                SingleLogger().debug("无id")
+                SingleLogger().log.debug("无id")
             # 若唯一标识为空，则获取图片唯一标识，此资讯为图片资讯
             if articleid == "":
                 articleid = data['photosetID']
@@ -84,14 +84,14 @@ class WYNewsParse(BaseParse):
                 if TAG == "视频":
                     restype = 3
             except:
-                SingleLogger().debug("无TAG")
+                SingleLogger().log.debug("无TAG")
             try:
                 img_list = data['imgnewextra']
                 for z in img_list:
                     if z['imgsrc'] != "":
                         logo += "," + z['imgsrc']
             except:
-                SingleLogger().debug("仅一张或没有图片")
+                SingleLogger().log.debug("仅一张或没有图片")
             try:
                 tab = data['interest']
                 if tab == "S":
@@ -99,7 +99,7 @@ class WYNewsParse(BaseParse):
                 else:
                     tab = ""
             except:
-                SingleLogger().debug("无interest")
+                SingleLogger().log.debug("无interest")
             if category == "热点":
                 try:
                     tab = data['recReason']
@@ -108,7 +108,7 @@ class WYNewsParse(BaseParse):
                     else:
                         tab = ""
                 except:
-                    SingleLogger().debug("无recReason")
+                    SingleLogger().log.debug("无recReason")
         seq = y + 1  # 排序
         if publish_timestr == "":
             try:
@@ -120,7 +120,7 @@ class WYNewsParse(BaseParse):
                     publish_time = data['recTime']
                     publish_timestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(publish_time))
                 except:
-                    SingleLogger().debug("无recTime、ptime")
+                    SingleLogger().log.debug("无recTime、ptime")
         crawltimestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(crawltime / 1000))
         # 拼链接地址
         news_detail_url = 'https://c.m.163.com/nc/article/' + str(articleid) + '/full.html'
@@ -183,7 +183,7 @@ class WYNewsParse(BaseParse):
                         if v['url_mp4'] != "":
                             gallary += v['url_mp4'] + ","
                 except:
-                    SingleLogger().debug("无视频")
+                    SingleLogger().log.debug("无视频")
                 content = news_detail['body']
                 # 读取
                 try:
@@ -247,14 +247,14 @@ class WYNewsParse(BaseParse):
             categorytag = self.categroytag["%s" % category]
         elif url.find('recommend/useraction') > -1:
             if url.find('recommend/useraction?info=') > -1:
-                SingleLogger().debug(url)
+                SingleLogger().log.debug(url)
                 return
             category = "两会"
             categorytag = self.categroytag["%s" % category]
         elif url.find('photo/api') > -1:
             # photo/api/set 为图片详情
             if url.find('photo/api/set') > -1:
-                SingleLogger().debug(url)
+                SingleLogger().log.debug(url)
                 return
             category = "图片"
             categorytag = self.categroytag["%s" % category]
@@ -266,7 +266,7 @@ class WYNewsParse(BaseParse):
         try:
             data = json.loads(data)
         except:
-            SingleLogger().debug("无效抓取")
+            SingleLogger().log.debug("无效抓取")
             return
         if category == "热点":
             list = data['推荐']
