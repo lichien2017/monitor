@@ -80,7 +80,7 @@ class ScreenCaptureMatch(Thread):
         res = self._database["originnews"+date].find_one({"identity":"%s" % (resouce_id)})
         if res == None :
             return None
-        SingleLogger().log.debug(res)
+        # SingleLogger().log.debug(res)
         return res
 
     def write_to_queue(self,res_id,title,pics,seqs):
@@ -122,7 +122,7 @@ class ScreenCaptureMatch(Thread):
         screencap_cursor = collection.find(query, limit=10)
         try:
             for item in screencap_cursor:
-                # SingleLogger().log.debug(item)
+                SingleLogger().log.debug(item)
                 res = self.__get_resource(item["res_id"],date.strftime("%Y%m%d"))  # 获取资源详情
                 pictures, seqs = self.queryPictures(date.strftime("%Y%m%d"),item["time"],item["app_tag"],item["category_tag"])
                 if len(pictures) > 0:
