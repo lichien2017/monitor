@@ -1,7 +1,7 @@
 #-*- coding: UTF-8 -*-
 from analysis.rule import Rule
-from util.log import Logger
-log = Logger()
+from util import *
+# log = Logger()
 class ColumnRule(Rule):
     def execute(self,res_msg,extra=None):
         super().execute(res_msg,extra)
@@ -9,7 +9,7 @@ class ColumnRule(Rule):
     @staticmethod
     def add_resource_to_queue(res_msg):
         # 插入消息队列
-        log.debug('kk')
+        SingleLogger().log.debug('kk')
 
 class KeyWordRule(Rule):
     def execute(self,res_msg,extra=None):
@@ -18,4 +18,4 @@ class KeyWordRule(Rule):
     @staticmethod
     def add_resource_to_queue(res_msg):
         # 插入消息队列
-        log.debug('kk')
+        SingleLogger().log.debug('kk')

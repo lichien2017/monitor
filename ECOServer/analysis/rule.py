@@ -7,7 +7,7 @@ import json
 import time
 from util import *
 # from util.log import Logger
-log = Logger()
+# log = Logger()
 
 class Rule:
     _mongodb_client = None
@@ -40,24 +40,24 @@ class Rule:
 
     # 通过资源id和资源抓取的时间找到资源详情
     def _get_resource(self,res_id,date):
-        log.debug("_get_resource:%s" % res_id)
-        log.debug("_mongodb = %s",'crawlnews'+LocalTime.get_local_date(date,"%Y%m%d").strftime("%Y%m"))
+        SingleLogger().log.debug("_get_resource:%s" % res_id)
+        SingleLogger().log.debug("_mongodb = %s",'crawlnews'+LocalTime.get_local_date(date,"%Y%m%d").strftime("%Y%m"))
         self._mongodb = self._mongodb_client['crawlnews']
         # 从指定日期的分表中查询数据
-        log.debug("table = %s", "originnews"+date)
+        SingleLogger().log.debug("table = %s", "originnews"+date)
         res = self._mongodb["originnews"+date].find_one({"identity":"%s" % (res_id)})
         if res == None :
             return None
-        log.debug(res)
+        SingleLogger().log.debug(res)
         return res
     # 0 level规则处理函数
     def _level0_execute(self,res_id,resource,table,extra=None):
         if self._res_columns == None or self._extra_data == None :
-            log.debug("_level0_execute 函数没有可用的数据执行")
+            SingleLogger().log.debug("_level0_execute 函数没有可用的数据执行")
             return
         for col in self._res_columns :
             for keyword in self._extra_data :
-                log.debug("%s列的数据'%s'是否包含关键字'%s'" % (col,resource[col],keyword))
+                SingleLogger().log.debug("%s列的数据'%s'是否包含关键字'%s'" % (col,resource[col],keyword))
                 if resource[col] == keyword or resource[col].find(keyword) >=0:  # 匹配关键字
                     # 关键字匹配上了，插入到对应的数据表格中
                     #table = self._mongodb[self._mongodb_tablename+LocalTime.now_str()]
@@ -81,7 +81,7 @@ class Rule:
         return normal_msg
     # 非0 level规则处理函数
     def execute_other(self,res_id,resource,crawl_time_str,extra=None):
-        log.debug('其他处理方式') # 但是这里不需要实现，由各实现类的线程函数直接处理了，如果实现了，那实质上是同步调用方式
+        SingleLogger().log.debug('其他处理方式') # 但是这里不需要实现，由各实现类的线程函数直接处理了，如果实现了，那实质上是同步调用方式
         if resource == None :
             return
         # title = resource["title"]
@@ -100,7 +100,7 @@ class Rule:
                 normal_msg["seq"] = col
                 normal_msg["data"] = [resource[col]]
                 normal_msg["resdata"] = "%s,%s" % (res_id,crawl_time_str)
-                log.debug("title package:%s", normal_msg)
+                SingleLogger().log.debug("title package:%s", normal_msg)
                 self._redis_server.lpush(self.queue_name_text, json.dumps(normal_msg))
 
 
@@ -136,12 +136,12 @@ class Rule:
     # res_msg {res_id:xxxx,time:xxxx}
     def execute(self,res_msg_json,extra=None):
         item = json.loads(res_msg_json) # 转换成dict
-        log.debug("规则:%s,正在处理:resource_id=%s" % (self.__class__.__name__,item["res_id"]))
+        SingleLogger().log.debug("规则:%s,正在处理:resource_id=%s" % (self.__class__.__name__,item["res_id"]))
         resource = self._get_resource(item["res_id"],item["time"])
         if resource != None:
-            # log.debug("资源找到了，检查结果表中是否存在数据:%s%s" %(self._mongodb_tablename,resource["time"]))
+            # SingleLogger().log.debug("资源找到了，检查结果表中是否存在数据:%s%s" %(self._mongodb_tablename,resource["time"]))
             table = self._mongodb[self._mongodb_tablename+item["time"]]
-            # log.debug(table)
+            # SingleLogger().log.debug(table)
             try:
                 rows = table.find({"res_id": item["res_id"]})
                 if rows.count() == 0:  # 如果不存在数据表中，则开始判断是否能匹配上规则
@@ -150,7 +150,7 @@ class Rule:
                     else:
                         self.execute_other(item["res_id"],resource,item["time"],extra)
             except Exception as e:
-                log.error(e)
+                SingleLogger().log.error(e)
                 pass
 
         return 0
@@ -166,10 +166,10 @@ class Rule:
 class RuleFactory:
     @staticmethod
     def get_class(settings):
-        log.debug("module:"+settings["imp_python_module"])
+        SingleLogger().log.debug("module:"+settings["imp_python_module"])
         ip_module = __import__(settings["imp_python_module"])
         # dir()查看模块属性
-        log.debug(dir(ip_module))
+        SingleLogger().log.debug(dir(ip_module))
         # 使用getattr()获取imp_module的类
         obj_class = getattr(ip_module, settings["imp_python_class"])
         return obj_class

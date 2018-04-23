@@ -1,10 +1,8 @@
 
 from screencap.screencap_match import ScreenCaptureMatch
 
-from util.log import Logger
-
-log = Logger()
-
+from util import *
+import  sys
 
 
 def main():
@@ -13,4 +11,5 @@ def main():
     pass
 
 if __name__ == "__main__" :
+    SingleLogger().log.debug("测试")
     main()

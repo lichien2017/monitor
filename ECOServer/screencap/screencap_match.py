@@ -6,10 +6,9 @@ import time
 import datetime
 import redis
 import json
-
 from util import *
 
-log = Logger()
+# log = Logger()
 
 time_format = "%Y-%m-%d %H:%M:%S"
 interval = 10 #10分钟间隔
@@ -22,6 +21,7 @@ redis_server = redis.StrictRedis(connection_pool=pool)
 class ScreenCaptureMatch(Thread):
 
     def __init__(self):
+        # SingleLogger().log.debug("ScreenCaptureMatch")
         Thread.__init__(self)
         self._client = MongoClient(ConfigHelper.mongodbip, ConfigHelper.mongodbport)
         self._database = self._client["crawlnews"]
@@ -32,8 +32,8 @@ class ScreenCaptureMatch(Thread):
         start_time = datetime.datetime.strptime(pkg_time,time_format)
         end_time = start_time + datetime.timedelta(minutes=interval)
 
-        log.debug(start_time)
-        log.debug(end_time)
+        SingleLogger().log.debug(start_time)
+        SingleLogger().log.debug(end_time)
 
         query = {}
         query["tag"] = app_tag
@@ -53,7 +53,7 @@ class ScreenCaptureMatch(Thread):
 
         # {'time': {'$gte': '2018-04-19 01:42:57'}, '$and': [{'time': {'$lte': '2018-04-19 02:42:57'}}]}
         # {'time': {'$gte': '2018-04-19 01:42:59'}, '$and': [{'time': {'$lte': '2018-04-19 01:47:59'}}]}
-        log.debug(query)
+        SingleLogger().log.debug(query)
 
         # now = LocalTime.now()  # datetime.datetime.now()
         # date = now + datetime.timedelta(days=DAYS)
@@ -69,24 +69,24 @@ class ScreenCaptureMatch(Thread):
                 seq.append(doc["screen"])
         finally:
             pass
-        log.debug(pic)
+        SingleLogger().log.debug(pic)
         return pic,seq
 
         pass
 
     def __get_resource(self,resouce_id,date):
-        log.debug("_get_resource:%s" % resouce_id)
+        SingleLogger().log.debug("_get_resource:%s" % resouce_id)
         self._database = self._client['crawlnews']
         res = self._database["originnews"+date].find_one({"identity":"%s" % (resouce_id)})
         if res == None :
             return None
-        log.debug(res)
+        SingleLogger().log.debug(res)
         return res
 
     def write_to_queue(self,res_id,title,pics,seqs):
         data =  {"resid":res_id,"title":title,"imgs":pics,"seqs":seqs}
         json_str = json.dumps(data)
-        log.debug(json_str)
+        SingleLogger().log.debug(json_str)
         redis_server.lpush("ocr:queue",json_str)
         pass
 
@@ -113,7 +113,7 @@ class ScreenCaptureMatch(Thread):
         #local_time = LocalTime.now() #datetime.datetime.fromtimestamp(time.time())
         now = LocalTime.now() #datetime.datetime.now()
         date = now + datetime.timedelta(days=DAYS)
-        log.debug(date.strftime("%Y%m%d"))
+        SingleLogger().log.debug(date.strftime("%Y%m%d"))
 
         collection = self._database["screencapocr" + date.strftime("%Y%m%d")]
         # 查询条件
@@ -122,7 +122,7 @@ class ScreenCaptureMatch(Thread):
         screencap_cursor = collection.find(query, limit=10)
         try:
             for item in screencap_cursor:
-                log.debug(item)
+                SingleLogger().log.debug(item)
                 res = self.__get_resource(item["res_id"],date.strftime("%Y%m%d"))  # 获取资源详情
                 pictures, seqs = self.queryPictures(date.strftime("%Y%m%d"),item["time"],item["app_tag"],item["category_tag"])
                 if len(pictures) > 0:
@@ -137,10 +137,10 @@ class ScreenCaptureMatch(Thread):
     def recv_data(self,collection):
         data = redis_server.rpop("ocr:result")
         if data != None:
-            log.debug(data)
+            SingleLogger().log.debug(data)
             item_str = data.decode("utf-8")
             item = json.loads(item_str)
-            log.debug(item)
+            SingleLogger().log.debug(item)
             query = {}
             query["res_id"] = {
                 u"$in": [

@@ -7,7 +7,6 @@ from mysqldb.mysql_helper import MySQLHelper
 
 
 class Collector(Thread):
-    log = Logger()
     def __init__(self):
         Thread.__init__(self)
         self._client = MongoClient(ConfigHelper.mongodbip, ConfigHelper.mongodbport)
@@ -17,7 +16,7 @@ class Collector(Thread):
     # 处理单列的有害数据
     def copy_data_one_column(self,table_name,rule_tag,date):
         if table_name == None:
-            self.log.debug("table_name is None")
+            SingleLogger().log.debug("table_name is None")
             return
         table = self._database[table_name]
         rows = table.find() # 查询出所有数据
@@ -31,7 +30,7 @@ class Collector(Thread):
             # 执行SQL，并返回收影响行数
             row_count = cursor.execute(insert_sql)
             conn.commit()
-            self.log.debug(row)
+            SingleLogger().log.debug(row)
             pass
         cursor.close()
         conn.close()
@@ -39,7 +38,7 @@ class Collector(Thread):
     # 处理ORC的数据，识别资源是第几屏幕
     def copy_data_screen_orc(self,table_name,rule_tag,date):
         if table_name == None:
-            self.log.debug("table_name is None")
+            SingleLogger().log.debug("table_name is None")
             return
         table = self._database[table_name]
         rows = table.find()
@@ -56,11 +55,11 @@ class Collector(Thread):
         result = cursor.fetchone()
 
         while result != None:
-            self.log.debug(result)
+            SingleLogger().log.debug(result)
             yestoday = LocalTime.now()
             yestoday_str = yestoday.strftime("%Y%m%d")
             table_name = "%s%s" % (result["mongodb_tablename"],yestoday_str)
-            self.log.debug("table_name is %s",table_name)
+            SingleLogger().SingleLogger().log.debug("table_name is %s",table_name)
             if result["mongodb_tablename"].startswith("screencapocr") : #如果是判断第几屏幕，单独处理
                 self.copy_data_screen_orc(table_name,result["mongodb_tablename"],yestoday_str)
                 pass

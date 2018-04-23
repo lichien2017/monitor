@@ -10,7 +10,7 @@ from analysis.rule_level0_service import RuleServiceLevel0
 from analysis.rule_level0_service import RuleServiceLevel1
 
 
-log = Logger()
+# log = Logger()
 
 if __name__ == "__main__":
     ruleServiceLevel0 = RuleServiceLevel0(ConfigHelper.load_rule_time)
