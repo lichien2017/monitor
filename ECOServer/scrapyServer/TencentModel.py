@@ -11,7 +11,6 @@ import sys
 import requests as rq
 from bs4 import BeautifulSoup
 from util.log import SingleLogger
-log = SingleLogger()
 
 class TencentParse(BaseParse):
 
@@ -23,13 +22,13 @@ class TencentParse(BaseParse):
         try:
             title = data['title']#标题
         except:
-            SingleLogger.log.debug('无标题')
+            SingleLogger().debug('无标题')
         #摘要
         abstract = ""
         try:
             abstract = data['abstract']#摘要
         except:
-            SingleLogger.log.debug("无摘要")
+            SingleLogger().debug("无摘要")
         #文章标识
         articleid = ""
         try:
@@ -38,7 +37,7 @@ class TencentParse(BaseParse):
             if articleid == "":
                 return
         except:
-            SingleLogger.log.debug("无文章标识")
+            SingleLogger().debug("无文章标识")
         #图片
         logo = ""
         #来源
@@ -48,7 +47,7 @@ class TencentParse(BaseParse):
         try:
             source = data['source']
         except :
-            SingleLogger.log.debug("无来源")
+            SingleLogger().debug("无来源")
         try :
             url = data['url']#分享地址
             if not(url) or url=="":
@@ -56,7 +55,7 @@ class TencentParse(BaseParse):
                 if not (url) or url == "":
                     url = data['surl']  # 分享地址
         except:
-            SingleLogger.log.debug("无资讯地址")
+            SingleLogger().debug("无资讯地址")
         #发布时间 时间戳
         publish_time = ""
         #发布时间 标准时间
@@ -66,7 +65,7 @@ class TencentParse(BaseParse):
             if publish_time and publish_time != "":
                 publish_timestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(publish_time))
         except:
-            SingleLogger.log.debug("无发布时间")
+            SingleLogger().debug("无发布时间")
 
         # 抓包时间
         crawltimestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(crawltime / 1000))  # 抓包时间
@@ -86,14 +85,14 @@ class TencentParse(BaseParse):
                 else:
                     tab += "、置顶"
         except:
-            SingleLogger.log.debug("无置顶标签")
+            SingleLogger().debug("无置顶标签")
 
         #文章展示类型（528-热点精选 88-问答）
         articletype = ""
         try:
             articletype = data['articletype']
         except:
-            SingleLogger.log.debug("无articletype")
+            SingleLogger().debug("无articletype")
             return
 
         #内容
@@ -116,7 +115,7 @@ class TencentParse(BaseParse):
         try :
             picShowType = data['picShowType']
         except :
-            SingleLogger.log.debug("无picShowType")
+            SingleLogger().debug("无picShowType")
 
         #logo 图片列表(除了视频板块)
         if picShowType == 1:#无图
@@ -135,7 +134,7 @@ class TencentParse(BaseParse):
                     if i != "":
                         logo+=i + ","
             except:
-                SingleLogger.log.debug("没有列表图,可能没有图或是视频")
+                SingleLogger().debug("没有列表图,可能没有图或是视频")
 
         if articletype == "528" or articletype == "525": #528,525-热点精选
             if tab == "":
@@ -155,7 +154,7 @@ class TencentParse(BaseParse):
                         logo = childList['thumbnails'][0]
 
             except:
-                SingleLogger.log.debug("该条热点消息无内容")
+                SingleLogger().debug("该条热点消息无内容")
 
         elif articletype == "1": #图片新闻
             restype = 2#图片
@@ -167,7 +166,7 @@ class TencentParse(BaseParse):
                 logo = videoData["img"]
                 content = videoData["playurl"]
             except:
-                SingleLogger.log.debug('无视频')
+                SingleLogger().debug('无视频')
 
         elif articletype == "533": #直播
             restype = 3  # 视频
@@ -185,7 +184,7 @@ class TencentParse(BaseParse):
                 if publish_time and publish_time != "":
                     publish_timestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(publish_time))# 发布时间 标准时间
             except:
-                SingleLogger.log.debug("无发布时间")
+                SingleLogger().debug("无发布时间")
             try:
                 url = liveVideo['url']  # 分享地址
                 if not (url) or url == "":
@@ -193,7 +192,7 @@ class TencentParse(BaseParse):
                     if not (url) or url == "":
                         url = liveVideo['surl']  # 分享地址
             except:
-                SingleLogger.log.debug("无分享地址")
+                SingleLogger().debug("无分享地址")
 
         elif articletype == "526": #标签列表，不是新闻return
             return
@@ -302,10 +301,10 @@ class TencentParse(BaseParse):
                 category = "图片"
                 categorytag = self.categroytag["%s" % category]
             else:
-                SingleLogger.log.debug("不在4种类型之内")
+                SingleLogger().debug("不在4种类型之内")
                 return
         except :
-            SingleLogger.log.debug("无类型")
+            SingleLogger().debug("无类型")
             return
         crawltime = strjson['time']
         #获取data

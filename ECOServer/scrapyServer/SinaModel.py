@@ -11,7 +11,7 @@ import sys
 import requests as rq
 from bs4 import BeautifulSoup
 from util.log import SingleLogger
-log = SingleLogger()
+
 
 class SinaParse(BaseParse):
     # 解析新浪新闻
@@ -53,9 +53,9 @@ class SinaParse(BaseParse):
             elif data['title'] and data['title'] != "":
                 title = data['title']
             else:
-                SingleLogger.log.debug('无标题1')
+                SingleLogger().debug('无标题1')
         except:
-            SingleLogger.log.debug('无标题2')
+            SingleLogger().debug('无标题2')
 
         # 发布时间
         try:
@@ -63,37 +63,37 @@ class SinaParse(BaseParse):
             if publish_time and publish_time != "":
                 publish_timestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(publish_time))
         except:
-            SingleLogger.log.debug("无发布时间")
+            SingleLogger().debug("无发布时间")
 
         # 抓包时间
         try:
             crawltimestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(crawltime / 1000))  # 抓包时间
         except:
-            SingleLogger.log.debug("获取抓包时间失败")
+            SingleLogger().debug("获取抓包时间失败")
 
         # 来源
         try:
             source = data['source']
         except:
-            SingleLogger.log.debug("没有来源")
+            SingleLogger().debug("没有来源")
 
         # 短地址
         try:
             url = data['link']
         except:
-            SingleLogger.log.debug("无短地址")
+            SingleLogger().debug("无短地址")
 
         # 文章标识
         try:
             articleid = data['newsId']
         except:
-            SingleLogger.log.debug("没有文章标识")
+            SingleLogger().debug("没有文章标识")
 
         # 文章摘要
         try:
             abstract = data['intro']
         except:
-            SingleLogger.log.debug('无摘要')
+            SingleLogger().debug('无摘要')
 
         # 列表图logo
         try:
@@ -111,12 +111,12 @@ class SinaParse(BaseParse):
                 else:
                     tab += "、置顶"
         except:
-            SingleLogger.log.debug('不置顶')
+            SingleLogger().debug('不置顶')
 
         # 分类处理
         # 视频
         if actionType == 3:
-            SingleLogger.log.debug('视频')
+            SingleLogger().debug('视频')
             restype = 3
             # 防止报错
             try:
@@ -124,11 +124,11 @@ class SinaParse(BaseParse):
                 logo = videoInfo['pic']
                 content = videoInfo['url']
             except:
-                SingleLogger.log.debug("获取视频详情失败")
+                SingleLogger().debug("获取视频详情失败")
 
         # 图片
         elif actionType == 6:
-            SingleLogger.log.debug('图片')
+            SingleLogger().debug('图片')
             restype = 2
             try:
                 logo = data['pic']
@@ -137,11 +137,11 @@ class SinaParse(BaseParse):
                     gallary += imgobj['pic'] + "、"
                     content += imgobj['alt'] + "<br>"
             except:
-                SingleLogger.log.debug('获取图片详情失败')
+                SingleLogger().debug('获取图片详情失败')
 
         # 广告
         elif actionType == 1:
-            SingleLogger.log.debug('广告')
+            SingleLogger().debug('广告')
             if tab == "":
                 tab = "广告"
             else:
@@ -149,7 +149,7 @@ class SinaParse(BaseParse):
 
         # 明日头条
         elif actionType == 14:
-            SingleLogger.log.debug('明日头条')
+            SingleLogger().debug('明日头条')
             mrttList = data['mrttList']
             title = mrttList[0]['alt']
             logo = mrttList[0]['kpic']
@@ -157,23 +157,23 @@ class SinaParse(BaseParse):
 
         # 普通新闻
         else:
-            SingleLogger.log.debug('普通新闻')
+            SingleLogger().debug('普通新闻')
             # 防止报错
             if url != '':
                 try:
                     gallary = self.getImg(url)
                 except:
-                    SingleLogger.log.debug("没有gallary")
+                    SingleLogger().debug("没有gallary")
                 try:
                     content = self.getWen(url)
                 except:
-                    SingleLogger.log.debug("没有图文详情")
+                    SingleLogger().debug("没有图文详情")
                 try:
                     video = self.getVideo(url)
                     if video != '':
                         gallary += video
                 except:
-                    SingleLogger.log.debug("详情没有video")
+                    SingleLogger().debug("详情没有video")
 
         sdata = {
             "title": title,
@@ -272,7 +272,7 @@ class SinaParse(BaseParse):
             category = "图片"
             categorytag = self.categroytag["%s" % category]
         else:
-            SingleLogger.log.debug("有不正确的栏目")
+            SingleLogger().debug("有不正确的栏目")
             return
 
         # 获取data
