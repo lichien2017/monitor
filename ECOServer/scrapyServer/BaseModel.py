@@ -7,7 +7,8 @@ from time import sleep
 from pymongo import MongoClient
 from util import *
 
-log = Logger()
+# log = Logger()
+log = SingleLogger()
 #消息队列
 class MyQueue(object):
     def __init__(self,db=7, host='localhost'):
@@ -74,15 +75,15 @@ def flowparse(confdata):
     #create BaseParse by reflact
     #parser = BaseParse(confdata["parsername"])
     # confdata = confobj["conf"]
-    #log.debug('the confdata is:', confdata)
+    #SingleLogger.log.debug('the confdata is:', confdata)
 
     amod = __import__(confdata["modname"], fromlist=True)
     #amod = __import__("ToutiaoModel", fromlist=True)
-    #log.debug('imported modname')
+    #SingleLogger.log.debug('imported modname')
     aclass = getattr(amod, confdata["classname"])
     parser = aclass(confdata["classname"],confdata["apppinfo"]["app_name"],confdata["apppinfo"]["app_tag"],confdata["apppinfo"]["categroy"])
 
-    #log.debug('created confdata')
+    #SingleLogger.log.debug('created confdata')
     queue = MyQueue(db=ConfigHelper.redisdb,host=ConfigHelper.redisip)
     while(True):
         #print('step 0')
@@ -90,7 +91,7 @@ def flowparse(confdata):
         #print('step 1')
 
         if (datastr == None):
-            log.debug("has no data")
+            SingleLogger.log.debug("has no data")
             break
 
         data = parser.tryparse(datastr)

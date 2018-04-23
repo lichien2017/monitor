@@ -9,9 +9,9 @@ import datetime
 import hashlib
 import uuid
 import sys
-from util.log import Logger
-log = Logger()
-
+from util.log import SingleLogger
+# log = Logger()
+log = SingleLogger()
 class i1NewsParse(BaseParse):
     # 解析一点资讯
     def Analysis_ydzx(self, data, category, crawltime, y,categorytag):
@@ -52,11 +52,11 @@ class i1NewsParse(BaseParse):
         try:
             abstract = data['summary']
         except:
-            log.debug("无summary")
+            SingleLogger.log.debug("无summary")
         try:
             articleid = data['docid']
         except:
-            log.debug("广告资讯")
+            SingleLogger.log.debug("广告资讯")
             articleid = data['aid']
             if title == "":
                 title = abstract
@@ -66,22 +66,22 @@ class i1NewsParse(BaseParse):
                 if i != "":
                     logo += i + ","
         except:
-            log.debug("无图片")
+            SingleLogger.log.debug("无图片")
         try:
             card_label = data['card_label']['text']
             tab = card_label
         except:
-            log.debug("无标签")
+            SingleLogger.log.debug("无标签")
         try:
             url = data['url']
         except:
-            log.debug("无url")
+            SingleLogger.log.debug("无url")
         try:
             publish_timestr = data['date']
             timeArray = time.strptime(publish_timestr, "%Y-%m-%d %H:%M:%S")
             publish_time = int(time.mktime(timeArray))
         except:
-            log.debug("无时间")
+            SingleLogger.log.debug("无时间")
         try:
             content_type = data['content_type']
             if content_type == "video":
@@ -102,7 +102,7 @@ class i1NewsParse(BaseParse):
             if ctype == "advertisement":
                 IsArtID = True
                 tab = data['tag']
-                log.debug("广告")
+                SingleLogger.log.debug("广告")
         crawltimestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(crawltime / 1000))
         # 拼链接地址
         news_detail_url = 'https://a1.go2yd.com/Website/contents/content?docid=' + str(articleid)
@@ -174,10 +174,10 @@ class i1NewsParse(BaseParse):
                 category = "图片"
                 categorytag = self.categroytag["%s" % category]
             else:
-                log.debug(url)
+                SingleLogger.log.debug(url)
                 return
         else:
-            log.debug(url)
+            SingleLogger.log.debug(url)
             return
         crawltime = strjson['time']
         # 获取data

@@ -9,8 +9,9 @@ import datetime
 import hashlib
 import uuid
 import sys
-from util.log import Logger
-log = Logger()
+from util.log import SingleLogger
+# log = Logger()
+log = SingleLogger();
 class FenHParse(BaseParse):
 
     #post请求
@@ -44,14 +45,14 @@ class FenHParse(BaseParse):
             if articletype == 'marquee2':
                 return
         except:
-            log.debug("无articletype")
+            SingleLogger.log.debug("无articletype")
             return
 
         # 标题
         try:
             title = data['title']
         except:
-            log.debug('无标题')
+            SingleLogger.log.debug('无标题')
 
         # 发布时间
         try:
@@ -59,19 +60,19 @@ class FenHParse(BaseParse):
             timeArray = time.strptime(publish_timestr, "%Y/%m/%d %H:%M:%S")
             publish_time = int(time.mktime(timeArray)) #string转成时间戳
         except:
-            log.debug("无发布时间")
+            SingleLogger.log.debug("无发布时间")
 
         # 抓包时间
         try:
             crawltimestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(crawltime / 1000))  # 抓包时间
         except:
-            log.debug("获取抓包时间失败")
+            SingleLogger.log.debug("获取抓包时间失败")
 
         # 来源
         try:
             source = data['source']
         except:
-            log.debug("没有来源或者是视频、广告")
+            SingleLogger.log.debug("没有来源或者是视频、广告")
 
         #没有link字段就return
         try:
@@ -83,13 +84,13 @@ class FenHParse(BaseParse):
         try:
             url = linkInfo['weburl']
         except:
-            log.debug("无短地址")
+            SingleLogger.log.debug("无短地址")
 
         # 文章标识
         try:
             articleid = data['documentId']
         except:
-            log.debug("没有文章标识或者是广告")
+            SingleLogger.log.debug("没有文章标识或者是广告")
 
         #列表图logo
         #style.images里面没有就取thumbnail
@@ -101,12 +102,12 @@ class FenHParse(BaseParse):
             else:
                 logo = data['thumbnail']
                 if logo == "":
-                    log.debug('无列表图')
+                    SingleLogger.log.debug('无列表图')
         except:
             try:
                 logo = data['thumbnail']
             except:
-                log.debug('无列表图')
+                SingleLogger.log.debug('无列表图')
 
         #分类处理
         # 视频,或 小视频栏目
@@ -115,7 +116,7 @@ class FenHParse(BaseParse):
             try:
                 source = data['phvideo']['channelName'] #来源
             except:
-                log.debug("视频无来源")
+                SingleLogger.log.debug("视频无来源")
             # 防止报错
             try:
                 guid = data['id'] #视频接口参数
@@ -129,7 +130,7 @@ class FenHParse(BaseParse):
                     res =self.httpPost(detailJk, postData)
                     content = res['singleVideoInfo'][0]['videoURLMid']
             except:
-                log.debug("获取视频详情失败")
+                SingleLogger.log.debug("获取视频详情失败")
 
         #图片栏目、图片新闻
         elif articletype == "photo" or articletype == "slide":
@@ -154,22 +155,22 @@ class FenHParse(BaseParse):
                     try:
                         content = res['body']['text']
                     except:
-                        log.debug("无text")
+                        SingleLogger.log.debug("无text")
                     try:
                         gallaryList = res['body']['img']
                         if len(gallaryList) > 0:
                             for gaobj in gallaryList:
                                 gallary += gaobj['url'] + "、"
                     except:
-                        log.debug("详情没有图片")
+                        SingleLogger.log.debug("详情没有图片")
                     try:
                         videos = res['body']['videos']
                         for vidobj in videos:
                             gallary += vidobj['video']['Normal']['src'] + "、"
                     except:
-                        log.debug("详情没有视频")
+                        SingleLogger.log.debug("详情没有视频")
             except:
-                log.debug("获取图片详情失败")
+                SingleLogger.log.debug("获取图片详情失败")
 
         #广告
         elif articletype == "advert":
@@ -180,7 +181,7 @@ class FenHParse(BaseParse):
             try:
                 articleid = data['pid'] #文章标识
             except:
-                log.debug("该广告没有文章标识")
+                SingleLogger.log.debug("该广告没有文章标识")
 
         #普通新闻
         elif articletype == "doc":
@@ -192,22 +193,22 @@ class FenHParse(BaseParse):
                 try:
                     content = res['body']['text']
                 except:
-                    log.debug("无text")
+                    SingleLogger.log.debug("无text")
                 try:
                     gallaryList = res['body']['img']
                     if len(gallaryList) > 0:
                         for gaobj in gallaryList:
                             gallary += gaobj['url']+"、"
                 except:
-                    log.debug("详情没有图片")
+                    SingleLogger.log.debug("详情没有图片")
                 try:
                     videos = res['body']['videos']
                     for vidobj in videos:
                         gallary += vidobj['video']['Normal']['src']+"、"
                 except:
-                    log.debug("详情没有视频")
+                    SingleLogger.log.debug("详情没有视频")
             except:
-                log.debug("获取图文详情失败")
+                SingleLogger.log.debug("获取图文详情失败")
 
         # 置顶新闻
         elif articletype == "topic2":
@@ -269,10 +270,10 @@ class FenHParse(BaseParse):
                 category = "小视频"
                 categorytag = self.categroytag["%s" % category]
             else:
-                log.debug("有不正确的url1")
+                SingleLogger.log.debug("有不正确的url1")
                 return
         else:
-            log.debug("有不正确的url2")
+            SingleLogger.log.debug("有不正确的url2")
             return
         crawltime = strjson['time']
         #获取data
