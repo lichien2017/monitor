@@ -128,8 +128,12 @@ class ScreenCapORCRule(BaseLevel1Rule):
                     if item == None:
                         # 每天的数据表格中只保证有一条记录就行了，插入的数据格式
                         # 包括 res_id,time,status,image
-                        local_time = LocalTime.now() #datetime.datetime.fromtimestamp(time.time())
-                        log.debug(local_time.strftime("%Y-%m-%d %H:%M:%S"))
+                        # local_time = LocalTime.now() #datetime.datetime.fromtimestamp(time.time())
+                        # log.debug(local_time.strftime("%Y-%m-%d %H:%M:%S"))
                         # time_str = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
-                        table.insert({"res_id": "%s" % res_msg["res_id"],"time":local_time.strftime("%Y-%m-%d %H:%M:%S"),"status":0,"image":"","screen_index":-1})
+                        table.insert({"res_id": "%s" % res_msg["res_id"],
+                                      "time":resource["crawltimestr"],
+                                      "app_tag": resource["app_tag"],
+                                      "category_tag": resource["category_tag"],
+                                      "status":0,"image":"","screen_index":-1})
             time.sleep(1)

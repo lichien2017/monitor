@@ -28,13 +28,17 @@ class ScreenCaptureMatch(Thread):
         self.thread_stop = False
         pass
 
-    def queryPictures(self,pkg_time):
+    def queryPictures(self,query_date,pkg_time,app_tag,category_tag):
         start_time = datetime.datetime.strptime(pkg_time,time_format)
         end_time = start_time + datetime.timedelta(minutes=interval)
 
         log.debug(start_time)
         log.debug(end_time)
+
         query = {}
+        query["tag"] = app_tag
+        query["reference"] = category_tag
+
         query["time"] = {
             u"$gte": start_time.strftime(time_format)
         }
@@ -42,7 +46,7 @@ class ScreenCaptureMatch(Thread):
         query["$and"] = [
             {
                 u"time": {
-                    u"$lte": end_time.strftime(time_format)
+                    u"$lt": end_time.strftime(time_format)
                 }
             }
         ]
@@ -51,10 +55,10 @@ class ScreenCaptureMatch(Thread):
         # {'time': {'$gte': '2018-04-19 01:42:59'}, '$and': [{'time': {'$lte': '2018-04-19 01:47:59'}}]}
         log.debug(query)
 
-        now = LocalTime.now()  # datetime.datetime.now()
-        date = now + datetime.timedelta(days=DAYS)
-        log.debug(date.strftime("%Y%m%d"))
-        collection = self._database["runner_logs"+ date.strftime("%Y%m%d")]
+        # now = LocalTime.now()  # datetime.datetime.now()
+        # date = now + datetime.timedelta(days=DAYS)
+        # log.debug(date.strftime("%Y%m%d"))
+        collection = self._database["runner_logs"+ query_date]
         cursor = collection.find(query)
         try:
             pic = []
@@ -120,7 +124,7 @@ class ScreenCaptureMatch(Thread):
             for item in screencap_cursor:
                 log.debug(item)
                 res = self.__get_resource(item["res_id"],date.strftime("%Y%m%d"))  # 获取资源详情
-                pictures, seqs = self.queryPictures(item["time"])
+                pictures, seqs = self.queryPictures(date.strftime("%Y%m%d"),item["time"],item["app_tag"],item["category_tag"])
                 if len(pictures) > 0:
                     self.write_to_queue(item["res_id"], res["title"], pictures, seqs)
                     self.update_status(collection, item["_id"], 1)
@@ -129,7 +133,7 @@ class ScreenCaptureMatch(Thread):
             # self._client.close()
         return collection
         pass
-
+    # 回写状态
     def recv_data(self,collection):
         data = redis_server.rpop("ocr:result")
         if data != None:
