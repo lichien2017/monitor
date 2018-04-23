@@ -14,6 +14,14 @@ class LocalTime:
         local_dt = dt.astimezone(tzutc_8)
         return local_dt
         pass
+
+    @classmethod
+    def get_utc_date(cls, date_str, format):
+        date = datetime.strptime(date_str, format)
+
+        return date
+        pass
+
     @classmethod
     def now_month_str(cls):
         dt = datetime.utcnow()
