@@ -122,11 +122,13 @@ class ScreenCaptureMatch(Thread):
         screencap_cursor = collection.find(query, limit=10)
         try:
             for item in screencap_cursor:
-                SingleLogger().log.debug(item)
+                # SingleLogger().log.debug(item)
                 res = self.__get_resource(item["res_id"],date.strftime("%Y%m%d"))  # 获取资源详情
                 pictures, seqs = self.queryPictures(date.strftime("%Y%m%d"),item["time"],item["app_tag"],item["category_tag"])
                 if len(pictures) > 0:
+                    SingleLogger().log.debug("找到了图片，长度为:%d",len(pictures))
                     self.write_to_queue(item["res_id"], res["title"], pictures, seqs)
+                    SingleLogger().log.debug("update screencap id = %s status=%d", item["_id"],1)
                     self.update_status(collection, item["_id"], 1)
         finally:
             pass
