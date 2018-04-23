@@ -24,7 +24,11 @@ Redis
 docker run --name redis-container --restart="always" -d -p 6379:6379 redis
 
 Mongodb
-docker run --name mongo-container --restart="always" -p 27017:27017 -v /mnt/mongodb:/data/db -d mongo
+docker run --name mongo-container --restart="always" --privileged=true -p 27017:27017 -v /mnt/mongodata:/data/db -d mongo
+
+mysql服务
+
+docker run --name mysql-container -v /mnt/mysqldata:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -d mysql
 
 自定义的消息队列（nodejs）
 docker run --restart="always" --name nodejsqueue -d -v /home/tymx/Documents/DockerContainer/nodejsqueue:/usr/local/nodejsqueue -v /mnt/upload_files:/usr/local/nodejsqueue/redisService/uploads -p 3000:3000 --link redis-container:redisdb --link mongo-container:mongodb tymx/nodejsqueue:v1
@@ -36,9 +40,7 @@ docker run --restart="always" -d -p 7001:8001 -p 7002:8002 -p 7013:8013 -v /home
 docker run --restart="always" -itd --name ecologicalmonitor -v /home/tymx/Documents/DockerContainer/monkeyrunner/ecological:/usr/local/monkeyrunner/ecological --link redis-container:redisdb --link mongo-container:mongodb tymx/ecological:v1
 
 
-mysql服务
 
-docker run --name mysql-container -v /mnt/mysqldata:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -d mysql
 
 
 ADB服务
@@ -50,6 +52,10 @@ docker run --restart="always" -itd --name imagedownload -v /home/tymx/Documents/
 
 解析服务
 docker run --restart="always" -itd --name ecoserver -v /home/tymx/Documents/DockerContainer/ECOServer:/usr/local/ECOServer --link redis-container:redisdb --link mongo-container:mongodb --link mysql-container:mysqldb tymx/ecoserver:v1
+
+
+截图OCR服务
+docker run --restart="always" -itd --name orcserver -v /home/tymx/Documents/DockerContainer/ECOServer:/usr/local/ECOServer --link redis-container:redisdb --link mongo-container:mongodb --link mysql-container:mysqldb tymx/ecoserver:v1 python /usr/local/ECOServer/screencap_match_main.py
 
 
 #如何映射网盘
