@@ -10,8 +10,6 @@ from util import *
 
 # log = Logger()
 
-pool = redis.ConnectionPool(host=ConfigHelper.redisip, port=ConfigHelper.redisport, db=ConfigHelper.redisdb)
-redis_server = redis.StrictRedis(connection_pool=pool)
 
 # level1的基础类
 class BaseLevel1Rule(Rule,Thread):
@@ -25,7 +23,7 @@ class BaseLevel1Rule(Rule,Thread):
 
     def do_rule1(self):
         # 不同规则从缓存中获取资源id进行处理
-        item = self._redis_server.rpop(self.__class__.__name__ + ":queue")
+        item = RedisHelper.strict_redis.rpop(self.__class__.__name__ + ":queue")
         if item != None:
             SingleLogger().log.debug(item)  # msg = {"res_id":resource_id,"time":LocalTime.now_str()}
             # res_id = item.decode("utf-8")
@@ -37,18 +35,18 @@ class BaseLevel1Rule(Rule,Thread):
                 self.execute_other(res_msg["res_id"], resource, res_msg["time"], self._extra_data)  # 扩展数据里面可能是阈值
         pass
     def do_recv(self):
-        item = self._redis_server.rpop("recvjob:%s" % (self.__class__.__name__))
+        item = RedisHelper.strict_redis.rpop("recvjob:%s" % (self.__class__.__name__))
         if item != None:
             SingleLogger().log.debug(item)
             # print(self._mongodb_tablename)
             res_recv = item.decode("utf-8").split(",")  # res_id,time
             sub_job = "sendjob:%s:%s" % (self.__class__.__name__, res_recv[0])  # 子任务消息key
             SingleLogger().log.info(sub_job)
-            hset_keys = self._redis_server.hkeys(sub_job)
+            hset_keys = RedisHelper.strict_redis.hkeys(sub_job)
             remove_flag = 1  # 是否删除标示
             inserted = 0  # 可以插入数据库
             for key in hset_keys:
-                rel = self._redis_server.hget(sub_job, key)
+                rel = RedisHelper.strict_redis.hget(sub_job, key)
                 rel = int(rel.decode("utf-8"))
                 # SingleLogger().log.debug("ret = %d" % rel)
                 if rel == 1 and inserted == 0:
@@ -63,7 +61,7 @@ class BaseLevel1Rule(Rule,Thread):
                     remove_flag = 0
 
             if remove_flag == 1:
-                self._redis_server.delete(sub_job)
+                RedisHelper.strict_redis.delete(sub_job)
         pass
 
     def run(self):
@@ -81,7 +79,7 @@ class BaseLevel1Rule(Rule,Thread):
     @staticmethod
     def add_resource_to_queue(res_msg,class_name):
         # 插入消息队列，从抓包传过来的的资源id，插入到规则处理表
-        redis_server.lpush(class_name + ":queue",res_msg)
+        RedisHelper.strict_redis.lpush(class_name + ":queue",res_msg)
 
 #血腥暴力
 class XueXingBaoLiRule(BaseLevel1Rule):
@@ -114,7 +112,7 @@ class ScreenCapORCRule(BaseLevel1Rule):
 
     def run(self):
         while not self.thread_stop:
-            item = self._redis_server.rpop(self.__class__.__name__ + ":queue")
+            item = RedisHelper.strict_redis.rpop(self.__class__.__name__ + ":queue")
             if item != None :
                 SingleLogger().log.debug(item)
                 # res_id = item.decode("utf-8")

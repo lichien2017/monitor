@@ -17,8 +17,8 @@ class Rule:
     _mongodb_tablename = None
     _level = 0
 
-    __pool = redis.ConnectionPool(host=ConfigHelper.redisip, port=ConfigHelper.redisport, db=ConfigHelper.redisdb)
-    _redis_server = redis.StrictRedis(connection_pool=__pool)
+    # __pool = redis.ConnectionPool(host=ConfigHelper.redisip, port=ConfigHelper.redisport, db=ConfigHelper.redisdb)
+    # _redis_server = redis.StrictRedis(connection_pool=__pool)
 
     def __init__(self,level,mongodb_table,res_columns=None,extra_data = None):
         if res_columns != None :
@@ -96,12 +96,12 @@ class Rule:
         # 处理文字字段，需要匹配的
         if self._res_columns !=None and len(self._res_columns)>0 :
             for col in self._res_columns :
-                self._redis_server.hset(sub_job, col, -1)
+                RedisHelper.strict_redis.hset(sub_job, col, -1)
                 normal_msg["seq"] = col
                 normal_msg["data"] = [resource[col]]
                 normal_msg["resdata"] = "%s,%s" % (res_id,crawl_time_str)
                 SingleLogger().log.debug("title package:%s", normal_msg)
-                self._redis_server.lpush(self.queue_name_text, json.dumps(normal_msg))
+                RedisHelper.strict_redis.lpush(self.queue_name_text, json.dumps(normal_msg))
 
 
         index = 1
@@ -114,21 +114,21 @@ class Rule:
         logo = [x for x in logo if x != '' and (x.startswith("http://") or x.startswith("https://"))]
 
         for x in logo :
-            self._redis_server.hset(sub_job, index, -1)
+            RedisHelper.strict_redis.hset(sub_job, index, -1)
             normal_msg["seq"] = index
             normal_msg["data"] = [x,"%s/%s"%(ConfigHelper.download_savepath,Secret.md5(x)),"%s/%s" % (media_savepath,Secret.md5(x))]
             normal_msg["resdata"] = "%s,%s" % (res_id,crawl_time_str)
-            self._redis_server.lpush(self.queue_name_image, json.dumps(normal_msg))
+            RedisHelper.strict_redis.lpush(self.queue_name_image, json.dumps(normal_msg))
             index += 1
 
         images = [x for x in images if x != '' and (x.startswith("http://") or x.startswith("https://"))]
         for x in images :
-            self._redis_server.hset(sub_job, index, -1)
+            RedisHelper.strict_redis.hset(sub_job, index, -1)
             normal_msg["seq"] = index
             normal_msg["data"] = [x, "%s/%s" % (ConfigHelper.download_savepath, Secret.md5(x)),
                                   "%s/%s" % (media_savepath, Secret.md5(x))]
             normal_msg["resdata"] = "%s,%s" % (res_id,crawl_time_str)
-            self._redis_server.lpush(self.queue_name_image, json.dumps(normal_msg))
+            RedisHelper.strict_redis.lpush(self.queue_name_image, json.dumps(normal_msg))
             index += 1
 
 
