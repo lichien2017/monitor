@@ -1,6 +1,6 @@
 var http=require('http');
 
-var nodejsQueue = '127.0.0.1'
+var nodejsQueue = '192.168.10.176'
 var port = 3000;
 var ruler = [];
 
