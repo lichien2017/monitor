@@ -118,9 +118,18 @@ class ScreenCaptureMatch(Thread):
         SingleLogger().log.debug(date.strftime("%Y%m%d"))
 
         collection = self._database["screencapocr" + date.strftime("%Y%m%d")]
+
+        start_time = date + datetime.timedelta(minutes=-5)
         # 查询条件
         query = {}
         query["status"] = Int64(0)
+
+        query["time"] = {
+            u"$lt": start_time.strftime(time_format)
+        }
+
+
+
         screencap_cursor = collection.find(query, limit=10)
         try:
             for item in screencap_cursor:
