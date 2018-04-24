@@ -15,8 +15,8 @@ interval = 10 #10分钟间隔
 DAYS = 0 # 与今天的差异，0 标示处理当天，-1标示处理前一天
 
 
-pool = redis.ConnectionPool(host=ConfigHelper.redisip, port=ConfigHelper.redisport, db=ConfigHelper.redisdb)
-redis_server = redis.StrictRedis(connection_pool=pool)
+# pool = redis.ConnectionPool(host=ConfigHelper.redisip, port=ConfigHelper.redisport, db=ConfigHelper.redisdb)
+# redis_server = redis.StrictRedis(connection_pool=pool)
 
 class ScreenCaptureMatch(Thread):
 
@@ -89,7 +89,7 @@ class ScreenCaptureMatch(Thread):
         data =  {"resid":res_id,"title":title,"imgs":pics,"seqs":seqs}
         json_str = json.dumps(data)
         SingleLogger().log.debug(json_str)
-        redis_server.lpush("ocr:queue",json_str)
+        RedisHelper.strict_redis.lpush("ocr:queue",json_str)
         pass
 
     def update_status(self,collection,_id,status):
@@ -141,7 +141,7 @@ class ScreenCaptureMatch(Thread):
         pass
     # 回写状态
     def recv_data(self,collection):
-        data = redis_server.rpop("ocr:result")
+        data = RedisHelper.strict_redis.rpop("ocr:result")
         if data != None:
             SingleLogger().log.debug(data)
             item_str = data.decode("utf-8")
