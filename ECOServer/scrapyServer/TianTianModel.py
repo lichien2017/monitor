@@ -201,6 +201,7 @@ class TianTianParse(BaseParse):
         post = strjson['post']
         if url.find('getSubNewsInterest') > -1:
             category = "推荐"
+            categorytag = self.categroytag["%s" % category]
         elif url.find('getSubNewsChlidInterest') > -1:
             chlid = ""
             params = post.split('&')

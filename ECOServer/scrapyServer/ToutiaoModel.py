@@ -269,8 +269,10 @@ class ToutiaoParse(BaseParse):
         except :
             if url.find('wenda/v1/native/feedbrow') > -1:
                 category = "问答"
+                categorytag = self.categroytag["%s" % category]
             else:
                 category = "推荐"
+                categorytag = self.categroytag["%s" % category]
                 SingleLogger().log.debug("无类型")
         if category != "两会" and category != "问答" and category != "热点" and category != "视频" and category != "小视频" and category != "推荐" and category != "图片" and category != "美图":
            return
