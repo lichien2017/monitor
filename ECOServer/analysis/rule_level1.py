@@ -34,7 +34,8 @@ class BaseLevel1Rule(Rule,Thread):
                 if resource != None:
                     SingleLogger().log.debug("%s 获取到数据:%s" % (self.__class__.__name__, resource))
                     self.execute_other(res_msg["res_id"], resource, res_msg["time"], self._extra_data)  # 扩展数据里面可能是阈值
-            time.sleep(1)
+            else:
+                time.sleep(1)
         pass
     def do_recv(self):
         while True:
@@ -68,7 +69,8 @@ class BaseLevel1Rule(Rule,Thread):
 
                 if remove_flag == 1:
                     RedisHelper.strict_redis.delete(sub_job)
-            time.sleep(1)
+            else:
+                time.sleep(1)
         pass
 
     def run(self):
