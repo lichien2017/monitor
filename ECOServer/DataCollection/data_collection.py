@@ -106,14 +106,27 @@ class Collector(Thread):
         conn = MySQLHelper.pool_connection.get_connection()
         # 创建游标
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+        # 总涉嫌违规条数
+        row_count = cursor.execute("""
+        select count(distinct res_id) as ct from `analysis_data_total`
+where create_date = '%s' and rule_tag <> 'screencapocr' 
+        """% (date))
+        result = cursor.fetchone()
+        bad_count = result["ct"]
+        # 总条数
+        table = self._database["originnews" + date]
+        count = table.count()
+        # 删除数据
+        row_count = cursor.execute("""
+        delete from `analysis_collectCount`
+        where create_date = '%s'
+                """ % (date))
         # 执行SQL，并返回收影响行数
         row_count = cursor.execute("""
-        insert into `analysis_collectCount`(`create_date`,`count`)
-select '%s',count(distinct res_id) from `analysis_data_total`
-where create_date = '%s'
-on DUPLICATE KEY UPDATE `create_date` = '%s'
-        
-        """ % (date,date,date))
+        insert into `analysis_collectCount`(`create_date`,`bad_count`,`count`)
+        values('%s',%d,%d) 
+        """ % (date,bad_count,count))
+
         cursor.close()
         conn.close()
         pass
@@ -126,7 +139,7 @@ on DUPLICATE KEY UPDATE `create_date` = '%s'
         row_count = cursor.execute("select * from analysis_rules where level = 1 and isonline = 1")
         # 获取所有数据
         result = cursor.fetchone()
-        yestoday = LocalTime.yestoday() #LocalTime.from_today(-1)
+        yestoday = LocalTime.from_today(-1)
         yestoday_str = yestoday.strftime("%Y%m%d")
         self.remove_all_table_data(yestoday_str)
         while result != None:

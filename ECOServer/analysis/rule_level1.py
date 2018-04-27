@@ -1,5 +1,5 @@
 from threading import Thread
-
+from concurrent import futures
 import redis
 import time
 import datetime
@@ -22,57 +22,66 @@ class BaseLevel1Rule(Rule,Thread):
         self.thread_stop = False
 
     def do_rule1(self):
-        # 不同规则从缓存中获取资源id进行处理
-        item = RedisHelper.strict_redis.rpop(self.__class__.__name__ + ":queue")
-        if item != None:
-            SingleLogger().log.debug(item)  # msg = {"res_id":resource_id,"time":LocalTime.now_str()}
-            # res_id = item.decode("utf-8")
-            res_msg = json.loads(item)
-            SingleLogger().log.debug("%s 获取到数据:%s" % (self.__class__.__name__, res_msg["res_id"]))
-            resource = self._get_resource(res_msg["res_id"], res_msg["time"])
-            if resource != None:
-                SingleLogger().log.debug("%s 获取到数据:%s" % (self.__class__.__name__, resource))
-                self.execute_other(res_msg["res_id"], resource, res_msg["time"], self._extra_data)  # 扩展数据里面可能是阈值
+        while True:
+            # 不同规则从缓存中获取资源id进行处理
+            item = RedisHelper.strict_redis.rpop(self.__class__.__name__ + ":queue")
+            if item != None:
+                SingleLogger().log.debug(item)  # msg = {"res_id":resource_id,"time":LocalTime.now_str()}
+                # res_id = item.decode("utf-8")
+                res_msg = json.loads(item)
+                SingleLogger().log.debug("%s 获取到数据:%s" % (self.__class__.__name__, res_msg["res_id"]))
+                resource = self._get_resource(res_msg["res_id"], res_msg["time"])
+                if resource != None:
+                    SingleLogger().log.debug("%s 获取到数据:%s" % (self.__class__.__name__, resource))
+                    self.execute_other(res_msg["res_id"], resource, res_msg["time"], self._extra_data)  # 扩展数据里面可能是阈值
+            time.sleep(1)
         pass
     def do_recv(self):
-        item = RedisHelper.strict_redis.rpop("recvjob:%s" % (self.__class__.__name__))
-        if item != None:
-            SingleLogger().log.debug(item)
-            # print(self._mongodb_tablename)
-            res_recv = item.decode("utf-8").split(",")  # res_id,time
-            sub_job = "sendjob:%s:%s" % (self.__class__.__name__, res_recv[0])  # 子任务消息key
-            SingleLogger().log.info(sub_job)
-            hset_keys = RedisHelper.strict_redis.hkeys(sub_job)
-            remove_flag = 1  # 是否删除标示
-            inserted = 0  # 可以插入数据库
-            for key in hset_keys:
-                rel = RedisHelper.strict_redis.hget(sub_job, key)
-                rel = int(rel.decode("utf-8"))
-                # SingleLogger().log.debug("ret = %d" % rel)
-                if rel == 1 and inserted == 0:
-                    # 只要有一个为1，表示规则匹配成功，插入数据库
-                    SingleLogger().log.info(self._mongodb_tablename + res_recv[1])
-                    table = self._mongodb[self._mongodb_tablename + res_recv[1]]
-                    item = table.find_one({"res_id": "%s" % res_recv[0]})
-                    if item == None:
-                        table.insert({"res_id": "%s" % res_recv[0]})
-                    inserted = 1
-                if rel == -1:
-                    remove_flag = 0
+        while True:
+            item = RedisHelper.strict_redis.rpop("recvjob:%s" % (self.__class__.__name__))
+            if item != None:
+                SingleLogger().log.debug(item)
+                # print(self._mongodb_tablename)
+                res_recv = item.decode("utf-8").split(",")  # res_id,time
+                sub_job = "sendjob:%s:%s" % (self.__class__.__name__, res_recv[0])  # 子任务消息key
+                SingleLogger().log.info(sub_job)
+                hset_keys = RedisHelper.strict_redis.hkeys(sub_job)
+                remove_flag = 1  # 是否删除标示
+                inserted = 0  # 可以插入数据库
+                for key in hset_keys:
+                    rel = RedisHelper.strict_redis.hget(sub_job, key)
+                    if rel == None :
+                        continue
+                    rel = int(rel.decode("utf-8"))
+                    # SingleLogger().log.debug("ret = %d" % rel)
+                    if rel == 1 and inserted == 0:
+                        # 只要有一个为1，表示规则匹配成功，插入数据库
+                        SingleLogger().log.info(self._mongodb_tablename + res_recv[1])
+                        self._mongodb = self._mongodb_client['crawlnews']
+                        table = self._mongodb[self._mongodb_tablename + res_recv[1]]
+                        item = table.find_one({"res_id": "%s" % res_recv[0]})
+                        if item == None:
+                            table.insert({"res_id": "%s" % res_recv[0]})
+                        inserted = 1
+                    if rel == -1:
+                        remove_flag = 0
 
-            if remove_flag == 1:
-                RedisHelper.strict_redis.delete(sub_job)
+                if remove_flag == 1:
+                    RedisHelper.strict_redis.delete(sub_job)
+            time.sleep(1)
         pass
 
     def run(self):
-        while not self.thread_stop:
-            try:
-                # 不同规则从缓存中获取资源id进行处理
-                self.do_rule1()
-                self.do_recv()
-                time.sleep(1)
-            except Exception as e:
-                SingleLogger().log.error(e)
+        future_list = []
+        try:
+            with futures.ThreadPoolExecutor(max_workers=20) as executor:
+                future = executor.submit(self.do_rule1)
+                future_list.append(future)
+                future = executor.submit(self.do_recv)
+                future_list.append(future)
+                futures.wait(future_list)
+        except Exception as e:
+            SingleLogger().log.error(e)
 
 
 
