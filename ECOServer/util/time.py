@@ -51,6 +51,14 @@ class LocalTime:
         now = LocalTime.now().strftime(format)
         return now
         pass
+
+    @classmethod
+    def from_today(cls,days):
+        now = LocalTime.now()
+        from_today = now + timedelta(days=days)
+        return from_today
+        pass
+
     @classmethod
     def yestoday(cls):
         now = LocalTime.now()

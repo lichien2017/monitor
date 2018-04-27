@@ -28,11 +28,13 @@ class Collector(Thread):
             if res == None:
                 SingleLogger().log.error("resid = %s,没有找到详情信息，所以跳过"% row["res_id"])
                 continue
-            insert_sql = """insert into `analysis_data_total`(`res_id`,`create_date`,`rule_tag`,`app_tag`,`category_tag`,`deleted`,`title`,`description`,`shorturl`)
-                            VALUES('%s','%s','%s','%s','%s',0,'%s','%s','%s')  ON DUPLICATE Key UPDATE res_id = '%s'
-                         """ % (row["res_id"],date,rule_tag,res["app_tag"],res["category_tag"],res["title"],res["description"],res["shorturl"],row["res_id"])
+            # insert_sql =
             # 执行SQL，并返回收影响行数
-            row_count = cursor.execute(insert_sql)
+            row_count = cursor.execute("""insert into `analysis_data_total`(`res_id`,`create_date`,`rule_tag`,`app_tag`,
+                            `category_tag`,`deleted`,`title`,`description`,`shorturl`,`changed`,`crawl_time`)
+                            VALUES('%s','%s','%s','%s','%s',0,'%s','%s','%s',0,'%s')  ON DUPLICATE Key UPDATE res_id = '%s'
+                         """ % (row["res_id"],date,rule_tag,res["app_tag"],res["category_tag"],pymysql.escape_string(res["title"]),
+                                pymysql.escape_string(res["description"]),res["shorturl"],res["crawltimestr"],row["res_id"]))
             conn.commit()
             SingleLogger().log.debug(row)
             pass
@@ -61,15 +63,57 @@ class Collector(Thread):
                 res = self.get_resource(date,row["res_id"])
                 if res == None :
                     continue
-                insert_sql = """insert into `analysis_data_total`(`res_id`,`create_date`,`rule_tag`,`screenshot`,`screen_index`,`app_tag`,`category_tag`,`deleted`,`title`,`description`,`shorturl`)
-                                        VALUES('%s','%s','%s','%s','%s','%s','%s',0,'%s','%s','%s')  ON DUPLICATE Key UPDATE res_id = '%s'
-                                     """ % (row["res_id"], date, rule_tag, row["image"],row["screen_index"],res["app_tag"],res["category_tag"],res["title"],res["description"],res["shorturl"],row["res_id"])
+                # insert_sql =
                 # 执行SQL，并返回收影响行数,'%s'
-                SingleLogger().log.debug(insert_sql)
-                row_count = cursor.execute(insert_sql)
+                # SingleLogger().log.debug("""insert into `analysis_data_total`(`res_id`,`create_date`,`rule_tag`,`screenshot`,
+                #                   `screen_index`,
+                #                   `app_tag`,`category_tag`,`deleted`,`title`,`description`,`shorturl`,`changed`,`crawl_time`)
+                #                         VALUES('%s','%s','%s','%s','%s','%s','%s',0,'%s','%s','%s',0,'%s')
+                #                         ON DUPLICATE Key UPDATE res_id = '%s'
+                #                      """ % (row["res_id"], date, rule_tag, row["image"],row["screen_index"],
+                #                             res["app_tag"],res["category_tag"],res["title"],res["description"],
+                #                             res["shorturl"],res["crawltimestr"],row["res_id"]))
+                row_count = cursor.execute("""insert into `analysis_data_total`(`res_id`,`create_date`,`rule_tag`,`screenshot`,
+                                  `screen_index`,
+                                  `app_tag`,`category_tag`,`deleted`,`title`,`description`,`shorturl`,`changed`,`crawl_time`)
+                                        VALUES('%s','%s','%s','%s','%s','%s','%s',0,'%s','%s','%s',0,'%s')  
+                                        ON DUPLICATE Key UPDATE res_id = '%s'
+                                     """ % (row["res_id"], date, rule_tag, row["image"],row["screen_index"],
+                                            res["app_tag"],res["category_tag"],pymysql.escape_string(res["title"]),pymysql.escape_string(res["description"]),
+                                            res["shorturl"],res["crawltimestr"],row["res_id"]))
                 conn.commit()
             SingleLogger().log.debug(row)
             pass
+        cursor.close()
+        conn.close()
+        pass
+
+    #移除老的数据
+    def remove_all_table_data(self,date):
+        conn = MySQLHelper.pool_connection.get_connection()
+        # 创建游标
+        cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+        # 执行SQL，并返回收影响行数
+        row_count = cursor.execute("""
+                delete from `analysis_data_total`
+                where create_date = '%s'
+                """ % (date))
+        cursor.close()
+        conn.close()
+        pass
+    # 统计指定时间的数据
+    def total_count(self,date):
+        conn = MySQLHelper.pool_connection.get_connection()
+        # 创建游标
+        cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+        # 执行SQL，并返回收影响行数
+        row_count = cursor.execute("""
+        insert into `analysis_collectCount`(`create_date`,`count`)
+select '%s',count(distinct res_id) from `analysis_data_total`
+where create_date = '%s'
+on DUPLICATE KEY UPDATE `create_date` = '%s'
+        
+        """ % (date,date,date))
         cursor.close()
         conn.close()
         pass
@@ -82,11 +126,11 @@ class Collector(Thread):
         row_count = cursor.execute("select * from analysis_rules where level = 1 and isonline = 1")
         # 获取所有数据
         result = cursor.fetchone()
-
+        yestoday = LocalTime.yestoday() #LocalTime.from_today(-1)
+        yestoday_str = yestoday.strftime("%Y%m%d")
+        self.remove_all_table_data(yestoday_str)
         while result != None:
             SingleLogger().log.debug(result)
-            yestoday = LocalTime.yestoday()
-            yestoday_str = yestoday.strftime("%Y%m%d")
             table_name = "%s%s" % (result["mongodb_tablename"],yestoday_str)
             SingleLogger().log.debug("table_name is %s",table_name)
 
@@ -95,6 +139,36 @@ class Collector(Thread):
                 pass
             else: #其他规则直接存到指定的表格中
                 self.copy_data_one_column(table_name,result["mongodb_tablename"],yestoday_str)
+                pass
+            result = cursor.fetchone()
+        # 汇总所有的统计数据
+        self.total_count(yestoday_str)
+        cursor.close()
+        conn.close()
+        pass
+
+    def test(self):
+        # 先找到有哪些表需要归档的，可以从规则表找
+        conn = MySQLHelper.pool_connection.get_connection()
+        # 创建游标
+        cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+        # 执行SQL，并返回收影响行数
+        row_count = cursor.execute("""
+        SELECT
+	res_id,
+	'originnews' + `create_date` AS mongodb_table
+FROM
+	`analysis_data_total`
+where changed =1 and check_status = 1 and date_format(check_time,'%Y-%m-%d') = date_format(adddate(now(),-1),'%Y-%m-%d')
+        """)
+        # 获取所有数据
+        result = cursor.fetchone()
+
+        while result != None:
+            table = self._database[result["mongodb_table"]]
+            single = table.find_one({"identity":result["res_id"]})
+            if single != None:
+                content = single["content"]
                 pass
             result = cursor.fetchone()
         cursor.close()
