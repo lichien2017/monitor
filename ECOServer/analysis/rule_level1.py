@@ -63,6 +63,11 @@ class BaseLevel1Rule(Rule,Thread):
                         item = table.find_one({"res_id": "%s" % res_recv[0]})
                         if item == None:
                             table.insert({"res_id": "%s" % res_recv[0]})
+                            # 同时将有问题的数据加入到每天的合计表中
+                            total_table = self._mongodb["all_resource" + res_recv[1]]
+                            total_item = total_table.find_one({"res_id": "%s" % res_recv[0]})
+                            if item == None :# 如果不存在就插入
+                                total_table.insert({"res_id": "%s" % res_recv[0]})
                         inserted = 1
                     if rel == -1:
                         remove_flag = 0
