@@ -12,7 +12,7 @@ const fs = require('fs');
 
 var router = express.Router();
 
-var debug = true;
+var debug = false;
 var redisIp ='192.168.10.176';//container里面的redisdb名称
 var redisPort = 6379
 var mongodbIp = '192.168.10.176';//container里面的mongodb名称
