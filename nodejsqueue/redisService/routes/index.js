@@ -247,6 +247,7 @@ router.post('/pkg', function (req, res) {
 router.get('/filename', function (req, res) {
     try{
         var filePath = path.join(uploadpath, req.query.fn);
+        console.log('filePath='+filePath);
         fs.exists(filePath, function (exists) {
             res.sendfile(exists ? filePath : path.join(uploadpath, ""));
         });
