@@ -1,6 +1,6 @@
 var http=require('http');
 
-var nodejsQueue = '192.168.10.176'
+var nodejsQueue = "nodejsqueue"
 var port = 3000;
 var ruler = [];
 
@@ -46,7 +46,8 @@ module.exports = {
  */
 function GetRuler() {
     try{
-        http.get('http://'+nodejsQueue+":"+port,function(req,res){
+        console.log('http://'+nodejsQueue+':'+port)
+        http.get('http://'+nodejsQueue+':'+port,function(req,res){
             var jsonString='';
             req.on('data',function(data){
                 jsonString+=data;
