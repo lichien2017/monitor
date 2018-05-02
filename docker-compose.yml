@@ -74,7 +74,7 @@ services:
     restart: always
     volumes:
       - /home/tymx/Documents/DockerContainer/nodejsqueue:/usr/local/nodejsqueue
-      - /home/tymx/Documents/DockerContainer/nodejsqueue/uploads:/usr/local/nodejsqueue/redisService/uploads
+      - /mnt/upload_files:/usr/local/nodejsqueue/redisService/uploads
     networks:
       - mobilephone
     depends_on:
@@ -114,7 +114,7 @@ services:
     restart: always
     volumes:
       - /home/tymx/Documents/DockerContainer/ECOServer:/usr/local/imagedownload
-      - /mnt/upload_files:/usr/local/imagedownload/downloadServer/files
+      - /mnt/download_media:/usr/local/imagedownload/downloadServer/files
     depends_on:
       - redis
       - mongo
