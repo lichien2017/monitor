@@ -124,7 +124,9 @@ router.post("/image",function (req,res) {
             // var date = new Date();
             //var time = '_' + date.getFullYear() + "_" + date.getMonth() + "_" + date.getDay() + "_" + date.getHours() + "_" + date.getMinutes();
             // var avatarName = name  + '.' + type;
-            var newPath = form.uploadDir + "/" + filename;
+            var paths = filename.split("_");
+            mkdirsSync(form.uploadDir + "/" + paths[0]);
+            var newPath = form.uploadDir + "/" + paths[0]+"/"+ paths[1];
             console.log('newPath='+newPath);
             fs.renameSync(files.uploadfile.path, newPath);  //重命名
             res.send({"status": "success"});
@@ -136,7 +138,26 @@ router.post("/image",function (req,res) {
 
 });
 
-
+//创建多层文件夹 同步
+function mkdirsSync(dirpath, mode) {
+    if (!fs.existsSync(dirpath)) {
+        var pathtmp;
+        dirpath.split(path.sep).forEach(function(dirname) {
+            if (pathtmp) {
+                pathtmp = path.join(pathtmp, dirname);
+            }
+            else {
+                pathtmp = dirname;
+            }
+            if (!fs.existsSync(pathtmp)) {
+                if (!fs.mkdirSync(pathtmp, mode)) {
+                    return false;
+                }
+            }
+        });
+    }
+    return true;
+}
 
 /**
  * 插入原始push消息数据
