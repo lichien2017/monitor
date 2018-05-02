@@ -36,11 +36,39 @@ services:
     image: sorccu/adb
     container_name: adbd
     restart: always
+    ports:
+      - "5037:5037"
     volumes:
-      - /etc/bus/usb:/dev/bus/usb
+      - /dev/bus/usb:/dev/bus/usb
     networks:
       - mobilephone
     privileged: true
+  rethinkdb:
+    image: rethinkdb:2.3
+    ports:
+      - "8080:8080"
+      - "28015:28015"
+      - "29015:29015"
+    restart: always
+    networks:
+      - mobilephone
+    volumes:
+      - "/mnt/rethinkdb:/data"
+    command: "rethinkdb --bind all --cache-size 2048"
+  stf-local:
+    image: openstf/stf
+    depends_on:
+      - rethinkdb
+      - adbd
+    ports:
+      - "7100:7100"
+      - "7110:7110"
+      - "7120:7120"
+      - "7400-7500:7400-7500"
+    networks:
+      - mobilephone
+    restart: always
+    command: stf local --public-ip 192.168.10.176 --provider-min-port 7400 --provider-max-port 7500 --adb-host adbd
   nodejsqueue:
     image: tymx/nodejsqueue:v1
     container_name: nodejsqueue
