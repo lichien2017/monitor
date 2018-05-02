@@ -33,7 +33,7 @@ services:
       - "7400-7500:7400-7500"
     network_mode: "host"
     restart: always
-    command: stf local --public-ip 192.168.10.176 --provider-min-port 7400 --provider-max-port 7500 --adb-host adbd
+    command: stf local --public-ip 192.168.10.176
   
 
 
