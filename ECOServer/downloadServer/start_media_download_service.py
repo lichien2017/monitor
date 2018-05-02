@@ -9,6 +9,7 @@ import time
 from config import ConfigHelper
 from log import Logger
 import json
+import datetime
 log = Logger()
 # 设定ThreadPoolExecutor 类最多使用几个线程
 MAX_WORKERS = 20
@@ -29,8 +30,9 @@ def get_md5(url):
     return m.hexdigest()
 
 # 保存图片
-def save_image(img, filename):  # <5>
-    path = os.path.join(DEST_DIR, filename)
+def save_image(img, job):  # <5>
+    filename = get_md5(job["url"])
+    path = os.path.join(DEST_DIR, job["dir"],filename)
     with open(path, 'wb') as fp:
         fp.write(img)
 
@@ -42,15 +44,16 @@ def get_image(url):  # <6>
         resp.raise_for_status() # 如果不是200 抛出异常
     return resp.content
 
-def download_one(url):
+def download_one(job):
     try:
+        url = job["url"]
         image = get_image(url)
     # 捕获 requests.exceptions.HTTPError
     except requests.exceptions.HTTPError as exc:  #
         # 如果有异常 直接抛出
         raise
     else:
-        save_image(image, get_md5(url))
+        save_image(image, job)
     return url
 
 
@@ -111,6 +114,12 @@ if __name__ == '__main__':
                gallary = res["gallary"].split(",")
                images = logos + gallary
                images = [x for x in images if x != '' and (x.startswith("http://") or x.startswith("https://"))]
-               download_many(images)
+               identity = res["identity"]
+               date = datetime.datetime.strptime(res["crawltimestr"], "%Y-%m-%D %H:%M:%s").strftime("%Y%m%D")
+               dir_name = res_msg["time"] + "/" + res_msg["res_id"]
+               jobs = []
+               for img in images :
+                   jobs.append({"url":img,"dir":dir_name,"res_id":res_msg["res_id"]})
+               download_many(jobs)
         time.sleep(2)
 

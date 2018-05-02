@@ -13,9 +13,9 @@ const fs = require('fs');
 var router = express.Router();
 
 var debug = false;
-var redisIp ='192.168.10.176';//container里面的redisdb名称
+var redisIp ="redisdb";//container里面的redisdb名称
 var redisPort = 6379
-var mongodbIp = '192.168.10.176';//container里面的mongodb名称
+var mongodbIp = "mongodb";//container里面的mongodb名称
 var mongodbPort = 27017
 var uploadpath = '/usr/local/nodejsqueue/redisService/uploads/';//图片保存路径
 
@@ -239,6 +239,26 @@ router.post('/pkg', function (req, res) {
     }
     res.send({"status": "success"});
 });
+
+
+/**
+ * 获取图片
+ */
+router.get('/filename', function (req, res) {
+    try{
+        var filePath = path.join(uploadpath, req.query.fn);
+        console.log('filePath='+filePath);
+        fs.exists(filePath, function (exists) {
+            res.sendfile(exists ? filePath : path.join(uploadpath, ""));
+        });
+
+    }catch (e){
+        res.send({"status": "error"});
+        console.log(e);
+    }
+    //res.send({"status": "success"});
+});
+
 /**
  * 解析数据并写入到redis
  * @param jsonObj 待发送的数据

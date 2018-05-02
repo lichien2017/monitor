@@ -135,8 +135,8 @@ where create_date = '%s' and rule_tag <> 'screencapocr'
         conn = MySQLHelper.pool_connection.get_connection()
         # 创建游标
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-        # 执行SQL，并返回收影响行数
-        row_count = cursor.execute("select * from analysis_rules where level = 1 and isonline = 1")
+        # 执行SQL，并返回收影响行数 select * from analysis_rules where level = 1 and isonline = 1
+        row_count = cursor.execute("select * from analysis_rules")
         # 获取所有数据
         result = cursor.fetchone()
         yestoday = LocalTime.from_today(-1)
