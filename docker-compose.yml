@@ -114,7 +114,7 @@ services:
     restart: always
     volumes:
       - /home/tymx/Documents/DockerContainer/ECOServer:/usr/local/imagedownload
-      - /home/tymx/Documents/download:/usr/local/imagedownload/downloadServer/files
+      - /mnt/upload_files:/usr/local/imagedownload/downloadServer/files
     depends_on:
       - redis
       - mongo
