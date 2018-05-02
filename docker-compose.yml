@@ -59,7 +59,7 @@ services:
     image: openstf/stf
     depends_on:
       - rethinkdb
-      - adbd
+      - adb
     ports:
       - "7100:7100"
       - "7110:7110"
