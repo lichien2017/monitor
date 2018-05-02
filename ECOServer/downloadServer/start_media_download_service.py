@@ -63,7 +63,7 @@ def download_many(cc_list):
     # with futures.ProcessPoolExecutor() as executor:
     with futures.ThreadPoolExecutor(max_workers=20) as executor:
         to_do_map = {}
-        for cc in sorted(cc_list):
+        for cc in cc_list:
             # if cc == None or cc == "" :
             #     continue
             future = executor.submit(download_one, cc)
@@ -115,8 +115,8 @@ if __name__ == '__main__':
                images = logos + gallary
                images = [x for x in images if x != '' and (x.startswith("http://") or x.startswith("https://"))]
                identity = res["identity"]
-               date = datetime.datetime.strptime(res["crawltimestr"], "%Y-%m-%D %H:%M:%s").strftime("%Y%m%D")
-               dir_name = res_msg["time"] + "/" + res_msg["res_id"]
+
+               dir_name = res_msg["time"] # + "/" + res_msg["res_id"]
                jobs = []
                for img in images :
                    jobs.append({"url":img,"dir":dir_name,"res_id":res_msg["res_id"]})
