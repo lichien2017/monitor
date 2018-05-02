@@ -88,6 +88,25 @@
       "app_tag":"sina",
       "categroy":{"推荐":"推荐","视频":"视频","要闻":"要闻","图片":"图片"}
     }
+  },
+  {
+    "modname": "scrapyServer.QuModel",
+    "classname": "QuParse",
+    "queuename": "origin:qusdk",
+    "apppinfo":{
+      "app_name":"趣头条",
+      "app_tag":"qusdk",
+      "categroy":{"推荐":"推荐"}
+    }
+  },
+  {
+    "modname": "scrapyServer.HuiModel",
+    "classname": "HuiParse",
+    "queuename": "origin:huisdk",
+    "apppinfo":{
+      "app_name":"惠头条",
+      "app_tag":"huisdk",
+      "categroy":{"头条":"头条","娱乐":"娱乐","八卦":"八卦","社会":"社会","国内":"国内","国际":"国际"}
+    }
   }
 ]
-
