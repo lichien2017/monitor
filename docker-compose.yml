@@ -32,7 +32,7 @@ services:
       - MYSQL_ROOT_PASSWORD:123456
     networks:
       - mobilephone
-  adb:
+  adbd:
     image: sorccu/adb
     container_name: adbd
     restart: always
@@ -59,7 +59,7 @@ services:
     image: openstf/stf
     depends_on:
       - rethinkdb
-      - adb
+      - adbd
     ports:
       - "7100:7100"
       - "7110:7110"
@@ -109,6 +109,7 @@ services:
     depends_on:
       - redis
       - mongo
+      - adbd
     networks:
       - mobilephone
   imagedownload:
