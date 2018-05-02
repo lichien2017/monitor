@@ -7,7 +7,7 @@ services:
     container_name: redisdb
     restart: always
     volumes:
-      - /Users/lizhengqing/Documents/redisdb:/data
+      - /mnt/redisdb:/data
     networks:
       - mobilephone
   mongo:
@@ -17,7 +17,7 @@ services:
     container_name: mongodb
     restart: always
     volumes:
-      - /Users/lizhengqing/Documents/mongodbData:/data/db
+      - /mnt/mongodbData:/data/db
     networks:
       - mobilephone
   mysql:
@@ -27,7 +27,7 @@ services:
     container_name: mysqldb
     restart: always
     volumes:
-      - /Users/lizhengqing/Documents/mysqldata:/var/lib/mysql
+      - /mnt/mysqldata:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD:123456
     networks:
@@ -48,8 +48,8 @@ services:
         - "3000:3000"
     restart: always
     volumes:
-      - /Users/lizhengqing/Documents/DockerContainer/nodejsqueue:/usr/local/nodejsqueue
-      - /Users/lizhengqing/Documents/DockerContainer/nodejsqueue/uploads:/usr/local/nodejsqueue/redisService/uploads
+      - /home/tymx/Documents/DockerContainer/nodejsqueue:/usr/local/nodejsqueue
+      - /home/tymx/Documents/DockerContainer/nodejsqueue/uploads:/usr/local/nodejsqueue/redisService/uploads
     networks:
       - mobilephone
     depends_on:
@@ -67,7 +67,7 @@ services:
       - "8002"
       - "8013"
     volumes:
-      - /Users/lizhengqing/Documents/DockerContainer/anyproxy4_x:/usr/local/anyproxy
+      - /home/tymx/Documents/DockerContainer/anyproxy4_x:/usr/local/anyproxy
     command: anyproxy --intercept --rule /usr/local/anyproxy/rulefiles/rule.js
     depends_on:
       - nodejsqueue
@@ -77,7 +77,7 @@ services:
     build: monkeyrunner/
     restart: always
     volumes:
-      - /Users/lizhengqing/Documents/DockerContainer/monkeyrunner/ecological:/usr/local/monkeyrunner/ecological
+      - /home/tymx/Documents/DockerContainer/monkeyrunner/ecological:/usr/local/monkeyrunner/ecological
     depends_on:
       - redis
       - mongo
@@ -87,8 +87,8 @@ services:
     build: ECOServer/downloadServer/
     restart: always
     volumes:
-      - /Users/lizhengqing/Documents/DockerContainer/ECOServer:/usr/local/imagedownload
-      - /Users/lizhengqing/Documents/download:/usr/local/imagedownload/downloadServer/files
+      - /home/tymx/Documents/DockerContainer/ECOServer:/usr/local/imagedownload
+      - /home/tymx/Documents/download:/usr/local/imagedownload/downloadServer/files
     depends_on:
       - redis
       - mongo
@@ -98,7 +98,7 @@ services:
     build: ECOServer/
     restart: always
     volumes:
-      - /Users/lizhengqing/Documents/DockerContainer/ECOServer:/usr/local/ECOServer
+      - /home/tymx/Documents/DockerContainer/ECOServer:/usr/local/ECOServer
     depends_on:
       - redis
       - mongo
@@ -109,7 +109,7 @@ services:
     build: ECOServer/
     restart: always
     volumes:
-      - /Users/lizhengqing/Documents/DockerContainer/ECOServer:/usr/local/ECOServer
+      - /home/tymx/Documents/DockerContainer/ECOServer:/usr/local/ECOServer
     command: python /usr/local/ECOServer/screencap_match_main.py
     depends_on:
       - redis
@@ -131,6 +131,8 @@ services:
       - mysql
     networks:
       - mobilephone
+
+
 networks:
   mobilephone:
     driver: bridge
