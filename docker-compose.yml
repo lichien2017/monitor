@@ -41,7 +41,7 @@ services:
     volumes:
       - /dev/bus/usb:/dev/bus/usb
     privileged: true
-    net: "host"
+    network_mode: "host"
   rethinkdb:
     image: rethinkdb
     ports:
@@ -51,7 +51,7 @@ services:
     restart: always
     volumes:
       - "/mnt/rethinkdb:/data"
-    net: "host"
+    network_mode: "host"
     command: "rethinkdb --bind all --cache-size 2048"
   stf-local:
     image: openstf/stf
@@ -63,7 +63,7 @@ services:
       - "7110:7110"
       - "7120:7120"
       - "7400-7500:7400-7500"
-    net: "host"
+    network_mode: "host"
     restart: always
     command: stf local --public-ip 192.168.10.176 --provider-min-port 7400 --provider-max-port 7500 --adb-host adbd
   nodejsqueue:
