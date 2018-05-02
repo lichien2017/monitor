@@ -12,7 +12,7 @@ const fs = require('fs');
 
 var router = express.Router();
 
-var debug = false;
+var debug = true;
 var redisIp ="redisdb";//container里面的redisdb名称
 var redisPort = 6379
 var mongodbIp = "mongodb";//container里面的mongodb名称
@@ -125,8 +125,9 @@ router.post("/image",function (req,res) {
             //var time = '_' + date.getFullYear() + "_" + date.getMonth() + "_" + date.getDay() + "_" + date.getHours() + "_" + date.getMinutes();
             // var avatarName = name  + '.' + type;
             var paths = filename.split("_");
-            mkdirsSync(form.uploadDir + "/" + paths[0]);
-            var newPath = form.uploadDir + "/" + paths[0]+"/"+ paths[1];
+            console.log(paths)
+            mkdirsSync(form.uploadDir + path.sep + paths[0]);
+            var newPath = form.uploadDir + path.sep + paths[0]+path.sep+ paths[1];
             console.log('newPath='+newPath);
             fs.renameSync(files.uploadfile.path, newPath);  //重命名
             res.send({"status": "success"});
@@ -141,20 +142,8 @@ router.post("/image",function (req,res) {
 //创建多层文件夹 同步
 function mkdirsSync(dirpath, mode) {
     if (!fs.existsSync(dirpath)) {
-        var pathtmp;
-        dirpath.split(path.sep).forEach(function(dirname) {
-            if (pathtmp) {
-                pathtmp = path.join(pathtmp, dirname);
-            }
-            else {
-                pathtmp = dirname;
-            }
-            if (!fs.existsSync(pathtmp)) {
-                if (!fs.mkdirSync(pathtmp, mode)) {
-                    return false;
-                }
-            }
-        });
+        fs.mkdirSync(dirpath, mode);
+
     }
     return true;
 }
