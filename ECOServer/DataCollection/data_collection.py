@@ -7,6 +7,7 @@ from mysqldb.mysql_helper import MySQLHelper
 
 
 class Collector(Thread):
+    time_go = -1
     def __init__(self):
         Thread.__init__(self)
         self._client = MongoClient(ConfigHelper.mongodbip, ConfigHelper.mongodbport)
@@ -30,13 +31,16 @@ class Collector(Thread):
                 continue
             # insert_sql =
             # 执行SQL，并返回收影响行数
-            row_count = cursor.execute("""insert into `analysis_data_total`(`res_id`,`create_date`,`rule_tag`,`app_tag`,
-                            `category_tag`,`deleted`,`title`,`description`,`shorturl`,`changed`,`crawl_time`)
-                            VALUES('%s','%s','%s','%s','%s',0,'%s','%s','%s',0,'%s')  ON DUPLICATE Key UPDATE res_id = '%s'
-                         """ % (row["res_id"],date,rule_tag,res["app_tag"],res["category_tag"],pymysql.escape_string(res["title"]),
-                                pymysql.escape_string(res["description"]),res["shorturl"],res["crawltimestr"],row["res_id"]))
-            conn.commit()
-            SingleLogger().log.debug(row)
+            try:
+                row_count = cursor.execute("""insert into `analysis_data_total`(`res_id`,`create_date`,`rule_tag`,`app_tag`,
+                                `category_tag`,`deleted`,`title`,`description`,`shorturl`,`changed`,`crawl_time`)
+                                VALUES('%s','%s','%s','%s','%s',0,'%s','%s','%s',0,'%s')  ON DUPLICATE Key UPDATE res_id = '%s'
+                             """ % (row["res_id"],date,rule_tag,res["app_tag"],res["category_tag"],pymysql.escape_string(res["title"]),
+                                    pymysql.escape_string(res["description"]),res["shorturl"],res["crawltimestr"],row["res_id"]))
+                conn.commit()
+                SingleLogger().log.debug(row)
+            except Exception as e:
+                SingleLogger().log.error(e)
             pass
         cursor.close()
         conn.close()
@@ -139,7 +143,7 @@ where create_date = '%s' and rule_tag <> 'screencapocr'
         row_count = cursor.execute("select * from analysis_rules")
         # 获取所有数据
         result = cursor.fetchone()
-        yestoday = LocalTime.from_today(-1)
+        yestoday = LocalTime.from_today(self.time_go)
         yestoday_str = yestoday.strftime("%Y%m%d")
         self.remove_all_table_data(yestoday_str)
         while result != None:
