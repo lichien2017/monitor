@@ -56,10 +56,13 @@ class FenHParse(BaseParse):
         # 发布时间
         try:
             publish_timestr = data['updateTime']  #发布时间 标准时间str
-            timeArray = time.strptime(publish_timestr, "%Y/%m/%d %H:%M:%S")
+            timeArray = time.strptime(publish_timestr, "%Y-%m-%d %H:%M:%S")
             publish_time = int(time.mktime(timeArray)) #string转成时间戳
         except:
             SingleLogger().log.debug("无发布时间")
+            #无发布时间采用当前时间
+            publish_timestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(crawltime / 1000))
+            publish_time = crawltime  # string转成时间戳
 
         # 抓包时间
         try:

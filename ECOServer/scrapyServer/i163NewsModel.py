@@ -271,7 +271,7 @@ class WYNewsParse(BaseParse):
         if category == "热点":
             list = data['推荐']
         elif category == "头条":
-            list = data['tid']
+            list = data['T1348647909107']
         elif category == "视频":
             list = data['视频']
         elif category == "图片":
