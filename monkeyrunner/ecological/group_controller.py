@@ -61,11 +61,13 @@ class DeviceGroupController:
         log.debug(data)
         if data['type'] == 'START':  # 启动
             sub_data = data['data']
-            self._start_all_group_thread(sub_data)  # 解析数据包
+            self._get_default_settings()
+            #self._start_all_group_thread(sub_data)  # 解析数据包
         elif data['type'] == 'RESTART':  # 重新启动
             self._close_all_group()
             sub_data = data['data']
-            self._start_all_group_thread(sub_data)  # 解析数据包
+            self._get_default_settings()
+            #self._start_all_group_thread(sub_data)  # 解析数据包
         elif data['type'] == 'STOP':  # 结束了就退出吧
             self._close_all_group()
             return False
