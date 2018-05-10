@@ -74,7 +74,7 @@ services:
     restart: always
     volumes:
       - /home/tymx/Documents/DockerContainer/nodejsqueue:/usr/local/nodejsqueue
-      - /home/tymx/Documents/DockerContainer/nodejsqueue/uploads:/usr/local/nodejsqueue/redisService/uploads
+      - /mnt/upload_files:/usr/local/nodejsqueue/redisService/uploads
     networks:
       - mobilephone
     depends_on:
@@ -114,7 +114,7 @@ services:
     restart: always
     volumes:
       - /home/tymx/Documents/DockerContainer/ECOServer:/usr/local/imagedownload
-      - /home/tymx/Documents/download:/usr/local/imagedownload/downloadServer/files
+      - /mnt/download_media:/usr/local/imagedownload/downloadServer/files
     depends_on:
       - redis
       - mongo
@@ -147,7 +147,7 @@ services:
     image: abh1nav/dockerui:latest
     restart: always
     volumes:
-      - /var/run/docker.sock:/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock
     ports: 
       - "19000:9000"
     privileged: true

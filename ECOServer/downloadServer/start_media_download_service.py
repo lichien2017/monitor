@@ -32,8 +32,11 @@ def get_md5(url):
 # 保存图片
 def save_image(img, job):  # <5>
     filename = get_md5(job["url"])
-    path = os.path.join(DEST_DIR, job["dir"],filename)
-    with open(path, 'wb') as fp:
+    path = os.path.join(DEST_DIR, job["dir"])
+    if not os.path.exists(path):
+        os.makedirs(path)
+    full_filename = os.path.join(DEST_DIR, job["dir"],filename)
+    with open(full_filename, 'wb') as fp:
         fp.write(img)
 
 

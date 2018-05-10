@@ -107,8 +107,8 @@ class Rule:
         index = 1
 
         # 创建image
-        # 图片保存路径
-        media_savepath = "%s/%s" % (ConfigHelper.analysis_savepath,res_id)
+        # 图片保存路径 相对路径，日期/资源id/文件名
+        media_savepath = "%s/%s/%s" % (ConfigHelper.analysis_savepath,crawl_time_str,res_id)
         # self._check_dir(media_savepath)
 
         logo = [x for x in logo if x != '' and (x.startswith("http://") or x.startswith("https://"))]
@@ -116,7 +116,7 @@ class Rule:
         for x in logo :
             RedisHelper.strict_redis.hset(sub_job, index, -1)
             normal_msg["seq"] = index
-            normal_msg["data"] = [x,"%s/%s"%(ConfigHelper.download_savepath,Secret.md5(x)),"%s/%s" % (media_savepath,Secret.md5(x))]
+            normal_msg["data"] = [x,"%s/%s/%s"%(ConfigHelper.download_savepath,crawl_time_str,Secret.md5(x)),"%s/%s" % (media_savepath,Secret.md5(x))]
             normal_msg["resdata"] = "%s,%s" % (res_id,crawl_time_str)
             RedisHelper.strict_redis.lpush(self.queue_name_image, json.dumps(normal_msg))
             index += 1
@@ -125,7 +125,7 @@ class Rule:
         for x in images :
             RedisHelper.strict_redis.hset(sub_job, index, -1)
             normal_msg["seq"] = index
-            normal_msg["data"] = [x, "%s/%s" % (ConfigHelper.download_savepath, Secret.md5(x)),
+            normal_msg["data"] = [x, "%s/%s/%s" % (ConfigHelper.download_savepath,crawl_time_str, Secret.md5(x)),
                                   "%s/%s" % (media_savepath, Secret.md5(x))]
             normal_msg["resdata"] = "%s,%s" % (res_id,crawl_time_str)
             RedisHelper.strict_redis.lpush(self.queue_name_image, json.dumps(normal_msg))
