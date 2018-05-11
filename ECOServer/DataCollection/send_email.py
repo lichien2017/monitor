@@ -1,4 +1,5 @@
 import pymongo
+from threading import Thread
 import time
 import datetime
 import pymysql
@@ -6,9 +7,11 @@ from email.mime.text import MIMEText
 from email.header import Header
 from smtplib import SMTP_SSL
 
-class MongodbConn(object):
+
+class MongodbConn(Thread):
 
     def __init__(self):
+        Thread.__init__(self)
         self.CONN = pymongo.MongoClient("192.168.10.176", 27017)
         self.sdb = pymysql.connect("192.168.10.176", "root", "123456", "app_ecological_db", charset='utf8')
         self.sendemail = "";
