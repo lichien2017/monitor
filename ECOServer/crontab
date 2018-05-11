@@ -14,4 +14,4 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 52 6	1 * *	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.monthly )
 #
 0  5    * * *   root    python /usr/local/ECOServer/data_collection_main.py
-30 *    * * *   root    python /usr/local/ECOServer/send_email_main.py
+*/30 *    * * *   root    python /usr/local/ECOServer/send_email_main.py
