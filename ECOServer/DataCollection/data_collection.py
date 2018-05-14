@@ -165,30 +165,49 @@ select mongodb_tablename from `analysis_rules` where level = 0)
         conn.close()
         pass
 
-    def test(self):
+    def news_reader(self, tag):
         # 先找到有哪些表需要归档的，可以从规则表找
         conn = MySQLHelper.pool_connection.get_connection()
         # 创建游标
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
         # 执行SQL，并返回收影响行数
         row_count = cursor.execute("""
-        SELECT
-	res_id,
-	'originnews' + `create_date` AS mongodb_table
-FROM
-	`analysis_data_total`
-where changed =1 and check_status = 1 and date_format(check_time,'%Y-%m-%d') = date_format(adddate(now(),-1),'%Y-%m-%d')
-        """)
+                            SELECT res_id, concat('originnews', `create_date`) AS mongodb_table ,rule_tag  
+                            FROM `analysis_data_total` 
+                            where changed =1 and check_status = 1 and rule_tag = '%s'
+                            and %s
+                            """ % (tag,
+                                   """date_format(check_time,'%Y-%m-%d') = date_format(adddate(now(),-2),'%Y-%m-%d')"""))
         # 获取所有数据
         result = cursor.fetchone()
 
         while result != None:
             table = self._database[result["mongodb_table"]]
-            single = table.find_one({"identity":result["res_id"]})
+            single = table.find_one({"identity": result["res_id"]})
             if single != None:
                 content = single["content"]
-                pass
+                # pass
+                yield result, content
+
             result = cursor.fetchone()
         cursor.close()
         conn.close()
-        pass
+
+    def news_reader2(self, tag):
+        # 先找到有哪些表需要归档的，可以从规则表找
+        conn = MySQLHelper.pool_connection.get_connection()
+        # 创建游标
+        cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+        # 执行SQL，并返回收影响行数
+        row_count = cursor.execute("""
+                            select * from ArticleNormalSample
+                            """)
+        # 获取所有数据
+        result = cursor.fetchone()
+
+        while result != None:
+            yield result["content"]
+
+            result = cursor.fetchone()
+        cursor.close()
+        conn.close()
