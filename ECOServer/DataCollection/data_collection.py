@@ -177,7 +177,7 @@ select mongodb_tablename from `analysis_rules` where level = 0)
                             where changed =1 and check_status = 1 and rule_tag = '%s'
                             and %s
                             """ % (tag,
-                                   """date_format(check_time,'%Y-%m-%d') = date_format(adddate(now(),-2),'%Y-%m-%d')"""))
+                                   """date_format(check_time,'%Y-%m-%d') = date_format(adddate(now(),-1),'%Y-%m-%d')"""))
         # 获取所有数据
         result = cursor.fetchone()
 
