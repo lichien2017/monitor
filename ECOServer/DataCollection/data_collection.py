@@ -113,7 +113,8 @@ class Collector(Thread):
         # 总涉嫌违规条数
         row_count = cursor.execute("""
         select count(distinct res_id) as ct from `analysis_data_total`
-where create_date = '%s' and rule_tag <> 'screencapocr' 
+where create_date = '%s' and rule_tag <> 'screencapocr' and rule_tag not in (
+select mongodb_tablename from `analysis_rules` where level = 0)
         """% (date))
         result = cursor.fetchone()
         bad_count = result["ct"]
