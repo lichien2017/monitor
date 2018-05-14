@@ -3,6 +3,7 @@ FROM python:3
 MAINTAINER lichien@qq.com
 
 RUN mkdir /usr/local/ECOServer/
+RUN mkdir /tmp/
 
 COPY requirements.txt .
 
