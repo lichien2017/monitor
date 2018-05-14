@@ -84,8 +84,8 @@ class BaseLevel1Rule(Rule,Thread):
             with futures.ThreadPoolExecutor(max_workers=20) as executor:
                 future = executor.submit(self.do_rule1)
                 future_list.append(future)
-                # future = executor.submit(self.do_recv)
-                # future_list.append(future)
+                future = executor.submit(self.do_recv)
+                future_list.append(future)
                 futures.wait(future_list)
         except Exception as e:
             SingleLogger().log.error(e)
