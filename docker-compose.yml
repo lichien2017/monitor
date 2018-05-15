@@ -67,7 +67,7 @@ services:
     networks:
       - mobilephone
   nodejsqueue:
-    image: tymx/nodejsqueue:v1
+    build: nodejsqueue/
     container_name: nodejsqueue
     ports: 
         - "3000:3000"
