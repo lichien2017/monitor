@@ -69,7 +69,7 @@ class BaseLevel1Rule(Rule,Thread):
                             if item == None :# 如果不存在就插入
                                 if not key.isdigit() :
                                     tmp_res = self._get_resource("%s" % res_recv[0],res_recv[1])
-                                    total_table.insert({"res_id": "%s" % res_recv[0],"badkey":key,"badcontent":tmp_res[key]})
+                                    total_table.insert({"res_id": "%s" % res_recv[0],"badkey":"%s" % key,"badcontent":tmp_res[key]})
                                 else:
                                     total_table.insert(
                                         {"res_id": "%s" % res_recv[0], "badkey": key, "badcontent": ""})
