@@ -31,6 +31,8 @@ services:
       - "7110:7110"
       - "7120:7120"
       - "7400-7500:7400-7500"
+    volumes:
+      - "/mnt/stfapp:/app"
     network_mode: "host"
     restart: always
     command: stf local --public-ip 192.168.10.176
