@@ -105,7 +105,7 @@ class SinaParse(BaseParse):
 
         # 置顶
         try:
-            if data['isTop'] and data['isTop'] == 1:
+            if data['isTop'] and data['isTop'] == 1 and data['showTag'] and data['showTag'] == "置顶":
                 if tab == "":
                     tab = "置顶"
                 else:
