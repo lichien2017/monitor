@@ -22,7 +22,7 @@ services:
     network_mode: "host"
     command: "rethinkdb --bind all --cache-size 2048"
   stf-local:
-    image: openstf/stf
+    build: stf/
     depends_on:
       - rethinkdb
       - adbd

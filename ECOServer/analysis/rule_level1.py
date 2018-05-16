@@ -67,7 +67,12 @@ class BaseLevel1Rule(Rule,Thread):
                             total_table = self._mongodb["all_resource" + res_recv[1]]
                             total_item = total_table.find_one({"res_id": "%s" % res_recv[0]})
                             if item == None :# 如果不存在就插入
-                                total_table.insert({"res_id": "%s" % res_recv[0]})
+                                if not key.isdigit() :
+                                    tmp_res = self._get_resource("%s" % res_recv[0],res_recv[1])
+                                    total_table.insert({"res_id": "%s" % res_recv[0],"badkey":key,"badcontent":tmp_res[key]})
+                                else:
+                                    total_table.insert(
+                                        {"res_id": "%s" % res_recv[0], "badkey": key, "badcontent": ""})
                         inserted = 1
                     if rel == -1:
                         remove_flag = 0
@@ -111,17 +116,17 @@ class PoliticalRule(BaseLevel1Rule):
     def __init__(self, settings):
         BaseLevel1Rule.__init__(self, settings)
 
-# 政治有害
+# 宗教
 class ZongJiaoRule(BaseLevel1Rule):
     def __init__(self, settings):
         BaseLevel1Rule.__init__(self, settings)
 
-# 政治有害
+# 标题党
 class BiaoTiDangRule(BaseLevel1Rule):
     def __init__(self, settings):
         BaseLevel1Rule.__init__(self, settings)
 
-# 政治有害
+# ORC匹配
 class ScreenCapORCRule(BaseLevel1Rule):
     def __init__(self, settings):
         BaseLevel1Rule.__init__(self, settings)

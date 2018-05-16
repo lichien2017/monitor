@@ -31,7 +31,7 @@ class ScreenCaptureMatch(Thread):
     def queryPictures(self,query_date,pkg_time,app_tag,category_tag):
         start_time1 = datetime.datetime.strptime(pkg_time,time_format)
 
-        start_time = start_time1 + datetime.timedelta(minutes=-3)
+        start_time = start_time1 + datetime.timedelta(minutes=-10)
         end_time = start_time1 + datetime.timedelta(minutes=interval)
 
         SingleLogger().log.debug(start_time)
