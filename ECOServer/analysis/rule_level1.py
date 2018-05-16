@@ -72,7 +72,7 @@ class BaseLevel1Rule(Rule,Thread):
                                     total_table.insert({"res_id": "%s" % res_recv[0],"badkey":"%s" % key,"badcontent":tmp_res[key]})
                                 else:
                                     total_table.insert(
-                                        {"res_id": "%s" % res_recv[0], "badkey": key, "badcontent": ""})
+                                        {"res_id": "%s" % res_recv[0], "badkey":"%s" % key, "badcontent": ""})
                         inserted = 1
                     if rel == -1:
                         remove_flag = 0
