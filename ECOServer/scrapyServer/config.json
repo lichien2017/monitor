@@ -108,5 +108,15 @@
       "app_tag":"huisdk",
       "categroy":{"头条":"头条","娱乐":"娱乐","八卦":"八卦","社会":"社会","国内":"国内","国际":"国际"}
     }
+  },
+    {
+    "modname": "scrapyServer.ZhiHuModel",
+    "classname": "ZhiHuParse",
+    "queuename": "origin:zhihusdk",
+    "apppinfo":{
+      "app_name":"知乎",
+      "app_tag":"zhihu",
+      "categroy":{"推荐":"推荐","热榜":"热榜"}
+    }
   }
 ]
