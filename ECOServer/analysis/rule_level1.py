@@ -69,18 +69,21 @@ class BaseLevel1Rule(Rule,Thread):
                             if item == None :# 如果不存在就插入
                                 tmp_res = self._get_resource("%s" % res_recv[0], res_recv[1])
                                 if not key.isdigit() :
-                                    total_table.insert({"res_id": "%s" % res_recv[0],"app_tag":tmp_res["app_tag"],"category_tag":tmp_res["category_tag"],"badkey":"%s" % key.decode("utf-8"),"badcontent":tmp_res[key.decode("utf-8")]})
+                                    total_table.insert({"res_id": "%s" % res_recv[0],"badkey":"%s" % key.decode("utf-8"),"badcontent":tmp_res[key.decode("utf-8")],"app_tag":tmp_res["app_tag"],"category_tag":tmp_res["category_tag"]})
                                 else:
-                                    logo = tmp_res["logo"].split(',')
-                                    images = tmp_res["gallary"].split(',')
+                                    logo = tmp_res["logo"].split(",")
+                                    images = tmp_res["gallary"].split(",")
                                     logo = [x for x in logo if
                                             x != '' and (x.startswith("http://") or x.startswith("https://"))]
                                     images = [x for x in images if
                                               x != '' and (x.startswith("http://") or x.startswith("https://"))]
-                                    gallery = logo + images
-                                    key_index = int(key.decode("utf-8"))
-                                    total_table.insert(
-                                        {"res_id": "%s" % res_recv[0],"app_tag":tmp_res["app_tag"],"category_tag":tmp_res["category_tag"], "badkey":"%s" % key.decode("utf-8"), "badcontent": gallery[key_index]})
+                                    gallary = logo + images
+                                    key_index = int(key.decode("utf-8")) - 1
+                                    if key_index <0 or key_index >= len(gallary) :
+                                        SingleLogger().log.debug("key_index = %d and gallary len is %d" %(key_index,len(gallary)))
+                                    else:
+                                        total_table.insert(
+                                        {"res_id": "%s" % res_recv[0], "badkey":"%s" % key.decode("utf-8"), "badcontent": gallary[key_index],"app_tag":tmp_res["app_tag"],"category_tag":tmp_res["category_tag"]})
                         inserted = 1
                     if rel == -1:
                         remove_flag = 0
@@ -100,6 +103,7 @@ class BaseLevel1Rule(Rule,Thread):
                 future = executor.submit(self.do_recv)
                 future_list.append(future)
                 futures.wait(future_list)
+                i = 1
         except Exception as e:
             SingleLogger().log.error(e)
 
