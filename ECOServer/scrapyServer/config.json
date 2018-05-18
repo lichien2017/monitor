@@ -112,11 +112,21 @@
     {
     "modname": "scrapyServer.ZhiHuModel",
     "classname": "ZhiHuParse",
-    "queuename": "origin:zhihusdk",
+    "queuename": "origin:zhihu",
     "apppinfo":{
       "app_name":"知乎",
       "app_tag":"zhihu",
       "categroy":{"推荐":"推荐","热榜":"热榜"}
+    }
+  },
+    {
+    "modname": "scrapyServer.JiKeModel",
+    "classname": "JiKeParse",
+    "queuename": "origin:jike",
+    "apppinfo":{
+      "app_name":"即刻",
+      "app_tag":"jike",
+      "categroy":{"推荐":"推荐"}
     }
   }
 ]
