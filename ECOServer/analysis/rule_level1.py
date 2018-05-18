@@ -69,7 +69,7 @@ class BaseLevel1Rule(Rule,Thread):
                             if item == None :# 如果不存在就插入
                                 tmp_res = self._get_resource("%s" % res_recv[0], res_recv[1])
                                 if not key.isdigit() :
-                                    total_table.insert({"res_id": "%s" % res_recv[0],"badkey":"%s" % key.decode("utf-8"),"badcontent":tmp_res[key.decode("utf-8")]})
+                                    total_table.insert({"res_id": "%s" % res_recv[0],"app_tag":tmp_res["app_tag"],"category_tag":tmp_res["category_tag"],"badkey":"%s" % key.decode("utf-8"),"badcontent":tmp_res[key.decode("utf-8")]})
                                 else:
                                     logo = tmp_res["logo"].split(',')
                                     images = tmp_res["gallary"].split(',')
@@ -80,7 +80,7 @@ class BaseLevel1Rule(Rule,Thread):
                                     gallery = logo + images
                                     key_index = int(key.decode("utf-8"))
                                     total_table.insert(
-                                        {"res_id": "%s" % res_recv[0], "badkey":"%s" % key.decode("utf-8"), "badcontent": gallery[key_index]})
+                                        {"res_id": "%s" % res_recv[0],"app_tag":tmp_res["app_tag"],"category_tag":tmp_res["category_tag"], "badkey":"%s" % key.decode("utf-8"), "badcontent": gallery[key_index]})
                         inserted = 1
                     if rel == -1:
                         remove_flag = 0
