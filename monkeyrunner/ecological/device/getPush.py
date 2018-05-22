@@ -113,7 +113,7 @@ class getPush(unittest.TestCase):
         t = str(int(round(time.time() * 1000)))
         day = time.strftime('%Y%m%d', time.localtime(time.time()))
         file_name = day + "_" + t + ".png"
-        full_file_name = self._cur_file_dir() + file_name
+        full_file_name = self._cur_file_dir() + "/"+file_name
         cmd1 = r"adb -s '"+self.deviceTag+"' shell screencap -p /sdcard/" + file_name  # 命令1：在手机上截图
         cmd2 = r"adb -s '"+self.deviceTag+"' pull /sdcard/" + file_name + " " + full_file_name  # 命令2：将图片保存到电脑
         self._execute_cmd(cmd1)  # 在手机上截图
