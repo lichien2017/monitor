@@ -26,6 +26,7 @@ __version__ = '14.0.0'
 
 import sys
 import warnings
+import json
 
 if sys.executable:
     if 'monkeyrunner' in sys.executable:
@@ -262,7 +263,7 @@ class AdbClient:
             except:
                 raise Exception("You have to install PIL to use takeSnapshot()")
 
-        sdk_version = 17
+        sdk_version = 19
         USE_ADB_FRAMEBUFFER_METHOD = (sdk_version < 14 or sdk_version >= 23)
         if USE_ADB_FRAMEBUFFER_METHOD:
             #self.__checkTransport()
@@ -354,6 +355,13 @@ class AdbClient:
         # if PROFILE:
         #     profileEnd()
         return image
+
+
+    def getNotification(self):
+        cmd = 'dumpsys notification'
+        out = self.shell(cmd)
+        NotificationList = re.findall("Notification List:(.*)mSoundNotification",out,re.S)[0]
+        return  NotificationList
 
 
 
@@ -889,7 +897,7 @@ class AdbClient:
         # self.__checkTransport()
         # if orientation == -1:
         #     orientation = self.display['orientation']
-        version = 17
+        version = 19
         if version > 10:
             self.shell(
                 'input tap %d %d' % self.__transformPointByOrientation((x, y), orientation, orientation))
@@ -938,7 +946,7 @@ class AdbClient:
         # (x1, y1) = self.__transformPointByOrientation((x1, y1), orientation, self.display['orientation'])
 
         # version = self.getSdkVersion()
-        version = 17
+        version = 19
         if version <= 15:
             raise RuntimeError('drag: API <= 15 not supported (version=%d)' % version)
         elif version <= 17:
