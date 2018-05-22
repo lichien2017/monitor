@@ -84,25 +84,19 @@ class Collector(Thread):
                                     `SexyRule`,
                                     `PoliticalRule`,
                                     `ZongJiaoRule`,
-                                    `BiaoTiDangRule`,top_news,ad_news,hot_news,topic_news,we_media,we_media_name)
+                                    `BiaoTiDangRule`,top_news,ad_news,hot_news,topic_news,we_media,source)
                                     VALUES
                                     ('%s','%s','%s','%s',%d,'%s',%d,'%s','%s','%s','%s',%d,%d,%d,%d,%d,%d,%d,%d,%d,'%s')
                                     """ % (
                                     row["res_id"],pymysql.escape_string(res["title"]),pymysql.escape_string(res["description"]),res["crawltimestr"],0,'',-1,
-                                    res["app_tag"], res["category_tag"], res["shorturl"],date, 0,0,0,0, 0,0,0,0,0,'')
+                                    res["app_tag"], res["category_tag"], res["shorturl"],date, 0,0,0,0, 0,0,0,0,0,res["source"])
 
                     SingleLogger().log.debug(sql_str)
                     row_count = cursor.execute(sql_str)
                     pass
                 # 更新相对应的规则字段
-                if rule_tag == 'we_media' : # 如果是自媒体
-                    row_count = cursor.execute("""update analysis_data_normal_total 
-                                                  set `%s` = 1 ,we_media_name = '%s'
-                                                  where res_id = '%s' and create_date = '%s'"""
-                                               % (rule_tag, row["source"],row["res_id"], date))
-                else:
-                    row_count = cursor.execute("""update analysis_data_normal_total 
-                                                  set `%s` = 1 where res_id = '%s' and create_date = '%s'"""
+                row_count = cursor.execute("""update analysis_data_normal_total 
+                                                                  set `%s` = 1 where res_id = '%s' and create_date = '%s'"""
                                            % (rule_tag, row["res_id"], date))
 
                 conn.commit()
