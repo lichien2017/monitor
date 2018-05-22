@@ -45,7 +45,7 @@ class Collector(Thread):
         cursor.close()
         conn.close()
         pass
-
+    # 汇总数据将违规项分列进行
     def copy_data_to_total(self,table_name,rule_tag,date):
         if table_name == None:
             SingleLogger().log.debug("table_name is None")
@@ -84,19 +84,19 @@ class Collector(Thread):
                                     `SexyRule`,
                                     `PoliticalRule`,
                                     `ZongJiaoRule`,
-                                    `BiaoTiDangRule`)
+                                    `BiaoTiDangRule`,top_news,ad_news,hot_news,topic_news,we_media,source)
                                     VALUES
-                                    ('%s','%s','%s','%s',%d,'%s',%d,'%s','%s','%s','%s',%d,%d,%d,%d)
+                                    ('%s','%s','%s','%s',%d,'%s',%d,'%s','%s','%s','%s',%d,%d,%d,%d,%d,%d,%d,%d,%d,'%s')
                                     """ % (
                                     row["res_id"],pymysql.escape_string(res["title"]),pymysql.escape_string(res["description"]),res["crawltimestr"],0,'',-1,
-                                    res["app_tag"], res["category_tag"], res["shorturl"],date, 0,0,0,0)
+                                    res["app_tag"], res["category_tag"], res["shorturl"],date, 0,0,0,0, 0,0,0,0,0,res["source"])
 
                     SingleLogger().log.debug(sql_str)
                     row_count = cursor.execute(sql_str)
                     pass
-                # 更新
+                # 更新相对应的规则字段
                 row_count = cursor.execute("""update analysis_data_normal_total 
-                                                              set `%s` = 1 where res_id = '%s' and create_date = '%s'"""
+                                                                  set `%s` = 1 where res_id = '%s' and create_date = '%s'"""
                                            % (rule_tag, row["res_id"], date))
 
                 conn.commit()
@@ -145,7 +145,7 @@ class Collector(Thread):
         cursor.close()
         conn.close()
         pass
-
+    # ocr在总表中匹配图片
     def copy_data_to_total_screen_orc(self,table_name,rule_tag,date):
         if table_name == None:
             SingleLogger().log.debug("table_name is None")
@@ -281,6 +281,8 @@ select mongodb_tablename from `analysis_rules` where level = 0)
                 level = int(result["level"])
                 if level == 1 :
                     self.copy_data_to_total(table_name,result["imp_python_class"],yestoday_str)
+                else:
+                    self.copy_data_to_total(table_name, result["mongodb_tablename"], yestoday_str)
                 pass
             result = cursor.fetchone()
         # 汇总所有的统计数据
