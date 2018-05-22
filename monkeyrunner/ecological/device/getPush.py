@@ -35,20 +35,20 @@ class getPush(unittest.TestCase):
         adb = obtainAdbPath()
         # 手机唯一标识
         self.deviceTag = 'M3LDU15518000041'
-        try:
-            self.adbClient = AdbClient(self.deviceTag, settransport=False)
-        except RuntimeError, ex:
-            if re.search('Connection refused', str(ex)):
-                raise RuntimeError("adb is not running")
-            raise (ex)
-        devices =  self.adbClient.getDevices()
-        if len(devices) == 0:
-            raise RuntimeError("This tests require at least one device connected. None was found.")
-        for device in devices:
-            if device.status == 'device':
-                androidSerial = device.serialno
-                print(androidSerial)
-                self.Run()
+        # try:
+        #     self.adbClient = AdbClient(self.deviceTag, settransport=False)
+        # except RuntimeError, ex:
+        #     if re.search('Connection refused', str(ex)):
+        #         raise RuntimeError("adb is not running")
+        #     raise (ex)
+        # devices =  self.adbClient.getDevices()
+        # if len(devices) == 0:
+        #     raise RuntimeError("This tests require at least one device connected. None was found.")
+        # for device in devices:
+        #     if device.status == 'device':
+        #         androidSerial = device.serialno
+        #         print(androidSerial)
+        self.Run()
 
     def Run(self):
         #mysql
@@ -62,7 +62,7 @@ class getPush(unittest.TestCase):
         table = self.db["push"]
 
         #获取到通知栏消息
-        NotificationList = self.adbClient.getNotification()
+        NotificationList = self.getNotification()
         #数据总数
         NotificationData = NotificationList.split("NotificationRecord")
         for data in NotificationData:
@@ -105,6 +105,12 @@ class getPush(unittest.TestCase):
 
                 except:
                     print  >> sys.stderr, "=====>err"
+
+    def getNotification(self):
+        cmd = r"adb -s '"+self.deviceTag+"' shell dumpsys notification"
+        out = str(self._execute_cmd(cmd))
+        NotificationList = re.findall("Notification List:(.*)mSoundNotification", out, re.S)[0]
+        return NotificationList
 
     # 截屏，返回文件名和完整文件路径
     def _take_photo(self):
