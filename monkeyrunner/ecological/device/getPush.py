@@ -41,14 +41,13 @@ class getPush(unittest.TestCase):
         #     if re.search('Connection refused', str(ex)):
         #         raise RuntimeError("adb is not running")
         #     raise (ex)
-        # devices =  self.adbClient.getDevices()
-        # if len(devices) == 0:
-        #     raise RuntimeError("This tests require at least one device connected. None was found.")
-        # for device in devices:
-        #     if device.status == 'device':
-        #         androidSerial = device.serialno
-        #         print(androidSerial)
-        self.Run()
+        phone = r"adb devices -l"
+        devices = self._execute_cmd(phone)
+        if len(devices) == 0:
+            raise RuntimeError("This tests require at least one device connected. None was found.")
+        for device in devices:
+            if device.status == 'device':
+                self.Run()
 
     def Run(self):
         #mysql
