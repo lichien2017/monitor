@@ -32,7 +32,7 @@ DEBUG_SHELL = DEBUG and False
 class getPush(unittest.TestCase):
     adbClient = None;
     def __init__(self):
-        adb = obtainAdbPath()
+        #adb = obtainAdbPath()
         # 手机唯一标识
         self.deviceTag = 'M3LDU15518000041'
         # try:
