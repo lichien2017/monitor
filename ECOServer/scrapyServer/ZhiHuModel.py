@@ -75,11 +75,26 @@ class ZhiHuParse(BaseParse):
             #作者
             source = data['target']['author']['name']
             publish_time = data['target']['created_time']
-            crawltimestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(crawltime / 1000))
             publish_timestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(int(publish_time) / 1000))
 
             content = ""
+        elif category == "热榜":
+            hottype =  data['target']['label_area']['type']
+            if hottype == 'text':
+                tab = data['target']['label_area']['text']
 
+
+            title = data['target']['title_area']['text']
+            articleid = data['id']
+            logo = data['target']['image_area']['url']
+            url = data['target']['link']['url']
+            abstract = data['target']['excerpt_area']['text']
+            # 没有发布时间，用当前时间暂替
+            publish_time = crawltime
+            publish_timestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(crawltime / 1000))
+            content = ""
+
+        crawltimestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(crawltime / 1000))
 
         SingleLogger().log.debug(title)
         sdata = {
