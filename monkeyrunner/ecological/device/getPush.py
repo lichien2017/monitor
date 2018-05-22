@@ -125,7 +125,9 @@ class getPush(unittest.TestCase):
         imgserver = "http://192.168.10.176:3000/image"
         cmd = r'curl -F "uploadfile=@' + full_file_name + '" ' + imgserver
         resultOk, error = self._execute_cmd(cmd)
+        print  >> sys.stderr, "=====>%s" % resultOk
         response = json.loads(resultOk)
+        print  >> sys.stderr, "00000=====>%s" % response
         if response["status"] == "success":
             # 删除本地文件
             cmd3 = r'rm -f ' + full_file_name
