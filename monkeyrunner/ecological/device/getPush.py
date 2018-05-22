@@ -115,6 +115,7 @@ class getPush(unittest.TestCase):
         full_file_name = self._cur_file_dir() + "/uploads/" + file_name
         cmd1 = r"adb -s '"+self.deviceTag+"' shell screencap -p /sdcard/" + file_name  # 命令1：在手机上截图
         cmd2 = r"adb -s '"+self.deviceTag+"' pull /sdcard/" + file_name + " " + full_file_name  # 命令2：将图片保存到电脑
+        print  >> sys.stderr, "=====>000000"
         self._execute_cmd(cmd1)  # 在手机上截图
         self._execute_cmd(cmd2)  # 将截图保存到电脑
         return (file_name, full_file_name)
