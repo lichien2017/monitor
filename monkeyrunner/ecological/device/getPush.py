@@ -99,6 +99,7 @@ class getPush(unittest.TestCase):
                                 self._upload_screenshot(full_file_name,file_name)
                                 # 获取当前的时分秒
                                 nowtime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+                                print  >> sys.stderr, "=====>11111"
                                 #插入数据库
                                 push = {'title': title, 'msg': text, 'tag': datatag,'time':nowtime,'imgfilename':file_name}
                                 table.insert_one(push)
@@ -115,7 +116,6 @@ class getPush(unittest.TestCase):
         full_file_name = self._cur_file_dir() + "/uploads/" + file_name
         cmd1 = r"adb -s '"+self.deviceTag+"' shell screencap -p /sdcard/" + file_name  # 命令1：在手机上截图
         cmd2 = r"adb -s '"+self.deviceTag+"' pull /sdcard/" + file_name + " " + full_file_name  # 命令2：将图片保存到电脑
-        print  >> sys.stderr, "=====>000000"
         self._execute_cmd(cmd1)  # 在手机上截图
         self._execute_cmd(cmd2)  # 将截图保存到电脑
         return (file_name, full_file_name)
@@ -131,6 +131,7 @@ class getPush(unittest.TestCase):
             cmd3 = r'rm -f ' + full_file_name
             # 删除手机文件
             cmd4 = r"adb -s '"+self.deviceTag+"' shell rm /sdcard/"+file_name
+            print  >> sys.stderr, "=====>000000"
             self._execute_cmd(cmd3)
             self._execute_cmd(cmd4)
             return True
