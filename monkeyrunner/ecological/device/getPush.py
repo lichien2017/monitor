@@ -46,7 +46,6 @@ class getPush(unittest.TestCase):
         if len(devices) == 0:
             raise RuntimeError("This tests require at least one device connected. None was found.")
         for device in devices:
-            if device.status == 'device':
                 self.Run()
 
     def Run(self):
