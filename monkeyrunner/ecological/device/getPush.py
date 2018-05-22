@@ -93,14 +93,14 @@ class getPush(unittest.TestCase):
                             datatag = sqldata[0][0]
                             rows = table.find({"tag":datatag,"title":title,"msg":text}).count();
                             if rows == 0:
-                                # # 无数据，截图
-                                # file_name, full_file_name = self._take_photo()
-                                # # 上传图片文件
-                                # self._upload_screenshot(full_file_name,file_name)
+                                # 无数据，截图
+                                file_name, full_file_name = self._take_photo()
+                                # 上传图片文件
+                                self._upload_screenshot(full_file_name,file_name)
                                 # 获取当前的时分秒
                                 nowtime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
                                 #插入数据库
-                                push = {'title': title, 'msg': text, 'tag': datatag,'time':nowtime,'imgfilename':'0'}
+                                push = {'title': title, 'msg': text, 'tag': datatag,'time':nowtime,'imgfilename':file_name}
                                 table.insert_one(push)
 
                 except:
