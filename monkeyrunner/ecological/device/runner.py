@@ -234,16 +234,18 @@ class DeviceRunner():
     #截屏，返回文件名和完整文件路径
     def _take_photo(self):
         # 截图上传
-        image = self.adbClient.newtakeSnapshot()
+
         print >> sys.stderr, "=====image================>"
         t = str(int(round(time.time() * 1000)))
         day = time.strftime('%Y%m%d', time.localtime(time.time()))
         file_name = day + "_"+ t + ".png"
         full_file_name = self._cur_file_dir() + "/uploads/" + file_name
+
+        image = self.adbClient.newtakeSnapshot_with_filename(full_file_name)
         # image.write(full_file_name)
-        with open(full_file_name, 'w') as fd:
-            for line in image:
-                fd.write(line)
+        # with open(full_file_name, 'w') as fd:
+        #     for line in image:
+        #         fd.write(line)
             # copyfileobj(image, fd)
 
         # t = str(int(round(time.time() * 1000)))
