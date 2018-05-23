@@ -69,17 +69,13 @@ class getPush(unittest.TestCase):
             if data == "":
                 return
             else:
-                print  >> sys.stderr, "=====>%s" % data
                 try:
                     #获取到包名
                     pkgname = data[data.index("pkg"):data.index("user")].replace("pkg=","")
-                    print  >> sys.stderr, "pkg=====>%s" % pkgname
                     # 获取到标题
                     title = data[data.index("android.title"):data.index("android.subText")].replace("android.title=", "")
-                    print  >> sys.stderr, "title=====>%s" % title
                     # 获取到副标题
                     text = data[data.index("android.text"):data.index("android.progress")].replace("android.text=","")
-                    print  >> sys.stderr, "text=====>%s" % text
                     if title !="null" and text!="null":
                         #查询包名的Tag
                         # 使用execute方法执行SQL语句
@@ -99,7 +95,6 @@ class getPush(unittest.TestCase):
                                 self._upload_screenshot(full_file_name,file_name)
                                 # 获取当前的时分秒
                                 nowtime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
-                                print  >> sys.stderr, "=====>11111"
                                 #插入数据库
                                 push = {'title': title, 'msg': text, 'tag': datatag,'time':nowtime,'imgfilename':file_name}
                                 table.insert_one(push)
@@ -118,9 +113,6 @@ class getPush(unittest.TestCase):
         cmd2 = r"adb -s '"+self.deviceTag+"' pull /sdcard/" + file_name + " " + full_file_name  # 命令2：将图片保存到电脑
         self._execute_cmd(cmd1)  # 在手机上截图
         self._execute_cmd(cmd2)  # 将截图保存到电脑
-
-        print  >> sys.stderr, "222222=====>%s" % cmd1
-        print  >> sys.stderr, "2222222222=====>%s" % cmd2
         return (file_name, full_file_name)
 
     # 上传图片文件
@@ -128,15 +120,12 @@ class getPush(unittest.TestCase):
         imgserver = "http://192.168.10.176:3000/image"
         cmd = r'curl -F "uploadfile=@' + full_file_name + '" ' + imgserver
         resultOk, error = self._execute_cmd(cmd)
-        print  >> sys.stderr, "0000=====>%s" % error
         response = json.loads(resultOk)
-        print  >> sys.stderr, "00000=====>%s" % response
         if response["status"] == "success":
             # 删除本地文件
             cmd3 = r'rm -f ' + full_file_name
             # 删除手机文件
             cmd4 = r"adb -s '"+self.deviceTag+"' shell rm /sdcard/"+file_name
-            print  >> sys.stderr, "=====>000000"
             self._execute_cmd(cmd3)
             self._execute_cmd(cmd4)
             return True
