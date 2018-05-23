@@ -245,6 +245,77 @@ class AdbClient:
         # return stream
 
 
+    def shell_saveto_file(self, file_name,cmd=None,flag = None):
+        self.lock.acquire()
+
+        if DEBUG_SHELL:
+            print >> sys.stderr, "shell(cmd=%s)" % cmd
+        #self.__checkTransport()
+        if cmd:
+            self.__send('shell:%s' % cmd, checkok=True, reconnect=False)
+            while True:
+                chunk = None
+                try:
+                    chunk = self.socket.recv(4096)
+                except Exception, ex:
+                    print >> sys.stderr, "ERROR:", ex
+                if not chunk:
+                    break
+                with open(file_name, 'ab') as f:
+                    f.write(chunk)
+
+            if self.reconnect:
+                if DEBUG:
+                    print >> sys.stderr, "Reconnecting..."
+                self.close()
+                self.socket = AdbClient.connect(self.hostname, self.port, self.timeout)
+                self.__setTransport()
+
+            self.lock.release()
+            return file_name
+        else:
+            self.__send('shell:')
+            # sin = self.socket.makefile("rw")
+            # sout = self.socket.makefile("r")
+            # return (sin, sin)
+            sout = adbClient.socket.makefile("r")
+
+            self.lock.release()
+            return sout
+
+    def newtakeSnapshot_with_filename(self,file_name):
+        # ALTERNATIVE_METHOD: screencap
+        print >> sys.stderr, "=====================>"
+        received = self.shell_saveto_file(file_name,'/system/bin/screencap -p')
+        print >> sys.stderr, "=====received================>"
+        if not received:
+            print >> sys.stderr, "=====notreceived================>"
+            raise RuntimeError('"/system/bin/screencap -p" result was empty')
+        # stream = StringIO.StringIO(received)
+        return received
+        # try:
+
+        #    image = Image.open(stream)
+        #
+        # except IOError, ex:
+        #     print >> sys.stderr, ex
+        #     print >> sys.stderr, repr(stream)
+        #     print >> sys.stderr, repr(received)
+        #     raise RuntimeError('Cannot convert stream to image: ' + ex.message)
+
+        # Just in case let's get the real image size
+
+        # (w, h) = image.size
+        # # if w == self.display['height'] and h == self.display['width']:
+        # if 'orientation' in self.display:
+        #     r = (0, 90, 180, -90)[self.display['orientation']]
+        # else:
+        #     r = 90
+        # image = image.rotate(r, expand=1).resize((h, w))
+
+        # if PROFILE:
+        #     profileEnd()
+        # return stream
 
     def takeSnapshot(self, reconnect=False):
         '''
