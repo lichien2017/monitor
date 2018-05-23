@@ -234,7 +234,7 @@ class DeviceRunner():
     #截屏，返回文件名和完整文件路径
     def _take_photo(self):
         #在这做一下区分，如果是华为白手机，用的截图方法不一样(暂时用版本号区分)
-        if self._settings["tag"] == 'M3LDU15518000041':
+        if self._settings["tag"] == 'jike' or self._settings["tag"] == 'zhihu':
             image = self.adbClient.takeSnapshot()
             t = str(int(round(time.time() * 1000)))
             day = time.strftime('%Y%m%d', time.localtime(time.time()))
