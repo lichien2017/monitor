@@ -215,7 +215,7 @@ class AdbClient:
         print >> sys.stderr, "=====================>"
         received = self.shell('/system/bin/screencap -p',"flag")
         # print received
-        print >> sys.stderr, "=====received================>"
+        print >> sys.stderr, "=====received================>" + received
         if not received:
             raise RuntimeError('"/system/bin/screencap -p" result was empty')
         # stream = StringIO.StringIO(received)
