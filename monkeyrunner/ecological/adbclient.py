@@ -45,7 +45,7 @@ import time
 import re
 import os
 import platform
-# from wand.image import Image
+from PIL import Image
 
 
 
@@ -325,16 +325,16 @@ class AdbClient:
         # if PROFILE:
         #     profileStart()
 
-        global PIL_AVAILABLE
-        if not PIL_AVAILABLE:
-            try:
-                global Image
-                from wand.image import Image
-                PIL_AVAILABLE = True
-            except:
-                raise Exception("You have to install PIL to use takeSnapshot()")
+        # global PIL_AVAILABLE
+        # if not PIL_AVAILABLE:
+        #     try:
+        #         global Image
+        #         from wand.image import Image
+        #         PIL_AVAILABLE = True
+        #     except:
+        #         raise Exception("You have to install PIL to use takeSnapshot()")
 
-        sdk_version = 19
+        sdk_version = 23
         USE_ADB_FRAMEBUFFER_METHOD = (sdk_version < 14 or sdk_version >= 23)
         if USE_ADB_FRAMEBUFFER_METHOD:
             #self.__checkTransport()

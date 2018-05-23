@@ -233,26 +233,24 @@ class DeviceRunner():
 
     #截屏，返回文件名和完整文件路径
     def _take_photo(self):
-        # 截图上传
-        image = self.adbClient.newtakeSnapshot()
-        print >> sys.stderr, "=====image================>"
-        t = str(int(round(time.time() * 1000)))
-        day = time.strftime('%Y%m%d', time.localtime(time.time()))
-        file_name = day + "_"+ t + ".png"
-        full_file_name = self._cur_file_dir() + "/uploads/" + file_name
-        # image.write(full_file_name)
-        with open(full_file_name, 'w') as fd:
-            for line in image:
-                fd.write(line)
-            # copyfileobj(image, fd)
+        #在这做一下区分，如果是华为白手机，用的截图方法不一样(暂时用版本号区分)
+        if self._settings["tag"] == 'M3LDU15518000041':
+            image = self.adbClient.takeSnapshot()
+            t = str(int(round(time.time() * 1000)))
+            day = time.strftime('%Y%m%d', time.localtime(time.time()))
+            file_name = day + "_" + t + ".png"
+            full_file_name = self._cur_file_dir() + "/uploads/" + file_name
+            image.save(full_file_name)
+        else:
+            image = self.adbClient.newtakeSnapshot()
+            t = str(int(round(time.time() * 1000)))
+            day = time.strftime('%Y%m%d', time.localtime(time.time()))
+            file_name = day + "_" + t + ".png"
+            full_file_name = self._cur_file_dir() + "/uploads/" + file_name
+            with open(full_file_name, 'w') as fd:
+                for line in image:
+                    fd.write(line)
 
-        # t = str(int(round(time.time() * 1000)))
-        # file_name = t + ".png"
-        # full_file_name = self._cur_file_dir() + "/uploads/" + file_name
-        # cmd1 = r"adb -s " +self._settings["tag"]+" shell screencap -p /sdcard/" + file_name  # 命令1：在手机上截图
-        # cmd2 = r"adb -s " +self._settings["tag"]+" pull /sdcard/" + t + ".png " + full_file_name  # 命令2：将图片保存到电脑
-        # self._execute_cmd(cmd1)  # 在手机上截图
-        # self._execute_cmd(cmd2)  # 将截图保存到电脑
         return (file_name,full_file_name)
 
     #执行命令行
