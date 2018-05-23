@@ -9,7 +9,6 @@ import hashlib
 import uuid
 import sys
 import requests as rq
-from bs4 import BeautifulSoup
 from util.log import SingleLogger
 
 class TencentParse(BaseParse):
