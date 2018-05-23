@@ -2,7 +2,7 @@
 import configparser
 import os
 
-debug = 0 # 1表示调试环境
+debug = 1 # 1表示调试环境
 
 class ConfigHelper:
     # mysqldb.logger.setLevel('DEBUG')
