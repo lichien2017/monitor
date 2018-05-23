@@ -184,8 +184,8 @@ class DeviceRunner():
         response = json.loads(resultOk)
         if response["status"] == "success":
             cmd = r'rm -f ' + full_file_name
-            log.debug(cmd)
-            self._execute_cmd(cmd)
+            # log.debug(cmd)
+            # self._execute_cmd(cmd)
             return True
         else:
             log.debug('上传结果：'+response)
