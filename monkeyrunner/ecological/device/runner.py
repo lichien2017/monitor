@@ -184,8 +184,8 @@ class DeviceRunner():
         response = json.loads(resultOk)
         if response["status"] == "success":
             cmd = r'rm -f ' + full_file_name
-            log.debug(cmd)
-            self._execute_cmd(cmd)
+            # log.debug(cmd)
+            # self._execute_cmd(cmd)
             return True
         else:
             log.debug('上传结果：'+response)
@@ -235,6 +235,7 @@ class DeviceRunner():
     def _take_photo(self):
         # 截图上传
         image = self.adbClient.newtakeSnapshot()
+        print >> sys.stderr, "=====image================>"
         t = str(int(round(time.time() * 1000)))
         day = time.strftime('%Y%m%d', time.localtime(time.time()))
         file_name = day + "_"+ t + ".png"

@@ -32,7 +32,7 @@ DEBUG_SHELL = DEBUG and False
 class getPush(unittest.TestCase):
     adbClient = None;
     def __init__(self):
-        adb = obtainAdbPath()
+        #adb = obtainAdbPath()
         # 手机唯一标识
         self.deviceTag = 'M3LDU15518000041'
         try:
@@ -69,17 +69,13 @@ class getPush(unittest.TestCase):
             if data == "":
                 return
             else:
-                print  >> sys.stderr, "=====>%s" % data
                 try:
                     #获取到包名
                     pkgname = data[data.index("pkg"):data.index("user")].replace("pkg=","")
-                    print  >> sys.stderr, "pkg=====>%s" % pkgname
                     # 获取到标题
                     title = data[data.index("android.title"):data.index("android.subText")].replace("android.title=", "")
-                    print  >> sys.stderr, "title=====>%s" % title
                     # 获取到副标题
                     text = data[data.index("android.text"):data.index("android.progress")].replace("android.text=","")
-                    print  >> sys.stderr, "text=====>%s" % text
                     if title !="null" and text!="null":
                         #查询包名的Tag
                         # 使用execute方法执行SQL语句

@@ -23,3 +23,4 @@ Wand==0.4.4
 uuid==1.30
 datetime==4.2
 timezones==1.9.7
+pymysql==0.8.1
