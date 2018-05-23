@@ -235,6 +235,7 @@ class DeviceRunner():
     def _take_photo(self):
         # 截图上传
         image = self.adbClient.newtakeSnapshot()
+        print >> sys.stderr, "=====rec=====received================>eived================>" +image
         t = str(int(round(time.time() * 1000)))
         day = time.strftime('%Y%m%d', time.localtime(time.time()))
         file_name = day + "_"+ t + ".png"
