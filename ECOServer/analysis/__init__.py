@@ -10,11 +10,12 @@ from analysis.rule_level1 import PoliticalRule
 from analysis.rule_level1 import ZongJiaoRule
 from analysis.rule_level1 import BiaoTiDangRule
 from analysis.rule_level1 import ScreenCapORCRule
+from analysis.rule_level0 import WeMediaRule
 __version__ = '1.0.0'
 VERSION = tuple(map(int, __version__.split('.')))
 
 
 __all__ = [
     'RuleFactory', 'ColumnRule','KeyWordRule','BaseLevel1Rule','XueXingBaoLiRule','SexyRule','PoliticalRule',
-    'ZongJiaoRule','BiaoTiDangRule','ScreenCapORCRule'
+    'ZongJiaoRule','BiaoTiDangRule','ScreenCapORCRule','WeMediaRule'
 ]
