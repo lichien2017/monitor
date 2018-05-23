@@ -16,7 +16,6 @@ class TencentParse(BaseParse):
 
    #解析腾讯新闻
     def Analysis_ten(self,data,category,crawltime,y,categorytag):
-        #data = json.loads(data)
         #标题
         title = ""
         try:
@@ -38,6 +37,12 @@ class TencentParse(BaseParse):
                 return
         except:
             SingleLogger().log.debug("无文章标识")
+        menulable=""
+        #当前栏目标签
+        try:
+            menulable=data['uinname']
+        except:
+            SingleLogger().log.debug("无栏目标签")
         #图片
         logo = ""
         #来源
@@ -79,14 +84,20 @@ class TencentParse(BaseParse):
         tab = ""
         try:
             zdTab = data['labelList'][0]['word']
-            if zdTab == "置顶":
-                if tab == "":
-                    tab = "置顶"
-                else:
-                    tab += "、置顶"
+            if tab == "":
+                tab = zdTab
+            else:
+                tab += "、"+zdTab
         except:
-            SingleLogger().log.debug("无置顶标签")
-
+            SingleLogger().log.debug("无标签")
+        try:
+            zdTab = data['up_labelList'][0]['word']
+            if tab != '':
+                tab += '、' + zdTab
+            else:
+                tab = zdTab
+        except:
+            SingleLogger().log.debug("无特殊标签")
         #文章展示类型（528-热点精选 88-问答）
         articletype = ""
         try:
@@ -100,15 +111,6 @@ class TencentParse(BaseParse):
 
         #图片资讯图片地址
         gallary = ""
-        #在bigImage数组里面取值
-        #try:
-        #    gallary_list = data['bigImage']
-        #    gallary = ""#图片资讯/问答资讯需做处理，普通资讯，视频资讯无需进行处理
-        #    for g in gallary_list:
-        #        if g != "":
-        #           gallary+=g + ","
-        #except:
-        #    print("没有详情图片")
 
         #列表图片展示类型（1-没图 0-1张小图 3-1张大图 2-3张小图）
         picShowType = ""
@@ -152,12 +154,17 @@ class TencentParse(BaseParse):
                     logo = childList['thumbnails_qqnews_photo'][0]
                     if not (logo):
                         logo = childList['thumbnails'][0]
-
+                try:
+                    url = data['url']  # 分享地址
+                    if not (url) or url == "":
+                        url = data['short_url']  # 分享地址
+                        if not (url) or url == "":
+                            url = data['surl']  # 分享地址
+                except:
+                    SingleLogger().log.debug("无资讯地址")
+                content=url
             except:
                 SingleLogger().log.debug("该条热点消息无内容")
-
-        elif articletype == "1": #图片新闻
-            restype = 2#图片
 
         elif articletype == "4" or articletype == "101": #视频新闻 4,101
             restype = 3#视频
@@ -170,6 +177,10 @@ class TencentParse(BaseParse):
 
         elif articletype == "533": #直播
             restype = 3  # 视频
+            if tab=="":
+                tab="直播"
+            else:
+                tab+="、直播"
             liveVideo = data["newsModule"]["newslist"][0]
             title = liveVideo['title']
             source = liveVideo['source']
@@ -191,18 +202,54 @@ class TencentParse(BaseParse):
                     url = liveVideo['short_url']  # 分享地址
                     if not (url) or url == "":
                         url = liveVideo['surl']  # 分享地址
+                try:
+                    video_channel=liveVideo['video_channel']['video']['playurl']
+                    content=video_channel
+                except:
+                    content=url
             except:
                 SingleLogger().log.debug("无分享地址")
 
         elif articletype == "526": #标签列表，不是新闻return
             return
-            # 普通新闻
-        elif articletype == "0" or articletype == "12":
-            gallary = self.getImg(url)
-            video = self.getVideo(url)
-            if video and video != '':
-                gallary = gallary + video
-            content = self.getWen(url)
+            # 普通新闻 图片新闻
+        elif articletype == "0" or articletype == "12" or articletype=="1":
+            news_detail_url = 'http://r.inews.qq.com/getSimpleNews/1.3.1_qqnews_5.5.90/' + str(menulable)+'/'+str(articleid)
+            news_detail = rq.get(news_detail_url).json()
+            if articletype == "0" or articletype == "12":
+                content=news_detail['content']['text']
+                attribute = news_detail['attribute']
+                for a in attribute:
+                    try:
+                        # 判断gallary是否存在此链接地址，存在则跳出此次循环，不存在则进行拼接
+                        if gallary.find(attribute[a]["url"]) > -1:
+                            continue
+                        else:
+                            gallary += attribute[a]["url"] + ","
+                    except:
+                        try:
+                            gallary += attribute[a]["playurl"] + ","
+                        except:
+                            try:
+                                gallary += attribute[a]["murl"] + ","
+                            except:
+                                SingleLogger().log.debug(json.dumps(attribute))
+            elif articletype=="1":
+                restype=2 #图片新闻
+                attribute = news_detail['attribute']
+                for a in attribute:
+                    try:
+                        # 判断gallary是否存在此链接地址，存在则跳出此次循环，不存在则进行拼接
+                        if gallary.find(attribute[a]["url"]) > -1:
+                            continue
+                        else:
+                            gallary += attribute[a]["url"] + ","
+                            content+=attribute[a]['desc']+"<br/>"
+                    except:
+                         SingleLogger().log.debug(json.dumps(attribute))
+            #专题新闻
+        elif articletype=="100":
+            content=url
         sdata = {
             "title": title,
             "description": abstract,
@@ -228,54 +275,6 @@ class TencentParse(BaseParse):
         }
         self.db(sdata,articleid,title)
 
-
-    # 获取图片main
-    def getImgMain(self):
-        html = rq.get(urls).text
-        soup = BeautifulSoup(html, "html.parser")  # 文档对象
-        imgStr = ""
-        for k in soup.find_all('img'):  # 获取img
-            imgStr += k['src'] + "、"
-        return imgStr
-
-    # 获取文字main
-    def getWenMain(self):
-        html = rq.get(urls).text
-        soup = BeautifulSoup(html, "html.parser")  # 文档对象
-        # imgStrArr = soup.find_all('div', class_="Nfgz6aIyFCi3vZUoFGKEr")
-        imgStrArr = soup.find_all('body')
-        print(len(imgStrArr))
-        if len(imgStrArr) == 0:
-            return ''
-        else:
-            return imgStrArr[0]
-
-    # 获取视频main
-    def getVideoMain(self):
-        html = rq.get(urls).text
-        soup = BeautifulSoup(html, "html.parser")  # 文档对象
-        imgStr = ""
-        for k in soup.find_all('video'):
-            imgStr += k['src'] + "、"
-        return imgStr
-
-    # 获取图片
-    def getImg(self,link):
-        global urls
-        urls = link
-        return self.getImgMain()
-
-    # 获取图文
-    def getWen(self,link):
-        global urls
-        urls = link
-        return str(self.getWenMain())
-
-    # 获取视频
-    def getVideo(self,link):
-        global urls
-        urls = link
-        return self.getVideoMain()
 
     def tryparse(self,str):
          #转换编码格式

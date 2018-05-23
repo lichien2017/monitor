@@ -19,11 +19,11 @@ class FenHParse(BaseParse):
         return detailJson
 
     #解析凤凰新闻
-    def Analysis_fenghuang(self,data,category,crawltime,y,categorytag):
+    def Analysis_fenghuang(self,data,category,crawltime,y,categorytag,lable):
         title = "" #标题
         abstract = "" #摘要
         articleid = "" #文章标识
-        tab = "" #标签
+        tab = lable #标签
         source = "" #来源
         logo = "" #列表图片
         url = "" #文章短地址
@@ -37,7 +37,7 @@ class FenHParse(BaseParse):
         content = "" #内容
         gallary = "" #图片资讯图片地址
         detailJk = "" #详情接口
-
+        style = ""  # 是否为热点
         #如果是推荐关注列表，直接return
         try:
             articletype = data['type']#文章展示类型
@@ -52,6 +52,24 @@ class FenHParse(BaseParse):
             title = data['title']
         except:
             SingleLogger().log.debug('无标题')
+
+        # 标签
+        try:
+            style = data['style']['recomReason']['reasonName']
+            if tab == "":
+                tab = style
+            else:
+                tab += "、" + style
+        except:
+            SingleLogger().log.debug('无标签资讯')
+        try:
+            style = data['style']['attribute']
+            if tab == "":
+                tab = style
+            else:
+                tab += "、" + style
+        except:
+            SingleLogger().log.debug('无标签资讯')
 
         # 发布时间
         try:
@@ -176,14 +194,11 @@ class FenHParse(BaseParse):
 
         #广告
         elif articletype == "advert":
-            if tab == "":
-                tab = "广告"
-            else:
-                tab += "、广告"
             try:
                 articleid = data['pid'] #文章标识
             except:
                 SingleLogger().log.debug("该广告没有文章标识")
+            content=url
 
         #普通新闻
         elif articletype == "doc":
@@ -214,10 +229,7 @@ class FenHParse(BaseParse):
 
         # 置顶新闻
         elif articletype == "topic2":
-            if tab == "":
-                tab = "置顶"
-            else:
-                tab += "、置顶"
+            content = url
 
         sdata = {
             "title": title,
@@ -281,14 +293,19 @@ class FenHParse(BaseParse):
         #获取data
         data = strjson['data']
         data = json.loads(data)
-
+        lable=""
         #如果是“图片”栏目,取item方式不一样
         if category == "图片":
             item = data['body']['item']
             for y, x in enumerate(item):
-                self.Analysis_fenghuang(x, category, crawltime, y,categorytag)
+                self.Analysis_fenghuang(x, category, crawltime, y,categorytag,lable)
         else:
             for y1, curobj1 in enumerate(data):
                 item = curobj1['item']
+                lable = curobj1['type']
+                if lable == "top":
+                    lable = "置顶"
+                else:
+                    lable=""
                 for y2, curobj2 in enumerate(item):
-                    self.Analysis_fenghuang(curobj2, category, crawltime, y2,categorytag)
+                    self.Analysis_fenghuang(curobj2, category, crawltime, y2,categorytag,lable)

@@ -89,6 +89,7 @@ class TianTianParse(BaseParse):
             restype = 2
         elif articletype == "30":#广告
             IsArtID = True
+            tab="广告"
         url = data['short_url']
         publish_timestr = data['time']
         timeArray = time.strptime(publish_timestr, "%Y-%m-%d %H:%M:%S")
