@@ -7,6 +7,8 @@ from email.mime.text import MIMEText
 from email.header import Header
 from smtplib import SMTP_SSL
 
+from util import LocalTime
+
 
 class MongodbConn(Thread):
 
@@ -39,6 +41,10 @@ class MongodbConn(Thread):
                 appname = sqldata[1]
                 #获取当前日期
                 day = time.strftime('%Y-%m-%d', time.localtime(time.time()))
+                # 时间修正一下，改为本地时间
+                day = LocalTime.get_local_date(day, "%Y-%m-%d").strftime("%Y-%m-%d")
+
+
                 #查询tablelog中数据
                 logrows = tablelog.find({"appname": appname,"datetime":day});
                 if logrows.count() == 0:
@@ -54,6 +60,10 @@ class MongodbConn(Thread):
                 nowtime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
                 #获取当天零点时间
                 passtime = day + " %s" % "00:00:00";
+                record_date = LocalTime.get_local_date(nowtime, "%Y-%m-%d %H:%M:%S")
+                # 时间修正一下，改为本地时间
+                nowtime = record_date.strftime("%Y-%m-%d %H:%M:%S")
+
                 rows = table.find({'crawltimestr': {'$gte': passtime, '$lte': nowtime},"appname": appname}).count();
                 if rows == 0:
                     #无数据，记录下来发邮件
