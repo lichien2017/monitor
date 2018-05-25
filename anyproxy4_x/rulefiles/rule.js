@@ -11,6 +11,16 @@ var myInterval=setInterval(GetRuler,1000*60*5);
 
 module.exports = {
   summary: 'a rule to hack response',
+
+  *beforeSendRequest(requestDetail) {
+    const newRequestOptions = requestDetail.requestOptions;
+      // 设置属性 rejectUnauthorized 为 false
+      newRequestOptions.rejectUnauthorized = false;
+      return {
+        requestOptions: newRequestOptions
+      };
+  },
+
   *beforeSendResponse(requestDetail, responseDetail) {
     //今日头条
     // if(/.+?\.snssdk\.com\/api\/news\/feed\/v/i.test(requestDetail.url)){
