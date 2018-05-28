@@ -163,9 +163,75 @@ from `yw_archives` a left join `yw_addonarticle` b on a.id = b.aid
     log.debug("count = %d" % count)
     #download_many(jobs)
     pass
+
+class MyHTMLParser1(HTMLParser):
+    doctors = []
+    doctor = None
+    new_line = 0
+    def handle_starttag(self, tag, attrs):
+        print("tag=",tag)
+        print("Encountered a start attrs:", attrs)
+        if tag == "img":
+            if self.doctor != None:
+                self.doctors.append(self.doctor)
+            self.doctor = {}
+            for key,value in attrs:
+                if key == "src":
+                    self.doctor["src"] = value
+                    break
+        elif tag == "strong" :
+            self.new_line = 1
+
+
+    def handle_endtag(self, tag):
+        print("Encountered an end tag :", tag)
+        if self.new_line == 1:
+            self.new_line = 1.1
+        pass
+
+    def handle_data(self, data):
+
+        print("Encountered some data  :", data)
+        if data.find('\n')>=0 :
+            return
+        if self.new_line == 1: #key
+            self.key = data.replace("：","")
+        elif self.new_line == 1.1 :
+            self.doctor[self.key] =data.replace("&nbsp; "," ").replace("：","")
+        pass
+
 if __name__ == '__main__':
-    parser = MyHTMLParser()
-    parser.feed('<html><head><title>Test</title></head>'
-                '<body><h1>Parse me!</h1></body></html>')
-    download_files()
+    parser = MyHTMLParser1()
+    parser.feed(""" 
+     
+
+<img alt="" src="/uploads/allimg/170915/3-1F915154509159.jpg" style="width: 140px; height: 221px;" />
+<strong>姓名：</strong>方劲<br />
+<strong>职称：</strong>超声影像科主任 副主任医师<br />
+<strong>简介：</strong>荆门市超声影像学会副主任委员，从事超声影像专业25年，曾分别在同济医院，协和医院进修学习。<br />
+<strong>专长：</strong>对各种超声影像的诊断积累了丰富的经验。<br />
+<img alt="" src="/uploads/allimg/170915/3-1F915154525649.jpg" style="width: 140px; height: 180px;" />
+<strong>姓名：</strong>曾丽华<br />
+<strong>职称：</strong>超声影像科副主任 副主任医师<br />
+<strong>简介：</strong>荆门市超声影像学会常委，毕业于武汉大学临床医学系，曾在湖北省人民医院及同济医院进修学习。<br />
+<strong>专长：</strong>擅长于超声影像中各种疑难疾病的诊断，现致力于产科三维及胎儿产前超声筛查。<br />
+<img alt="" src="/uploads/allimg/170915/3-1F91515454E91.jpg" style="width: 140px; height: 180px;" />
+<strong>姓名：</strong>张晓伟<br />
+<strong>职称：</strong>资深主治医师<br />
+<strong>简介：</strong>荆门市超声影像学会委员，毕业于湖北医学院，曾在协和医院进修。<br />
+<strong>专长：</strong>擅长于超声影像各种疾病的诊断，特别对乳腺及甲状腺疾病超声检查诊断有深厚的造诣。 &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<br />
+
+<img alt="" src="/uploads/allimg/170918/3-1F91PZAQ05.jpg" style="width: 120px; height: 175px;" /><br />
+    """)
+    print(parser.doctors)
+    for doctor in parser.doctors:
+        msg ="""
+        INSERT INTO [jshospital].[dbo].[Base_Doctor]
+           ([Name],[Sex],[Attending],[ImgUrl],[Job],[DivisionID],[HospitalID],[GoodAt],[CreateTime],[Inquire],[Hang])
+     VALUES
+           ('%s',0,'%s','%s' ,'%s',8872,46,'%s',GETDATE(),0,0)
+        
+        """ %(doctor["姓名"],doctor["简介"],doctor["src"],doctor["职称"],doctor["专长"])
+        print(msg)
+    #download_files()
 
