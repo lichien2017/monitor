@@ -31,8 +31,6 @@ services:
       - "7110:7110"
       - "7120:7120"
       - "7400-7500:7400-7500"
-    volumes:
-      - "/mnt/stfapp:/app"
     network_mode: "host"
     restart: always
     command: stf local --public-ip 192.168.10.176
@@ -86,7 +84,7 @@ services:
     build: mitmproxy/
     restart: always
     ports: 
-      - "8080:8080"
+      - "8088:8080"
       - "8081:8081"
     expose:
       - "8080"
