@@ -128,5 +128,14 @@
       "app_tag":"jike",
       "categroy":{"推荐":"推荐"}
     }
+  },{
+    "modname": "scrapyServer.DouYinModel",
+    "classname": "DouYinParse",
+    "queuename": "origin:douyin",
+    "apppinfo":{
+      "app_name":"抖音",
+      "app_tag":"douyin",
+      "categroy":{"推荐":"推荐","附近":"附近"}
+    }
   }
 ]
