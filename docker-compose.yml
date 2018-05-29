@@ -90,6 +90,7 @@ services:
       - "8080"
       - "8081"
     volumes:
+      - /home/tymx/Documents/DockerContainer/mitmproxy/crt:/root/.mitmproxy
       - /home/tymx/Documents/DockerContainer/ECOServer/mitmproxyServer:/tmp/script
     command: mitmweb --web-iface 0.0.0.0 --ssl-insecure -s /tmp/script/AddRule.py
     depends_on:
