@@ -180,7 +180,7 @@ class i1NewsParse(BaseParse):
             return
         crawltime = int(strjson['time'])
         # 获取data
-        data = strjson['str']
+        data = strjson['data']
         data = json.loads(data)
         list = data['result']
         datalen = len(list)

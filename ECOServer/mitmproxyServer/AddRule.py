@@ -1,4 +1,3 @@
-from mitmproxy import ctx
 from mitmproxy import http
 import json
 import redis
@@ -41,7 +40,7 @@ class AddRule:
             post_data = {}
             post_data["tag"] = ""
             post_data["url"] = flow.request.url
-            post_data["str"] = flow.response.content.decode("utf-8")
+            post_data["data"] = flow.response.content.decode("utf-8")
             post_data["post"] = flow.request.content.decode("utf-8")
             post_data["time"] = time.mktime(self.now().timetuple())
             json_str = json.dumps(post_data)
@@ -71,7 +70,7 @@ addons = [
 
 
 if __name__ == "__main__":
-    p = re.compile(r'channel/news-list-for.*channel')
-    url = "https://124.243.231.139/Website//channel/news-list-for-hot-channel?searchentry=channel_navibar&reqid=b6fcpe5d_1527486704709_344033&eventid=6759219382e0a6acd-5a73-46b3-b754-49907be92c94&infinite=true&distribution=app.qq.com&refresh=1&appid=yidian&cstart=0&platform=1&cv=4.6.0.5&fields=docid&fields=date&fields=image&fields=image_urls&fields=like&fields=source&fields=title&fields=url&fields=comment_count&fields=up&fields=down&cend=30&version=020600&ad_version=010946&group_fromid=g181&collection_num=0&net=wifi"
+    p = re.compile(r'r.inews.qq.com/getQQNewsUnreadList.*')
+    url = "https://r.inews.qq.com/getQQNewsUnreadList?last_id=20180528V12YJ200&forward=0&last_time=1527577220&lc_ids=&kankaninfo={%22refresh%22:0,%22gender%22:1,%22lastExp%22:8,%22scene%22:0}&newsTopPage=0&picType=&chlid=news_video_top&rendType=kankan&rtAd=1&user_chlid=news_news_19&page=3&channelPosition=1&Cookie=lskey%3D;skey%3D;uin%3D;%20luin%3D;logintype%3D0;%20main_login%3D;%20&uid=11ce66cea8677ae0&devid=11ce66cea8677ae0&appver=24_android_5.6.00&omgid=ac3fe75a887f634e7089ec5a4dff7018b0fb0010213310&qn-sig=54381a0e5f867e58977f8b80b80b9eb9&qn-rid=49e9a1ff-8319-4530-bd7f-461a8f4ba70e"
     rel = p.findall(url)
     pass
