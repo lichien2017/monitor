@@ -42,7 +42,7 @@ class AddRule:
             post_data["url"] = flow.request.url
             post_data["data"] = flow.response.content.decode("utf-8")
             post_data["post"] = flow.request.content.decode("utf-8")
-            post_data["time"] = time.mktime(self.now().timetuple())
+            post_data["time"] = time.mktime(self.now().timetuple())*1000
             json_str = json.dumps(post_data)
             print("json_str=%s" % json_str)
             RedisHelper.strict_redis.lpush("origin:" + tag, json_str)
