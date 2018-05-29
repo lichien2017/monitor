@@ -102,7 +102,7 @@ class i1NewsParse(BaseParse):
                 IsArtID = True
                 tab = data['tag']
                 SingleLogger().log.debug("广告")
-        crawltimestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(crawltime / 1000))
+        crawltimestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(crawltime))
         # 拼链接地址
         news_detail_url = 'https://a1.go2yd.com/Website/contents/content?docid=' + str(articleid)
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0'}
@@ -178,9 +178,9 @@ class i1NewsParse(BaseParse):
         else:
             SingleLogger().log.debug(url)
             return
-        crawltime = strjson['time']
+        crawltime = int(strjson['time'])
         # 获取data
-        data = strjson['data']
+        data = strjson['str']
         data = json.loads(data)
         list = data['result']
         datalen = len(list)
