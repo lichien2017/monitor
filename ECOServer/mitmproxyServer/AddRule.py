@@ -4,6 +4,7 @@ import redis
 from datetime import datetime,timezone,timedelta
 import time
 import re
+import urllib
 
 redisdb = "redisdb"
 class RedisHelper():
@@ -13,6 +14,7 @@ class RedisHelper():
 class AddRule:
     def __init__(self):
         rules_str = RedisHelper.strict_redis.get("rules").decode("utf-8")
+        rules_str = urllib.parse.unquote(rules_str)
         print(rules_str)
         self.rules = json.loads(rules_str)
 
