@@ -7,7 +7,7 @@ from mysqldb.mysql_helper import MySQLHelper
 
 
 class Collector(Thread):
-    time_go = -1
+    time_go = -6
     def __init__(self):
         Thread.__init__(self)
         self._client = MongoClient(ConfigHelper.mongodbip, ConfigHelper.mongodbport)
@@ -84,12 +84,12 @@ class Collector(Thread):
                                     `SexyRule`,
                                     `PoliticalRule`,
                                     `ZongJiaoRule`,
-                                    `BiaoTiDangRule`,top_news,ad_news,hot_news,topic_news,we_media,source)
+                                    `BiaoTiDangRule`,top_news,ad_news,hot_news,topic_news,we_media,source,contents,res_type)
                                     VALUES
-                                    ('%s','%s','%s','%s',%d,'%s',%d,'%s','%s','%s','%s',%d,%d,%d,%d,%d,%d,%d,%d,%d,'%s')
+                                    ('%s','%s','%s','%s',%d,'%s',%d,'%s','%s','%s','%s',%d,%d,%d,%d,%d,%d,%d,%d,%d,'%s','%s',%d)
                                     """ % (
                                     row["res_id"],pymysql.escape_string(res["title"]),pymysql.escape_string(res["description"]),res["crawltimestr"],0,'',-1,
-                                    res["app_tag"], res["category_tag"], res["shorturl"],date, 0,0,0,0, 0,0,0,0,0,res["source"])
+                                    res["app_tag"], res["category_tag"], res["shorturl"],date, 0,0,0,0, 0,0,0,0,0,res["source"],res["content"],res["restype"])
 
                     SingleLogger().log.debug(sql_str)
                     row_count = cursor.execute(sql_str)
