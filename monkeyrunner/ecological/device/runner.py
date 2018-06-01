@@ -139,7 +139,7 @@ class DeviceRunner():
             self._runner_log["sessionId"] = "%s" % self.myuuid;
             # 下拉以前先记录当前的时间
             tz = pytz.timezone('Asia/Shanghai')
-            self._runner_log["time"] = "%s" % datetime.datetime.now(tz);
+            self._runner_log["time"] = "%s" % datetime.datetime.now(tz).replace("+8:00","");
             print >> sys.stderr, "========time=============>%s" % datetime.datetime.now(tz);
             # 上拉
             self._dragup(self._settings["startpoint"], self._settings["endpoint"])
@@ -157,7 +157,7 @@ class DeviceRunner():
             self._runner_log["reference"] = self._settings["reference"]
             # 状态
             self._runner_log["status"] = "0"
-            self._write_to_mongodb()  # 将日志写入mongodb
+            self._write_to_mongodb(tz)  # 将日志写入mongodb
         # 关闭应用
         self.adbClient.stopActivity(self._settings["categroy"])
         # 调低亮度
@@ -167,9 +167,11 @@ class DeviceRunner():
     # 下面是工具函数
     #
     #结果写入数据库
-    def _write_to_mongodb(self):
+    def _write_to_mongodb(self,tz):
         db = self._mongodb_client['crawlnews']
-        day = time.strftime("%Y%m%d", time.localtime())
+        #day = time.strftime("%Y%m%d", time.localtime())
+        day = datetime.datetime.now(tz).strftime("%Y-%m-%d")
+        print >> sys.stderr, "========day=============>%s" % day;
         runner_logs = db["runner_logs%s" % day]
         runner_logs.insert(self._runner_log)
 
