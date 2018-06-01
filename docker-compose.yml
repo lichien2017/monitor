@@ -12,17 +12,18 @@ services:
     network_mode: "host"
   rethinkdb:
     image: rethinkdb
+    restart: always
     ports:
       - "8080:8080"
       - "28015:28015"
       - "29015:29015"
-    restart: always
     volumes:
       - "/mnt/rethinkdb:/data"
     network_mode: "host"
     command: "rethinkdb --bind all --cache-size 2048"
   stf-local:
     image: openstf/stf
+    restart: always
     depends_on:
       - rethinkdb
       - adbd
@@ -32,34 +33,33 @@ services:
       - "7120:7120"
       - "7400-7500:7400-7500"
     network_mode: "host"
-    restart: always
     command: stf local --public-ip 192.168.10.176
   redis:
     image: redis
+    restart: always
     ports: 
         - "6379:6379"
     container_name: redisdb
-    restart: always
     volumes:
       - /mnt/redisdb:/data
     networks:
       - mobilephone
   mongo:
     image: mongo
+    restart: always
     ports: 
         - "27017:27017"
     container_name: mongodb
-    restart: always
     volumes:
       - /mnt/mongodbData:/data/db
     networks:
       - mobilephone
   mysql:
     image: mysql
+    restart: always
     ports: 
         - "3306:3306"
     container_name: mysqldb
-    restart: always
     volumes:
       - /mnt/mysqldata:/var/lib/mysql
     environment:
@@ -69,9 +69,9 @@ services:
   nodejsqueue:
     build: nodejsqueue/
     container_name: nodejsqueue
+    restart: always
     ports: 
         - "3000:3000"
-    restart: always
     volumes:
       - /home/tymx/Documents/DockerContainer/nodejsqueue:/usr/local/nodejsqueue
       - /mnt/upload_files:/usr/local/nodejsqueue/redisService/uploads
