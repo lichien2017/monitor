@@ -140,7 +140,7 @@ class DeviceRunner():
             # 下拉以前先记录当前的时间
             tz = pytz.timezone('Asia/Shanghai')
             self._runner_log["time"] = "%s" % datetime.datetime.now(tz).replace("+8:00","");
-            print >> sys.stderr, "========time=============>%s" % datetime.datetime.now(tz);
+            print >> sys.stderr, "========time=============>%s" % datetime.datetime.now(tz).replace("+8:00","");
             # 上拉
             self._dragup(self._settings["startpoint"], self._settings["endpoint"])
             # 等待
