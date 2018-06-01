@@ -138,8 +138,9 @@ class DeviceRunner():
             self._runner_log["sessionId"] = "%s" % self.myuuid;
             # 下拉以前先记录当前的时间
             tz = pytz.timezone('Asia/Shanghai')
-            self._runner_log["time"] = "%s" % datetime.datetime.now(tz);
-            print >> sys.stderr, "========time=============>%s" % datetime.datetime.now(tz);
+            logtime = str(datetime.datetime.now(tz))[0:19]
+            self._runner_log["time"] = "%s" % logtime;
+            print >> sys.stderr, "========time=============>%s" % logtime;
             # 上拉
             self._dragup(self._settings["startpoint"], self._settings["endpoint"])
             # 等待
