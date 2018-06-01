@@ -10,7 +10,6 @@ import time
 import pymongo
 import configparser
 import sys
-import sys
 import time
 import re
 import unittest
@@ -130,7 +129,7 @@ class DeviceRunner():
         self._runner_log["reference"] = self._settings["reference"]
         # 状态
         self._runner_log["status"] = "0"
-        self._write_to_mongodb()  # 将日志写入mongodb
+        self._write_to_mongodb(tz)  # 将日志写入mongodb
         for i in range(1, 4):
             _tmp_log = self._runner_log
             del _tmp_log
