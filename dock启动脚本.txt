@@ -14,8 +14,13 @@ docker run --restart="always" -d -p 8001:8001 -p 8002:8002 -p 8013:8013 -v /User
 手机监控
 docker run --restart="always" -itd --name ecologicalmonitor -v /Users/lizhengqing/Documents/DockerContainer/monkeyrunner/ecological:/usr/local/monkeyrunner/ecological --link redis-container:redisdb --link mongo-container:mongodb --net=container:adbd tymx/ecological:v1
 
+docker run --rm --net=container:adbd -v /home/tymx/Documents/DockerContainer/monkeyrunner/ecological:/usr/local/monkeyrunner/ecological -v /mnt/train_files:/tmp tymx/monkeyrunner:latest python /usr/local/monkeyrunner/ecological/getPush_main.py
+
 mysql
 docker run --name mysql-container -v /Users/lizhengqing/Documents/mysqldata:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -d mysql
+
+
+docker run -it -v ~/.mitmproxy:/home/mitmproxy/.mitmproxy -v /Users/lizhengqing/Documents/DockerContainer/ECOServer/mitmproxyServer:/tmp/script --link redis-container:redisdb -p 8080:8080 -p 127.0.0.1:8081:8081 tymx/mitmproxy:v1 mitmweb --web-iface 0.0.0.0 --ssl-insecure -s /tmp/script/AddRule.py
 
 ================================================================================
 测试服务器
