@@ -4,8 +4,7 @@ import redis
 from datetime import datetime,timezone,timedelta
 import time
 import re
-import urllib
-
+import urllib.parse
 redisdb = "redisdb"
 class RedisHelper():
     connection_pool = redis.ConnectionPool(host=redisdb, port=6379, db=0)
@@ -58,7 +57,7 @@ class AddRule:
         # self.match_url("ydsdk", p, flow)
         for rule in self.rules :
             #print(rule["regStr"])
-            p = re.compile(rule["regStr"], re.IGNORECASE)
+            p = re.compile(urllib.parse.unquote(rule["regStr"],"utf-8"), re.IGNORECASE)
             if self.match_url(rule["tag"],p,flow):
                 break
             pass
@@ -72,7 +71,7 @@ addons = [
 
 
 if __name__ == "__main__":
-    p = re.compile(r'r.inews.qq.com/getQQNewsUnreadList.*')
-    url = "https://r.inews.qq.com/getQQNewsUnreadList?last_id=20180528V12YJ200&forward=0&last_time=1527577220&lc_ids=&kankaninfo={%22refresh%22:0,%22gender%22:1,%22lastExp%22:8,%22scene%22:0}&newsTopPage=0&picType=&chlid=news_video_top&rendType=kankan&rtAd=1&user_chlid=news_news_19&page=3&channelPosition=1&Cookie=lskey%3D;skey%3D;uin%3D;%20luin%3D;logintype%3D0;%20main_login%3D;%20&uid=11ce66cea8677ae0&devid=11ce66cea8677ae0&appver=24_android_5.6.00&omgid=ac3fe75a887f634e7089ec5a4dff7018b0fb0010213310&qn-sig=54381a0e5f867e58977f8b80b80b9eb9&qn-rid=49e9a1ff-8319-4530-bd7f-461a8f4ba70e"
+    p = re.compile(r'newsapi.sina.cn/\?resource=feed(.*)&channel=.*')
+    url = "http://newsapi.sina.cn/?resource=feed&mpName=%E6%8E%A8%E8%8D%90&lDid=f122441e-3f26-4319-a092-a4340eb83589&oldChwm=12040_0006&upTimes=0&city=CHXX0138&loginType=0&authToken=9c531068929199eb9397d40b9114fca5&channel=news_toutiao&link=&authGuid=6408634870838567279&ua=Xiaomi-Redmi+5__sinanews__6.8.8__android__7.1.2&deviceId=615b25417ba9c49d&connectionType=2&resolution=720x1344&weiboUid=&mac=02%3A00%3A00%3A00%3A00%3A00&replacedFlag=1&osVersion=7.1.2&chwm=12040_0006&pullTimes=3&weiboSuid=&andId=5bb64be3f5ebeee8&from=6068895012&sn=a2ccc84b7ce5&behavior=manual&aId=01AiyEffHXZ2NNAiUOA2pJWrLwthIalVYKmjLPFK_gP5xeFl4.&localSign=a_65a9f111-e57e-45e0-97e6-507ad1d74ec9&deviceIdV1=615b25417ba9c49d&todayReqTime=0&osSdk=25&abver=1527850390688&listCount=29&accessToken=&downTimes=2&abt=314_302_297_281_275_269_267_255_253_251_249_241_237_231_229_228_226_217_215_207_203_191_189_187_185_153_149_143_141_135_128_113_111_106_65_57_45_37_21_18_16_13&lastTimestamp=1527942308&pullDirection=down&seId=fa20d53e22&imei=868238031871103&deviceModel=Xiaomi__Xiaomi__Redmi+5&location=30.581782%2C114.218291&authUid=0&loadingAdTimestamp=0&urlSign=694a2bff7f&rand=536"
     rel = p.findall(url)
     pass
