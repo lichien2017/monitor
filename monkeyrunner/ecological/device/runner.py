@@ -170,7 +170,7 @@ class DeviceRunner():
     def _write_to_mongodb(self,tz):
         db = self._mongodb_client['crawlnews']
         #day = time.strftime("%Y%m%d", time.localtime())
-        day = datetime.datetime.now(tz).strftime("%Y-%m-%d")
+        day = datetime.datetime.now(tz).strftime("%Y%m%d")
         print >> sys.stderr, "========day=============>%s" % day;
         runner_logs = db["runner_logs%s" % day]
         runner_logs.insert(self._runner_log)
