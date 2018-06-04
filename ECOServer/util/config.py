@@ -11,7 +11,10 @@ class ConfigHelper:
     if debug == 1:
         __config.read(localDir+"/config_local.ini")
     else:
-        __config.read(localDir + "/config.ini")
+        if debug == 2:
+            __config.read(localDir + "/config_distributed.ini")
+        else:
+            __config.read(localDir + "/config.ini")
     mysql_ip = __config.get("mysql", "mysql_ip")
     mysql_user = __config.get("mysql", "mysql_user")
     mysql_pwd = __config.get("mysql", "mysql_pwd")
