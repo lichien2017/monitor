@@ -17,7 +17,7 @@ services:
     volumes:
       - /mnt/mysqldata:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_ROOT_PASSWORD: 123456
   dockerui:
     image: abh1nav/dockerui:latest
     restart: always
