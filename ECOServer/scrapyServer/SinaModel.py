@@ -198,6 +198,7 @@ class SinaParse(BaseParse):
             "restype": restype,  #
             "gallary": gallary  # 里面的所有图片地址
         }
+        SingleLogger().log.debug("=====sina======>%s" %sdata)
         self.db(sdata, articleid, title)
 
     # 获取图片main
