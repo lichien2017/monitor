@@ -7,9 +7,10 @@ from mysqldb.mysql_helper import MySQLHelper
 
 
 class Collector(Thread):
-    time_go = -6
-    def __init__(self):
+    time_go = -1
+    def __init__(self,time_go=-1):
         Thread.__init__(self)
+        self.time_go = time_go
         self._client = MongoClient(ConfigHelper.mongodbip, ConfigHelper.mongodbport)
         self._database = self._client["crawlnews"]
         self.thread_stop = False
