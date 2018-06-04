@@ -112,7 +112,7 @@ class DeviceRunner():
         self._waitting(self._settings["sleeptime"])
         # 下拉以前先记录当前的时间
         tz = pytz.timezone('Asia/Shanghai')
-        self._runner_log["time"] = "%s" % datetime.datetime.now(tz);
+        self._runner_log["time"] = "%s" % str(datetime.datetime.now(tz))[0:19];
         # 下拉
         self._drag(self._settings["startpoint"], self._settings["endpoint"])
         # 等待数据加载完成
@@ -138,9 +138,8 @@ class DeviceRunner():
             self._runner_log["sessionId"] = "%s" % self.myuuid;
             # 下拉以前先记录当前的时间
             tz = pytz.timezone('Asia/Shanghai')
-            logtime = str(datetime.datetime.now(tz))[0:19]
-            self._runner_log["time"] = "%s" % logtime;
-            print >> sys.stderr, "========time=============>%s" % logtime;
+            self._runner_log["time"] = "%s" % str(datetime.datetime.now(tz))[0:19];
+            print >> sys.stderr, "========time=============>%s" % str(datetime.datetime.now(tz))[0:19];
             # 上拉
             self._dragup(self._settings["startpoint"], self._settings["endpoint"])
             # 等待
