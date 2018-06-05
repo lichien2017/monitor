@@ -25,6 +25,7 @@ class MongodbConn(Thread):
         day = time.strftime('%Y%m%d', time.localtime(time.time()))
         # 时间修正一下，改为本地时间
         day = LocalTime.get_local_date(day, "%Y%m%d").strftime("%Y%m%d")
+        SingleLogger().log.debug("===tableday====>%s" % day)
         table = self.db["originnews%s" % day]
         #存放每天解析的数据表
         tablelog = self.db["originnewsLog"]
@@ -69,6 +70,8 @@ class MongodbConn(Thread):
                 nowtime = record_date.strftime("%Y-%m-%d %H:%M:%S")
 
                 rows = table.find({'crawltimestr': {'$gte': passtime, '$lte': nowtime},"appname": appname}).count();
+                SingleLogger().log.debug("===passtime====>%s" % passtime)
+                SingleLogger().log.debug("===nowtime====>%s" % nowtime)
                 SingleLogger().log.debug("===rows====>%s" % rows)
                 SingleLogger().log.debug("===appname====>%s" % appname)
                 if rows == 0:
