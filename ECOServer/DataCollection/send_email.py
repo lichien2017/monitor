@@ -6,7 +6,7 @@ import pymysql
 from email.mime.text import MIMEText
 from email.header import Header
 from smtplib import SMTP_SSL
-
+from util.log import SingleLogger
 from util import LocalTime
 
 
@@ -21,7 +21,12 @@ class MongodbConn(Thread):
         #连接到mongodb
         database = "crawlnews"
         self.db = self.CONN[database]
-        table = self.db["originnews%s" % time.strftime('%Y%m%d', time.localtime(time.time()))]
+
+        day = time.strftime('%Y%m%d', time.localtime(time.time()))
+        # 时间修正一下，改为本地时间
+        day = LocalTime.get_local_date(day, "%Y%m%d").strftime("%Y%m%d")
+        SingleLogger().log.debug("===tableday====>%s" % day)
+        table = self.db["originnews%s" % day]
         #存放每天解析的数据表
         tablelog = self.db["originnewsLog"]
         # mysql使用cursor()方法获取操作游标
@@ -65,6 +70,10 @@ class MongodbConn(Thread):
                 nowtime = record_date.strftime("%Y-%m-%d %H:%M:%S")
 
                 rows = table.find({'crawltimestr': {'$gte': passtime, '$lte': nowtime},"appname": appname}).count();
+                SingleLogger().log.debug("===passtime====>%s" % passtime)
+                SingleLogger().log.debug("===nowtime====>%s" % nowtime)
+                SingleLogger().log.debug("===rows====>%s" % rows)
+                SingleLogger().log.debug("===appname====>%s" % appname)
                 if rows == 0:
                     #无数据，记录下来发邮件
                     self.sendemail = self.sendemail + "，%s" % appname

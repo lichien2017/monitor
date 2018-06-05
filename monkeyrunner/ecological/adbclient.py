@@ -1017,7 +1017,7 @@ class AdbClient:
         # (x1, y1) = self.__transformPointByOrientation((x1, y1), orientation, self.display['orientation'])
 
         # version = self.getSdkVersion()
-        version = 19
+        version = 17
         if version <= 15:
             raise RuntimeError('drag: API <= 15 not supported (version=%d)' % version)
         elif version <= 17:
