@@ -21,7 +21,11 @@ class MongodbConn(Thread):
         #连接到mongodb
         database = "crawlnews"
         self.db = self.CONN[database]
-        table = self.db["originnews%s" % time.strftime('%Y%m%d', time.localtime(time.time()))]
+
+        day = time.strftime('%Y%m%d', time.localtime(time.time()))
+        # 时间修正一下，改为本地时间
+        day = LocalTime.get_local_date(day, "%Y%m%d").strftime("%Y%m%d")
+        table = self.db["originnews%s" % day]
         #存放每天解析的数据表
         tablelog = self.db["originnewsLog"]
         # mysql使用cursor()方法获取操作游标
