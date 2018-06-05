@@ -16,6 +16,7 @@ class BaseLevel1Rule(Rule,Thread):
 
     def __init__(self,settings):
         Thread.__init__(self)
+        # 规则级别，数据源的mongodb表格，资源列名用于0级处理
         Rule.__init__(self,settings["level"],settings["mongodb_tablename"],settings["res_columns"],settings["extra_rule_data"])
         self._settings = settings
         self.interval = 1

@@ -2,7 +2,7 @@
 import configparser
 import os
 
-debug = 0 # 1表示调试环境
+debug = 0 # 1表示调试环境 2表示分布式环境，分布式主要把mongodb和mysqldb单独拿出来了
 
 class ConfigHelper:
     # mysqldb.logger.setLevel('DEBUG')
@@ -11,10 +11,7 @@ class ConfigHelper:
     if debug == 1:
         __config.read(localDir+"/config_local.ini")
     else:
-        if debug == 2:
-            __config.read(localDir + "/config_distributed.ini")
-        else:
-            __config.read(localDir + "/config.ini")
+        __config.read(localDir + "/config.ini")
     mysql_ip = __config.get("mysql", "mysql_ip")
     mysql_user = __config.get("mysql", "mysql_user")
     mysql_pwd = __config.get("mysql", "mysql_pwd")

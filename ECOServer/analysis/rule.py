@@ -101,6 +101,7 @@ class Rule:
                 normal_msg["data"] = [resource[col]]
                 normal_msg["resdata"] = "%s,%s" % (res_id,crawl_time_str)
                 SingleLogger().log.debug("title package:%s", normal_msg)
+                # 将数据插入到指定的处理消息队列
                 RedisHelper.strict_redis.lpush(self.queue_name_text, json.dumps(normal_msg))
 
 
