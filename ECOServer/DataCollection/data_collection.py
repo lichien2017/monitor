@@ -325,12 +325,12 @@ where create_date = '%s'
         query = {}
         query["tag"] = tag
 
-        cursor = runner_logs.find(query)
+        mongo_cursor = runner_logs.find(query)
         try:
             conn = MySQLHelper.pool_connection.get_connection()
             # 创建游标
             mysql_cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-            for row in cursor:
+            for row in mongo_cursor:
                 sql_str = """INSERT INTO `analysis_data_normal_total`
                                                                         (`res_id`,
                                                                         `title`,
@@ -364,7 +364,7 @@ where create_date = '%s'
         self.tags = self.queryManualApp() # 查询人工审核的tags
         self.batchImportMachineData()
         for tag in self.tags:
-            self.batchImportManualData(tag)
+            self.batchImportManualData(tag["tag"])
         pass
 
     def news_reader(self, tag):
