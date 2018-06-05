@@ -6,7 +6,7 @@ import pymysql
 from email.mime.text import MIMEText
 from email.header import Header
 from smtplib import SMTP_SSL
-
+from util.log import SingleLogger
 from util import LocalTime
 
 
@@ -65,6 +65,8 @@ class MongodbConn(Thread):
                 nowtime = record_date.strftime("%Y-%m-%d %H:%M:%S")
 
                 rows = table.find({'crawltimestr': {'$gte': passtime, '$lte': nowtime},"appname": appname}).count();
+                SingleLogger().log.debug("===rows====>%s" % rows)
+                SingleLogger().log.debug("===appname====>%s" % appname)
                 if rows == 0:
                     #无数据，记录下来发邮件
                     self.sendemail = self.sendemail + "，%s" % appname
