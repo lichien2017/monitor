@@ -139,7 +139,6 @@ class DeviceRunner():
             # 下拉以前先记录当前的时间
             tz = pytz.timezone('Asia/Shanghai')
             self._runner_log["time"] = "%s" % str(datetime.datetime.now(tz))[0:19];
-            print >> sys.stderr, "========time=============>%s" % str(datetime.datetime.now(tz))[0:19];
             # 上拉
             self._dragup(self._settings["startpoint"], self._settings["endpoint"])
             # 等待
@@ -170,7 +169,6 @@ class DeviceRunner():
         db = self._mongodb_client['crawlnews']
         #day = time.strftime("%Y%m%d", time.localtime())
         day = datetime.datetime.now(tz).strftime("%Y%m%d")
-        print >> sys.stderr, "========day=============>%s" % day;
         runner_logs = db["runner_logs%s" % day]
         runner_logs.insert(self._runner_log)
 
