@@ -58,7 +58,7 @@ class Collector(Thread):
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
         for row in rows :
             res = self.get_resource(date, row["res_id"])
-            if res == None:
+            if res == None or self.checkInTags(res["app_tag"]):
                 SingleLogger().log.error("resid = %s,没有找到详情信息，所以跳过"% row["res_id"])
                 continue
             # insert_sql =
@@ -108,6 +108,7 @@ class Collector(Thread):
         cursor.close()
         conn.close()
         pass
+    #得到资源详情数据
     def get_resource(self,date,res_id):
         res_table = self._database["originnews%s" % date]
         res = res_table.find_one({"identity": res_id})
@@ -160,7 +161,7 @@ class Collector(Thread):
         for row in rows:
             if row["screen_index"] !=-1:
                 res = self.get_resource(date,row["res_id"])
-                if res == None :
+                if res == None or self.checkInTags(res["app_tag"]):
                     continue
                 try:
                     row_count = cursor.execute("""select res_id 
@@ -232,9 +233,8 @@ class Collector(Thread):
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
         # 总涉嫌违规条数
         row_count = cursor.execute("""
-        select count(distinct res_id) as ct from `analysis_data_total`
-where create_date = '%s' and rule_tag <> 'screencapocr' and rule_tag not in (
-select mongodb_tablename from `analysis_rules` where level = 0)
+        select count(distinct res_id) as ct from `analysis_data_normal_total`
+where create_date = '%s'
         """% (date))
         result = cursor.fetchone()
         bad_count = result["ct"]
@@ -255,41 +255,116 @@ select mongodb_tablename from `analysis_rules` where level = 0)
         cursor.close()
         conn.close()
         pass
-    def run(self):
+
+    # 查询人工审核的应用tag
+    def queryManualApp(self):
+        conn = MySQLHelper.pool_connection.get_connection()
+        # 创建游标
+        cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+        row_count = cursor.execute("select tag from app_information where isartificial = 1")
+        result = cursor.fetchone()
+        tags = []
+        while result != None:
+            tags.append(result)
+            result = cursor.fetchone()
+            pass
+        return tags
+        pass
+
+    # 检查是否是人工审核的应用
+    def checkInTags(self,tag):
+        for tmp in self.tags :
+            if tmp == tag :
+                return True
+        return False
+        pass
+    # 导入机器审核的数据，不包括人工审核数据
+    def batchImportMachineData(self):
         # 先找到有哪些表需要归档的，可以从规则表找
         conn = MySQLHelper.pool_connection.get_connection()
         # 创建游标
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+
         # 执行SQL，并返回收影响行数 select * from analysis_rules where level = 1 and isonline = 1
-        row_count = cursor.execute("select * from analysis_rules")
+        row_count = cursor.execute("select * from analysis_rules where isonline = 1")
         # 获取所有数据
         result = cursor.fetchone()
         yestoday = LocalTime.from_today(self.time_go)
         yestoday_str = yestoday.strftime("%Y%m%d")
-        self.remove_all_table_data(yestoday_str) # 清除当天数据
+        self.remove_all_table_data(yestoday_str)  # 清除当天数据
         while result != None:
             SingleLogger().log.debug(result)
-            table_name = "%s%s" % (result["mongodb_tablename"],yestoday_str)
-            SingleLogger().log.debug("table_name is %s",table_name)
+            table_name = "%s%s" % (result["mongodb_tablename"], yestoday_str)
+            SingleLogger().log.debug("table_name is %s", table_name)
 
-            if result["mongodb_tablename"].startswith("screencapocr") : #如果是判断第几屏幕，单独处理
-                self.copy_data_screen_orc(table_name,result["mongodb_tablename"],yestoday_str)
+            if result["mongodb_tablename"].startswith("screencapocr"):  # 如果是判断第几屏幕，单独处理
+                # self.copy_data_screen_orc(table_name,result["mongodb_tablename"],yestoday_str)
 
                 self.copy_data_to_total_screen_orc(table_name, result["imp_python_class"], yestoday_str)
                 pass
-            else: #其他规则直接存到指定的表格中
-                self.copy_data_one_column(table_name,result["mongodb_tablename"],yestoday_str)
+            else:  # 其他规则直接存到指定的表格中
+                self.copy_data_one_column(table_name, result["mongodb_tablename"], yestoday_str)
                 level = int(result["level"])
-                if level == 1 :
-                    self.copy_data_to_total(table_name,result["imp_python_class"],yestoday_str)
+                if level == 1:
+                    self.copy_data_to_total(table_name, result["imp_python_class"], yestoday_str)
                 else:
-                    self.copy_data_to_total(table_name, result["mongodb_tablename"], yestoday_str)
+                    # self.copy_data_to_total(table_name, result["mongodb_tablename"], yestoday_str)
+                    pass
                 pass
             result = cursor.fetchone()
         # 汇总所有的统计数据
         self.total_count(yestoday_str)
         cursor.close()
         conn.close()
+        pass
+
+    def batchImportManualData(self,tag):
+        yestoday = LocalTime.from_today(self.time_go)
+        yestoday_str = yestoday.strftime("%Y%m%d")
+        runner_logs = self._database["runner_logs"+yestoday_str]
+        query = {}
+        query["tag"] = tag
+
+        mongo_cursor = runner_logs.find(query)
+        try:
+            conn = MySQLHelper.pool_connection.get_connection()
+            # 创建游标
+            mysql_cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+            for row in mongo_cursor:
+                sql_str = """INSERT INTO `analysis_data_normal_total`
+                                                                        (`res_id`,
+                                                                        `title`,
+                                                                        `description`,
+                                                                        `crawl_time`,
+                                                                        `XueXingBaoLiRule`,
+                                                                        `screenshot`,
+                                                                        `screen_index`,
+                                                                        `app_tag`,
+                                                                        `category_tag`,
+                                                                        `shorturl`,
+                                                                        `create_date`,
+                                                                        `SexyRule`,
+                                                                        `PoliticalRule`,
+                                                                        `ZongJiaoRule`,
+                                                                        `BiaoTiDangRule`)
+                                                                        VALUES
+                                                                        ('%s','%s','%s','%s',%d,'%s',%s,'%s','%s','%s','%s',%d,%d,%d,%d)
+                                                                        """ % (
+                    Secret.md5(row["screenshot"]), "人工审核无标题","",
+                    row["time"], 0, row["screenshot"], row["screen"],
+                    row["tag"], row["reference"], "", yestoday_str, 0, 0, 0, 0)
+
+                SingleLogger().log.debug(sql_str)
+                row_count = mysql_cursor.execute(sql_str)
+        finally:
+            pass
+
+        pass
+    def run(self):
+        self.tags = self.queryManualApp() # 查询人工审核的tags
+        self.batchImportMachineData()
+        for tag in self.tags:
+            self.batchImportManualData(tag["tag"])
         pass
 
     def news_reader(self, tag):
