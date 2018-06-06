@@ -16,14 +16,14 @@ import unittest
 import os
 import subprocess
 from shutil import copyfileobj
-from util.log import Logger
+from util import *
 import uuid
 import datetime
 import pytz
 
 
 #初始化日志
-log = Logger()
+log = SingleLogger().log
 
 try:
     sys.path.insert(0, os.path.join(os.environ['ANDROID_VIEW_CLIENT_HOME'], 'src'))
