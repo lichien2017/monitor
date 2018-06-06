@@ -120,6 +120,7 @@ services:
     restart: always
     volumes:
       - /home/tymx/Documents/DockerContainer/monkeyrunner/ecological:/usr/local/monkeyrunner/ecological
+      - /mnt/db/logs:/usr/local/monkeyrunner/ecological/logs
     depends_on:
       - redis
       - mongo
@@ -142,6 +143,7 @@ services:
     restart: always
     volumes:
       - /home/tymx/Documents/DockerContainer/ECOServer:/usr/local/ECOServer
+      - /mnt/db/logs:/usr/local/ECOServer/logs
     depends_on:
       - redis
       - mongo
@@ -153,6 +155,7 @@ services:
     restart: always
     volumes:
       - /home/tymx/Documents/DockerContainer/ECOServer:/usr/local/ECOServer
+      - /mnt/db/logs:/usr/local/ECOServer/logs
     command: python /usr/local/ECOServer/screencap_match_main.py
     depends_on:
       - redis
