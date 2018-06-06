@@ -23,7 +23,7 @@ import pytz
 
 
 #初始化日志
-log = SingleLogger().log
+log = Logger()
 
 try:
     sys.path.insert(0, os.path.join(os.environ['ANDROID_VIEW_CLIENT_HOME'], 'src'))
