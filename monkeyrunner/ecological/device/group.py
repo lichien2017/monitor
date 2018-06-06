@@ -14,7 +14,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-log = Logger()
+log = SingleLogger().log
 
 class DeviceGroup(Thread):
     _device_id = ""                                            #设备的唯一标示
