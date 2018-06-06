@@ -11,7 +11,7 @@ import sys
 from util.log import Logger
 
 #初始化日志
-log = Logger()
+log = SingleLogger().log
 
 reload(sys)
 sys.setdefaultencoding('utf8')

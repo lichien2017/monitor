@@ -9,12 +9,12 @@ import json
 import time
 from threading import Thread
 from device.runner import DeviceRunner
-from util.log import Logger
+from util import *
 import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-log = Logger()
+log = SingleLogger().log
 
 class DeviceGroup(Thread):
     _device_id = ""                                            #设备的唯一标示

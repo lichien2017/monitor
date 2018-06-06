@@ -5,6 +5,14 @@
 
 import logging.handlers
 import os
+import sys
+
+class Singleton(object):
+    def __new__(cls, *args, **kw):
+        if not hasattr(cls, '_instance'):
+            orig = super(Singleton, cls)
+            cls._instance = orig.__new__(cls, *args, **kw)
+        return cls._instance
 
 class Logger(logging.Logger):
     def __init__(self, filename=None):
@@ -32,8 +40,13 @@ class Logger(logging.Logger):
         ch.setFormatter(formatter) 
 
         # 给logger添加handler 
-        self.addHandler(fh) 
+        self.addHandler(fh)
         self.addHandler(ch) 
 
+class SingleLogger(Singleton):
+    def __init__(self):
+        path = sys.argv[0].split("/")
+        self.log = Logger(path[-1].split(".")[0])
+        pass
 if __name__ == '__main__':
     pass
