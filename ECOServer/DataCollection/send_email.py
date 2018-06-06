@@ -1,21 +1,20 @@
-import pymongo
 from threading import Thread
 import time
-import datetime
 import pymysql
 from email.mime.text import MIMEText
 from email.header import Header
 from smtplib import SMTP_SSL
-from util.log import SingleLogger
-from util import LocalTime
+from util import *
+from pymongo import MongoClient
 
 
 class MongodbConn(Thread):
 
     def __init__(self):
         Thread.__init__(self)
-        self.CONN = pymongo.MongoClient("192.168.10.176", 27017)
-        self.sdb = pymysql.connect("192.168.10.176", "root", "123456", "app_ecological_db", charset='utf8')
+        self.CONN = MongoClient(ConfigHelper.mongodbip, ConfigHelper.mongodbport)
+        self.sdb = pymysql.connect(ConfigHelper.mysql_ip, ConfigHelper.mysql_user,
+                                   ConfigHelper.mysql_pwd, ConfigHelper.mysql_db, charset='utf8')
         self.sendemail = "";
     def run(self):
         #连接到mongodb
