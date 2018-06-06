@@ -15,7 +15,7 @@ class Singleton(object):
 
 
 class Logger(logging.Logger):
-    BASE_PATH = "./logs"
+    BASE_PATH = "/mnt/db/logs"
     def __init__(self, filename=None):
         super(Logger, self).__init__(self)
         # 日志文件名
