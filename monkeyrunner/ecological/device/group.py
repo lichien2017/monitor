@@ -33,7 +33,7 @@ class DeviceGroup(Thread):
     def run(self):  # Overwrite run() method, put what you want the thread do here
         if (self._runner_settings!=None):   #如果配置信息不为空时，直接启动相关线程，否则监听消息端口等待命令
             while not self.thread_stop :
-                log.debug("DeviceID(%s) is running" % self._device_id)
+                # log.debug("DeviceID(%s) is running" % self._device_id)
                 self._msg_channel = "%s:%s" % ('groupchannel', self._device_id)  # 当前分组的控制消息队列
                 for runner in self._runner_settings:
                     try:
