@@ -15,15 +15,17 @@ class Singleton(object):
         return cls._instance
 
 class Logger(logging.Logger):
+    BASE_PATH = "./logs"
     def __init__(self, filename=None):
         super(Logger, self).__init__(self)
 
         # 日志文件名
         if filename is None:
-            filename = './logs/pt.log'
+            filename = 'pt.log'
 
-        if not os.path.exists("./logs") :
-            os.makedirs("./logs")
+        if not os.path.exists(self.BASE_PATH):
+            os.makedirs(self.BASE_PATH)
+
         self.filename = filename
 
         # 创建一个handler，用于写入日志文件 (每天生成1个，保留30天的日志)
