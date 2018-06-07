@@ -39,7 +39,7 @@ class ScreenCaptureMatch(Thread):
 
         query = {}
         query["tag"] = app_tag
-        query["reference"] = category_tag
+        #query["reference"] = category_tag
 
         query["time"] = {
             u"$gte": start_time.strftime(time_format)
@@ -119,10 +119,10 @@ class ScreenCaptureMatch(Thread):
 
         collection = self._database["screencapocr" + date.strftime("%Y%m%d")]
 
-        start_time = date + datetime.timedelta(minutes=-5)
+        start_time = date + datetime.timedelta(minutes=-8)
         # 查询条件
         query = {}
-        query["status"] = Int64(0)
+        query["status"] = Int64(1)
 
         query["time"] = {
             u"$lt": start_time.strftime(time_format)
