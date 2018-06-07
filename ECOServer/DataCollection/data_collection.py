@@ -303,12 +303,12 @@ where create_date = '%s'
                 self.copy_data_to_total_screen_orc(table_name, result["imp_python_class"], yestoday_str)
                 pass
             else:  # 其他规则直接存到指定的表格中
-                self.copy_data_one_column(table_name, result["mongodb_tablename"], yestoday_str)
+                #self.copy_data_one_column(table_name, result["mongodb_tablename"], yestoday_str)
                 level = int(result["level"])
                 if level == 1:
                     self.copy_data_to_total(table_name, result["imp_python_class"], yestoday_str)
                 else:
-                    # self.copy_data_to_total(table_name, result["mongodb_tablename"], yestoday_str)
+                    self.copy_data_to_total(table_name, result["mongodb_tablename"], yestoday_str)
                     pass
                 pass
             result = cursor.fetchone()
