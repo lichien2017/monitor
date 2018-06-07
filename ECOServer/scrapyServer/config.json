@@ -137,5 +137,14 @@
       "app_tag":"douyin",
       "categroy":{"推荐":"推荐","附近":"附近"}
     }
+  },{
+    "modname": "scrapyServer.KuaishouModel",
+    "classname": "KuaishouParse",
+    "queuename": "origin:kuaishou",
+    "apppinfo":{
+      "app_name":"快手",
+      "app_tag":"kuaishou",
+      "categroy":{"发现":"发现"}
+    }
   }
 ]
