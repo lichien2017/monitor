@@ -20,8 +20,8 @@ var mongodbPort = 27017
 var uploadpath = '/usr/local/nodejsqueue/redisService/uploads/';//图片保存路径
 
 if (debug){
-    redisIp = '192.168.10.176';
-    mongodbIp= '192.168.10.176';
+    redisIp = '192.168.10.177';
+    mongodbIp= '192.168.10.177';
     uploadpath =path.join(process.cwd() + "/../uploads");
 }
 
@@ -154,8 +154,16 @@ function mkdirsSync(dirpath, mode) {
  * @param callback 回调
  */
 var insertPushData = function(db, insertData,callback) {
+    //以时间来分表
+    var mydate = new Date();
+    var day = mydate.getFullYear()+ (mydate.getMonth() + 1 >= 10 ? mydate.getMonth() + 1 : '0' + (mydate.getMonth() + 1)) +
+                (mydate.getDate() >= 10 ? mydate.getDate() : '0' + mydate.getDate())
+    var tablename = "push" + day;
+    //统一时间格式
+    insertData.imgfilename =insertData.imgfilename.replace("_","/")
+    console.log('insertData:'+ insertData.imgfilename);
     //连接到表
-    var collection = db.collection('push');
+    var collection = db.collection(tablename);
     //插入数据
     collection.insertOne(insertData,function (err,result) {
         if(err)
@@ -199,7 +207,7 @@ router.post("/push",function (req,res) {
                 db.close();
                 res.json({"status": "success"});
             });
-        });
+         });
 
     }catch (e){
         console.log(e);

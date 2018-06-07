@@ -6,6 +6,7 @@
 import logging.handlers
 import os
 import sys
+from util.config import ConfigHelper
 class Singleton(object):
     def __new__(cls, *args, **kw):
         if not hasattr(cls, '_instance'):
@@ -15,7 +16,7 @@ class Singleton(object):
 
 
 class Logger(logging.Logger):
-    BASE_PATH = "./logs"
+    BASE_PATH = ConfigHelper.log_path
     def __init__(self, filename=None):
         super(Logger, self).__init__(self)
         # 日志文件名

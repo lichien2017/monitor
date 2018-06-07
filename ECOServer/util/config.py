@@ -25,5 +25,6 @@ class ConfigHelper:
     download_savepath = __config.get("global", "download_savepath")
     analysis_savepath = __config.get("global", "analysis_savepath")
     download_msgqueue = __config.get("global", "download_msgqueue")
+    log_path = __config.get("global", "log_path")
 
 

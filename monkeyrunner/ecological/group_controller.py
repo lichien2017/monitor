@@ -8,10 +8,10 @@ import configparser
 import json
 import sys
 
-from util.log import Logger
+from util import *
 
 #初始化日志
-log = Logger()
+log = SingleLogger().log
 
 reload(sys)
 sys.setdefaultencoding('utf8')

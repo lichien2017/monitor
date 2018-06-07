@@ -1,33 +1,37 @@
-import pymongo
 from threading import Thread
 import time
-import datetime
 import pymysql
 from email.mime.text import MIMEText
 from email.header import Header
 from smtplib import SMTP_SSL
-
-from util import LocalTime
+from util import *
+from pymongo import MongoClient
 
 
 class MongodbConn(Thread):
 
     def __init__(self):
         Thread.__init__(self)
-        self.CONN = pymongo.MongoClient("192.168.10.176", 27017)
-        self.sdb = pymysql.connect("192.168.10.176", "root", "123456", "app_ecological_db", charset='utf8')
+        self.CONN = MongoClient(ConfigHelper.mongodbip, ConfigHelper.mongodbport)
+        self.sdb = pymysql.connect(ConfigHelper.mysql_ip, ConfigHelper.mysql_user,
+                                   ConfigHelper.mysql_pwd, ConfigHelper.mysql_db, charset='utf8')
         self.sendemail = "";
     def run(self):
         #连接到mongodb
         database = "crawlnews"
         self.db = self.CONN[database]
-        table = self.db["originnews%s" % time.strftime('%Y%m%d', time.localtime(time.time()))]
+
+        day = time.strftime('%Y%m%d', time.localtime(time.time()))
+        # 时间修正一下，改为本地时间
+        day = LocalTime.get_local_date(day, "%Y%m%d").strftime("%Y%m%d")
+        SingleLogger().log.debug("===tableday====>%s" % day)
+        table = self.db["originnews%s" % day]
         #存放每天解析的数据表
         tablelog = self.db["originnewsLog"]
         # mysql使用cursor()方法获取操作游标
         cursor = self.sdb.cursor()
         # 使用execute方法执行SQL语句
-        cursor.execute("SELECT * FROM app_information WHERE isonline = 1")
+        cursor.execute("SELECT * FROM app_information WHERE isartificial = 0")
         # 使用 fetchone() 方法获取一条数据
         data = cursor.fetchall()
         if bool(data) != True:
@@ -65,6 +69,10 @@ class MongodbConn(Thread):
                 nowtime = record_date.strftime("%Y-%m-%d %H:%M:%S")
 
                 rows = table.find({'crawltimestr': {'$gte': passtime, '$lte': nowtime},"appname": appname}).count();
+                SingleLogger().log.debug("===passtime====>%s" % passtime)
+                SingleLogger().log.debug("===nowtime====>%s" % nowtime)
+                SingleLogger().log.debug("===rows====>%s" % rows)
+                SingleLogger().log.debug("===appname====>%s" % appname)
                 if rows == 0:
                     #无数据，记录下来发邮件
                     self.sendemail = self.sendemail + "，%s" % appname

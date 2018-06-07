@@ -64,8 +64,8 @@ class BaseParse(object):
         SingleLogger().log.debug("Rule1server.add_resource_to_all_queue == %s", json.dumps(msg))
         Rule1server.add_resource_to_all_queue(json.dumps(msg))
         #分发给下载资源服务
-        queue = MyQueue(db=ConfigHelper.redisdb, host=ConfigHelper.redisip)
-        queue.push(ConfigHelper.download_msgqueue,json.dumps(msg))
+        # queue = MyQueue(db=ConfigHelper.redisdb, host=ConfigHelper.redisip)
+        # queue.push(ConfigHelper.download_msgqueue,json.dumps(msg))
     #每个App解析方法重载该方法
     def tryparse(self,str):
         None

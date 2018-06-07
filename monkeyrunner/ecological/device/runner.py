@@ -16,14 +16,14 @@ import unittest
 import os
 import subprocess
 from shutil import copyfileobj
-from util.log import Logger
+from util import *
 import uuid
 import datetime
 import pytz
 
 
 #初始化日志
-log = Logger()
+log = SingleLogger().log
 
 try:
     sys.path.insert(0, os.path.join(os.environ['ANDROID_VIEW_CLIENT_HOME'], 'src'))
@@ -139,7 +139,6 @@ class DeviceRunner():
             # 下拉以前先记录当前的时间
             tz = pytz.timezone('Asia/Shanghai')
             self._runner_log["time"] = "%s" % str(datetime.datetime.now(tz))[0:19];
-            print >> sys.stderr, "========time=============>%s" % str(datetime.datetime.now(tz))[0:19];
             # 上拉
             self._dragup(self._settings["startpoint"], self._settings["endpoint"])
             # 等待
@@ -170,7 +169,6 @@ class DeviceRunner():
         db = self._mongodb_client['crawlnews']
         #day = time.strftime("%Y%m%d", time.localtime())
         day = datetime.datetime.now(tz).strftime("%Y%m%d")
-        print >> sys.stderr, "========day=============>%s" % day;
         runner_logs = db["runner_logs%s" % day]
         runner_logs.insert(self._runner_log)
 
@@ -187,7 +185,7 @@ class DeviceRunner():
         if response["status"] == "success":
             cmd = r'rm -f ' + full_file_name
             # log.debug(cmd)
-            # self._execute_cmd(cmd)
+            self._execute_cmd(cmd)
             return True
         else:
             log.debug('上传结果：'+response)
