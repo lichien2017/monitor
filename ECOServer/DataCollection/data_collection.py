@@ -308,7 +308,7 @@ where create_date = '%s'
                 if level == 1:
                     self.copy_data_to_total(table_name, result["imp_python_class"], yestoday_str)
                 else:
-                    # self.copy_data_to_total(table_name, result["mongodb_tablename"], yestoday_str)
+                    self.copy_data_to_total(table_name, result["mongodb_tablename"], yestoday_str)
                     pass
                 pass
             result = cursor.fetchone()
