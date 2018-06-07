@@ -42,7 +42,7 @@ def save_image(img, job):  # <5>
 
 
 def get_image(url):  # <6>
-    resp = requests.get(url)
+    resp = requests.get(url,timeout=5)
     if resp.status_code != 200:  # <1>
         resp.raise_for_status() # 如果不是200 抛出异常
     return resp.content
