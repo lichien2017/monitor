@@ -102,6 +102,8 @@ class MediaDownload(Thread):
                 res = self.get_resource(res_msg) # 获取资源详情
                 media = [] # 待下载资源队列
                 if res != None:
+                    if res["crawltimestr"] < "2018-06-08 15:50:28":
+                        continue
                     # 读取资源中的图片
                     logos = []
                     if res["logo"].find("、")>=0 :
