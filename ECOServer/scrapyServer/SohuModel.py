@@ -15,13 +15,8 @@ class SohuParse(BaseParse):
 
     #解析搜狐新闻
     def Analysis_shxw(self,data,category,crawltime,y,categorytag):
-        #try:
-        #    date = time.strftime('%Y%m%d%H%M%S',time.localtime(time.time()))#当前时间
-        #    f = open("E:\\" + category + date + ".txt",'a')
-        #    f.write(json.dumps(data))
-        #    f.close()
-        #except:
-        #    print("文件未保存")
+        video = ''  # 视频
+        audio = ''  # 音频
         seq = y + 1#排序
         title = ""#标题
         articleid = ""#文章标识
@@ -89,6 +84,7 @@ class SohuParse(BaseParse):
                     news_detail = requests.get(news_detail_url,headers=headers).json()
                     content = news_detail['data']['download_url']
                     url = news_detail['data']['url_html5']
+                    video=content
             else:
                 news_detail = requests.get(news_detail_url,headers=headers).json()
                 content = news_detail['content']
@@ -104,9 +100,9 @@ class SohuParse(BaseParse):
                             vid = t['vid']
                             news_detail_url = 'https://s1.api.tv.itc.cn/v4/video/info/' + str(vid) + '.json?site=2&api_key=695fe827ffeb7d74260a813025970bd5'
                             news_detail = requests.get(news_detail_url,headers=headers).json()
-                            gallary+=  news_detail['data']['download_url']+ ","
+                            video+=  news_detail['data']['download_url']+ ","
                         else:
-                            gallary+=t['tvUrl'] + ","
+                            video+=t['tvUrl'] + ","
         sdata = {
             "title": title,
             "description": abstract,
@@ -128,7 +124,9 @@ class SohuParse(BaseParse):
             "category_tag": categorytag,
             "category": category,
             "restype": restype,
-            "gallary": gallary
+            "gallary": gallary,
+            "video": video,
+            "audio": audio
         }
         self.db(sdata,articleid,title)
 

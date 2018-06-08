@@ -38,6 +38,8 @@ class FenHParse(BaseParse):
         gallary = "" #图片资讯图片地址
         detailJk = "" #详情接口
         style = ""  # 是否为热点
+        video = ''  # 视频
+        audio = ''  # 音频
         #如果是推荐关注列表，直接return
         try:
             articletype = data['type']#文章展示类型
@@ -59,7 +61,7 @@ class FenHParse(BaseParse):
             if tab == "":
                 tab = style
             else:
-                tab += "、" + style
+                tab += "," + style
         except:
             SingleLogger().log.debug('无标签资讯')
         try:
@@ -67,7 +69,7 @@ class FenHParse(BaseParse):
             if tab == "":
                 tab = style
             else:
-                tab += "、" + style
+                tab += "," + style
         except:
             SingleLogger().log.debug('无标签资讯')
 
@@ -118,7 +120,7 @@ class FenHParse(BaseParse):
             images = data['style']['images']
             if images and len(images) > 0:
                 for imgobj in images:
-                    logo += imgobj+"、"
+                    logo += imgobj+","
             else:
                 logo = data['thumbnail']
                 if logo == "":
@@ -149,6 +151,7 @@ class FenHParse(BaseParse):
                     postData = {}
                     res =self.httpPost(detailJk, postData)
                     content = res['singleVideoInfo'][0]['videoURLMid']
+                video=content
             except:
                 SingleLogger().log.debug("获取视频详情失败")
 
@@ -170,7 +173,7 @@ class FenHParse(BaseParse):
                             if curDesc != "":
                                 content += curDesc+"<br/>"
                             if curImg != "":
-                                gallary += curImg+"、"
+                                gallary += curImg+","
                 except:
                     try:
                         content = res['body']['text']
@@ -180,13 +183,13 @@ class FenHParse(BaseParse):
                         gallaryList = res['body']['img']
                         if len(gallaryList) > 0:
                             for gaobj in gallaryList:
-                                gallary += gaobj['url'] + "、"
+                                gallary += gaobj['url'] + ","
                     except:
                         SingleLogger().log.debug("详情没有图片")
                     try:
                         videos = res['body']['videos']
                         for vidobj in videos:
-                            gallary += vidobj['video']['Normal']['src'] + "、"
+                            video += vidobj['video']['Normal']['src'] + ","
                     except:
                         SingleLogger().log.debug("详情没有视频")
             except:
@@ -215,13 +218,13 @@ class FenHParse(BaseParse):
                     gallaryList = res['body']['img']
                     if len(gallaryList) > 0:
                         for gaobj in gallaryList:
-                            gallary += gaobj['url']+"、"
+                            gallary += gaobj['url']+","
                 except:
                     SingleLogger().log.debug("详情没有图片")
                 try:
                     videos = res['body']['videos']
                     for vidobj in videos:
-                        gallary += vidobj['video']['Normal']['src']+"、"
+                        video += vidobj['video']['Normal']['src']+","
                 except:
                     SingleLogger().log.debug("详情没有视频")
             except:
@@ -251,8 +254,10 @@ class FenHParse(BaseParse):
             "app_tag": self.apptag,
             "category_tag":categorytag,
             "category": category,#栏目
-            "restype": restype,#
-            "gallary": gallary#里面的所有图片地址
+            "restype": restype,#类型
+            "gallary": gallary,#里面的所有图片地址
+            "video": video,
+            "audio": audio
         }
         self.db(sdata, articleid, title)
 

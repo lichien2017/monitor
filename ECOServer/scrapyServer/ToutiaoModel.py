@@ -17,13 +17,8 @@ class ToutiaoParse(BaseParse):
     # 解析今日头条
     def Analysis_sntt(self,x, category, crawltime, y,categorytag):
         data = x['content']
-        #try:
-        #    date = time.strftime('%Y%m%d%H%M%S',time.localtime(time.time()))#当前时间
-        #    f = open("E:\\" + category + date + ".txt",'a')
-        #    f.write(data)
-        #    f.close()
-        #except :
-        #    print("文件未保存")
+        video = ''  # 视频
+        audio = ''  # 音频
         data = json.loads(data)
         title = ""#标题
         articleid = ""#文章标识
@@ -163,7 +158,7 @@ class ToutiaoParse(BaseParse):
             if tab == "":
                 tab = "热"
             else:
-                tab = tab + "、热"
+                tab = tab + ",热"
         #若restype=1为普通资讯 则可能存在多张图片
         if restype == 1:
             try:
@@ -213,6 +208,8 @@ class ToutiaoParse(BaseParse):
                         gallery = news_detail['gallery']
                         for z in gallery:
                             gallary+=z['sub_image']['url'] + ","
+                    elif restype==3:
+                        video=content
                 except:
                     SingleLogger().log.debug("内容暂无/图片取值错误")
         sdata={
@@ -236,7 +233,9 @@ class ToutiaoParse(BaseParse):
             "category_tag":categorytag,
             "category": category,
             "restype": restype,
-            "gallary": gallary
+            "gallary": gallary,
+            "video": video,
+            "audio": audio
         }
         self.db(sdata,articleid,title)
 

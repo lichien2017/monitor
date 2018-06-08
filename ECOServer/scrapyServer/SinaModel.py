@@ -15,7 +15,8 @@ from util.log import SingleLogger
 class SinaParse(BaseParse):
     # 解析新浪新闻
     def Analysis_sina(self,data,category, crawltime, y,categorytag):
-
+        video = ''  # 视频
+        audio = ''  # 音频
         title = ""  # 标题
         abstract = ""  # 摘要
         articleid = ""  # 文章标识
@@ -97,7 +98,7 @@ class SinaParse(BaseParse):
         try:
             images = data['pics']['list']
             for imgobj in images:
-                logo += imgobj['pic'] + "、"
+                logo += imgobj['pic'] + ","
         except:
             logo = data['pic']
 
@@ -117,6 +118,7 @@ class SinaParse(BaseParse):
                 videoInfo = data['videoInfo']  # 视频信息
                 logo = videoInfo['pic']
                 content = videoInfo['url']
+                video=content
             except:
                 SingleLogger().log.debug("获取视频详情失败")
 
@@ -128,7 +130,7 @@ class SinaParse(BaseParse):
                 logo = data['pic']
                 images = data['pics']['list']
                 for imgobj in images:
-                    gallary += imgobj['pic'] + "、"
+                    gallary += imgobj['pic'] + ","
                     content += imgobj['alt'] + "<br>"
             except:
                 SingleLogger().log.debug('获取图片详情失败')
@@ -163,9 +165,9 @@ class SinaParse(BaseParse):
                     except:
                         SingleLogger().log.debug("没有图文详情")
                     try:
-                        video = self.getVideo(url)
-                        if video != '':
-                            gallary += video
+                        videos = self.getVideo(url)
+                        if videos != '':
+                            video += videos
                     except:
                         SingleLogger().log.debug("详情没有video")
 
@@ -190,7 +192,9 @@ class SinaParse(BaseParse):
             "category_tag":categorytag,
             "category": category,  # 栏目
             "restype": restype,  #
-            "gallary": gallary  # 里面的所有图片地址
+            "gallary": gallary,#里面的所有图片地址
+            "video": video,
+            "audio": audio
         }
         SingleLogger().log.debug("=====sina======>%s" %sdata)
         self.db(sdata, articleid, title)
@@ -201,7 +205,7 @@ class SinaParse(BaseParse):
         soup = BeautifulSoup(html, "html.parser")  # 文档对象
         imgStr = ""
         for k in soup.find_all('img'):  # 获取img
-            imgStr += k['src'] + "、"
+            imgStr += k['src'] + ","
         return imgStr
 
     # 获取文字main
@@ -220,7 +224,7 @@ class SinaParse(BaseParse):
         soup = BeautifulSoup(html, "html.parser")  # 文档对象
         imgStr = ""
         for k in soup.find_all('video'):
-            imgStr += k['src'] + "、"
+            imgStr += k['src'] + ","
         return imgStr
 
     # 获取图片

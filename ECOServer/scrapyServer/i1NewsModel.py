@@ -46,6 +46,8 @@ class i1NewsParse(BaseParse):
         publish_timestr = ""
         publish_time = ""
         url = ""  # 跳转地址
+        video = ''  # 视频
+        audio = ''  # 音频
         title = data['title']
         source = data['source']
         try:
@@ -86,6 +88,7 @@ class i1NewsParse(BaseParse):
             if content_type == "video":
                 restype = 3
                 content = data['video_url']
+                video=content
             elif content_type == "slides":
                 restype = 2
                 gallery_items = data['gallery_items']
@@ -143,7 +146,9 @@ class i1NewsParse(BaseParse):
             "category_tag":categorytag,
             "category": category,
             "restype": restype,
-            "gallary": gallary
+            "gallary": gallary,
+            "video": video,
+            "audio": audio
         }
         self.db(sdata, articleid, title)
 
