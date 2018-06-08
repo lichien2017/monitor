@@ -100,7 +100,8 @@ class BaseLevel1Rule(Rule,Thread):
                                         {"res_id": "%s" % res_recv[0], "badkey":"%s" % key.decode("utf-8"), "badcontent": gallary[key_index],"app_tag":tmp_res["app_tag"],"category_tag":tmp_res["category_tag"]})
 
                         # 同时对于视频的结果要存入到视频记录表中 lzq add
-                        if key.startswith("video"):  # key是video开头表示视频
+                        if key.decode("utf-8").startswith("video"):  # key是video开头表示视频
+                            self._mongodb = self._mongodb_client['crawlnews']
                             video_table = self._mongodb["VideoPictures" + res_recv[1]]
                             video_item = video_table.find_one({"res_id": "%s" % res_recv[0]})
                             if video_item == None:
