@@ -1,14 +1,11 @@
 from concurrent import futures
 import requests
 import os
-import hashlib
+
 from pymongo import MongoClient
 from threading import Thread
-import pymysql
 import json
 from util import *
-from mysqldb.mysql_helper import MySQLHelper
-import datetime
 import time
 from analysis.rule_level0_service import RuleServiceLevel1
 DEST_DIR = os.path.dirname(__file__) + "/files/"  # 服务启动后做映射过去
