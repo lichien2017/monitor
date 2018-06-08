@@ -159,7 +159,7 @@ class Rule:
             normal_msg["seq"] = "video%s" % index
             normal_msg["data"] = [x, "%s/%s/%s" % (ConfigHelper.download_savepath, crawl_time_str, Secret.md5(x)),
                                   "%s/%s" % (media_savepath, Secret.md5(x))]
-            normal_msg["resdata"] = "%s,%s" % (res_id, crawl_time_str)
+            normal_msg["resdata"] = "%s,%s,%s" % (res_id, crawl_time_str,self.__class__.__name__)
             # 将视频解析的任务发到视频处理消息队列中
             RedisHelper.strict_redis.lpush(ConfigHelper.video_all_msgqueue, json.dumps(normal_msg))
             index += 1
