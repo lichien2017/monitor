@@ -152,6 +152,18 @@ services:
       - mysql
     networks:
       - mobilephone_release
+  imagedownload:
+    build: ECOServer/
+    restart: always
+    volumes:
+      - /home/tymx/Documents/DockerContainer/ECOServer:/usr/local/ECOServer
+      - /mnt/download_media:/usr/local/ECOServer/files
+    command: python /usr/local/ECOServer/media_download_server.py
+    depends_on:
+      - redis
+      - mongo
+    networks:
+      - mobilephone_release
   dockerui:
     image: abh1nav/dockerui:latest
     restart: always
