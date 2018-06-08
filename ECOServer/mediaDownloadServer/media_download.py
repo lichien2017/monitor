@@ -92,7 +92,7 @@ class MediaDownload(Thread):
         return len(results)
 
     def run(self):
-        if True:
+        while True:
             # 从消息队列中获取任务
             item = RedisHelper.strict_redis.rpop(ConfigHelper.download_msgqueue)
             if item != None:
