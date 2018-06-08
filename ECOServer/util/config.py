@@ -2,7 +2,7 @@
 import configparser
 import os
 
-debug = 1 # 1表示调试环境 2表示分布式环境，分布式主要把mongodb和mysqldb单独拿出来了
+debug = 0 # 1表示调试环境 2表示分布式环境，分布式主要把mongodb和mysqldb单独拿出来了
 
 class ConfigHelper:
     # mysqldb.logger.setLevel('DEBUG')
