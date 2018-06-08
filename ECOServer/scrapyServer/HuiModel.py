@@ -27,7 +27,7 @@ class HuiParse(BaseParse):
         tab = ""  # 标签
         gallary = "" #详情图片，视频
         content = ""  # 内容
-
+        audio='' #音频
         #头条栏目暂时看到的都是图文新闻
         restype = 1
         content = self.getWen(data['url'])
@@ -35,7 +35,6 @@ class HuiParse(BaseParse):
         title = data['topic']
         url = data['url']
         source = data['source']
-        #
         articleid = data['rowkey']
 
         publish_time = data['date']
@@ -46,8 +45,6 @@ class HuiParse(BaseParse):
 
         gallary = self.getImg(url)
         video = self.getVideo(url)
-        if video and video != '':
-            gallary = gallary + video
 
         crawltimestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(crawltime / 1000))
         publish_timestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(int(publish_time) / 1000))
@@ -79,7 +76,9 @@ class HuiParse(BaseParse):
             "category_tag":categorytag,
             "category": category,
             "restype": restype,
-            "gallary": gallary
+            "gallary": gallary,#里面的所有图片地址
+            "video": video,
+            "audio": audio
         }
         self.db(sdata, articleid, title)
 
@@ -90,7 +89,7 @@ class HuiParse(BaseParse):
         soup = BeautifulSoup(html, "html.parser")  # 文档对象
         imgStr = ""
         for k in soup.find_all('img'):  # 获取img
-            imgStr += k['src'] + "、"
+            imgStr += k['src'] + ","
         return imgStr
 
         # 获取文字main
@@ -113,7 +112,7 @@ class HuiParse(BaseParse):
         soup = BeautifulSoup(html, "html.parser")  # 文档对象
         imgStr = ""
         for k in soup.find_all('video'):
-            imgStr += k['src'] + "、"
+            imgStr += k['src'] + ","
         return imgStr
 
         # 获取图片

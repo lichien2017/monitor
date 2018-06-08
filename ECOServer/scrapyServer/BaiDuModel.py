@@ -15,13 +15,6 @@ from util.log import SingleLogger
 class BaiDuParse(BaseParse):
     # 解析百度新闻
     def Analysis_bdxw(self, data, category, crawltime, y, categorytag):
-        # try:
-        #    date = time.strftime('%Y%m%d%H%M%S',time.localtime(time.time()))#当前时间
-        #    f = open("E:\\" + category + date + ".txt",'a')
-        #    f.write(json.dumps(data))
-        #    f.close()
-        # except :
-        #    print("文件未保存")
         seq = y + 1  # 排序
         title = ""  # 标题
         articleid = ""  # 文章标识
@@ -32,6 +25,8 @@ class BaiDuParse(BaseParse):
         tab = ""  # 标签
         gallary = ""
         content = ""  # 内容
+        video = ''  # 视频
+        audio = '' #音频
         try:
             ctag = data['ctag']["name"]
             if ctag == "专题":
@@ -55,6 +50,7 @@ class BaiDuParse(BaseParse):
             if corner_type == "video":
                 restype = 3
                 content = data['video']['url']
+                video=content
             elif corner_type == "image":
                 restype = 2
         except:
@@ -96,7 +92,9 @@ class BaiDuParse(BaseParse):
             "category_tag":categorytag,
             "category": category,
             "restype": restype,
-            "gallary": gallary
+            "gallary": gallary,
+            "video": video,
+            "audio": audio
         }
         self.db(sdata, articleid, title)
 

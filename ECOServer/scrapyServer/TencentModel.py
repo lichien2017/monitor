@@ -15,6 +15,8 @@ class TencentParse(BaseParse):
 
    #解析腾讯新闻
     def Analysis_ten(self,data,category,crawltime,y,categorytag):
+        video = ''  # 视频
+        audio = ''  # 音频
         #标题
         title = ""
         try:
@@ -86,13 +88,13 @@ class TencentParse(BaseParse):
             if tab == "":
                 tab = zdTab
             else:
-                tab += "、"+zdTab
+                tab += ","+zdTab
         except:
             SingleLogger().log.debug("无标签")
         try:
             zdTab = data['up_labelList'][0]['word']
             if tab != '':
-                tab += '、' + zdTab
+                tab += ',' + zdTab
             else:
                 tab = zdTab
         except:
@@ -141,7 +143,7 @@ class TencentParse(BaseParse):
             if tab == "":
                 tab = "热点精选"
             else:
-                tab += "、热点精选"
+                tab += ",热点精选"
             try:
                 #热点新闻，取里面第一个列表的
                 childList = data['newsModule']['newslist'][0]
@@ -171,6 +173,7 @@ class TencentParse(BaseParse):
                 videoData = data["video_channel"]["video"]
                 logo = videoData["img"]
                 content = videoData["playurl"]
+                video=content
             except:
                 SingleLogger().log.debug('无视频')
 
@@ -179,7 +182,7 @@ class TencentParse(BaseParse):
             if tab=="":
                 tab="直播"
             else:
-                tab+="、直播"
+                tab+=",直播"
             liveVideo = data["newsModule"]["newslist"][0]
             title = liveVideo['title']
             source = liveVideo['source']
@@ -206,6 +209,7 @@ class TencentParse(BaseParse):
                     content=video_channel
                 except:
                     content=url
+                video=content
             except:
                 SingleLogger().log.debug("无分享地址")
 
@@ -227,10 +231,10 @@ class TencentParse(BaseParse):
                             gallary += attribute[a]["url"] + ","
                     except:
                         try:
-                            gallary += attribute[a]["playurl"] + ","
+                            video += attribute[a]["playurl"] + ","
                         except:
                             try:
-                                gallary += attribute[a]["murl"] + ","
+                                audio += attribute[a]["murl"] + ","
                             except:
                                 SingleLogger().log.debug(json.dumps(attribute))
             elif articletype=="1":
@@ -269,8 +273,10 @@ class TencentParse(BaseParse):
             "app_tag": self.apptag,
             "category_tag":categorytag,
             "category": category,#栏目
-            "restype": restype,#
-            "gallary": gallary#里面的所有图片地址
+            "restype": restype,#类型
+            "gallary": gallary,
+            "video": video,
+            "audio": audio
         }
         self.db(sdata,articleid,title)
 

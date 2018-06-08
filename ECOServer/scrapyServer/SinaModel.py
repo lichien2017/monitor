@@ -1,4 +1,3 @@
-# coding=utf-8
 from scrapyServer.BaseModel import BaseParse
 import urllib.parse
 import json
@@ -16,16 +15,8 @@ from util.log import SingleLogger
 class SinaParse(BaseParse):
     # 解析新浪新闻
     def Analysis_sina(self,data,category, crawltime, y,categorytag):
-        '''
-        try:
-            date = time.strftime('%Y%m%d%H%M%S',time.localtime(time.time()))#当前时间
-            f = open("E:\\" + category + date + ".txt",'a')
-            f.write(json.dumps(data))
-            f.close()
-        except :
-            print("文件未保存")
-        '''
-
+        video = ''  # 视频
+        audio = ''  # 音频
         title = ""  # 标题
         abstract = ""  # 摘要
         articleid = ""  # 文章标识
@@ -34,7 +25,7 @@ class SinaParse(BaseParse):
         logo = ""  # 列表图片
         url = ""  # 文章短地址
         actionType = ""  # 文章展示类型（2-普通 14-头条 3-视频 1-广告 2-图片）
-        layoutStyle = ""  # 布局样式
+        layoutStyle =""   # 布局样式
         publish_time = ""  # 发布时间 时间戳
         publish_timestr = ""  # 发布时间 标准时间str
         crawltimestr = ""  # 抓包时间
@@ -42,12 +33,20 @@ class SinaParse(BaseParse):
         keywords = ""  # 关键字
         content = ""  # 内容
         gallary = ""  # 图片资讯图片地址
-
+        # 布局样式 20 频道样式
+        layoutStyle=data['layoutStyle']
         # 文章展示类型（2-普通 14-头条 3-视频 1-广告 2-图片）
         actionType = data['actionType']
-
+        #若样式为20 无文章类型则为频道 且忽略此数据
+        if layoutStyle==20 and actionType!='':
+            return;
+        # 若样式为36 类型为23 则为要闻滚动 且忽略此数据
+        if layoutStyle==36 and actionType!=23:
+            return;
         # 标题
         try:
+            if data['intro'] and data['intro']!="":
+                title = data['intro']
             if data['longTitle'] and data['longTitle'] != "":
                 title = data['longTitle']
             elif data['title'] and data['title'] != "":
@@ -99,19 +98,15 @@ class SinaParse(BaseParse):
         try:
             images = data['pics']['list']
             for imgobj in images:
-                logo += imgobj['pic'] + "、"
+                logo += imgobj['pic'] + ","
         except:
             logo = data['pic']
 
-        # 置顶
+        # 标签
         try:
-            if data['isTop'] and data['isTop'] == 1 and data['showTag'] and data['showTag'] == "置顶":
-                if tab == "":
-                    tab = "置顶"
-                else:
-                    tab += "、置顶"
+            tab=data['showTag']
         except:
-            SingleLogger().log.debug('不置顶')
+            SingleLogger().log.debug('无标签')
 
         # 分类处理
         # 视频
@@ -123,6 +118,7 @@ class SinaParse(BaseParse):
                 videoInfo = data['videoInfo']  # 视频信息
                 logo = videoInfo['pic']
                 content = videoInfo['url']
+                video=content
             except:
                 SingleLogger().log.debug("获取视频详情失败")
 
@@ -134,18 +130,15 @@ class SinaParse(BaseParse):
                 logo = data['pic']
                 images = data['pics']['list']
                 for imgobj in images:
-                    gallary += imgobj['pic'] + "、"
+                    gallary += imgobj['pic'] + ","
                     content += imgobj['alt'] + "<br>"
             except:
                 SingleLogger().log.debug('获取图片详情失败')
 
         # 广告
-        elif actionType == 1:
+        elif actionType == 1 and layoutStyle==3:
             SingleLogger().log.debug('广告')
-            if tab == "":
-                tab = "广告"
-            else:
-                tab += "、广告"
+            content=url
 
         # 明日头条
         elif actionType == 14:
@@ -158,22 +151,25 @@ class SinaParse(BaseParse):
         # 普通新闻
         else:
             SingleLogger().log.debug('普通新闻')
-            # 防止报错
-            if url != '':
-                try:
-                    gallary = self.getImg(url)
-                except:
-                    SingleLogger().log.debug("没有gallary")
-                try:
-                    content = self.getWen(url)
-                except:
-                    SingleLogger().log.debug("没有图文详情")
-                try:
-                    video = self.getVideo(url)
-                    if video != '':
-                        gallary += video
-                except:
-                    SingleLogger().log.debug("详情没有video")
+            if tab.find('专题')>-1:
+                content=url
+            else:
+                # 防止报错
+                if url != '':
+                    try:
+                        gallary = self.getImg(url)
+                    except:
+                        SingleLogger().log.debug("没有gallary")
+                    try:
+                        content = self.getWen(url)
+                    except:
+                        SingleLogger().log.debug("没有图文详情")
+                    try:
+                        videos = self.getVideo(url)
+                        if videos != '':
+                            video += videos
+                    except:
+                        SingleLogger().log.debug("详情没有video")
 
         sdata = {
             "title": title,
@@ -196,7 +192,9 @@ class SinaParse(BaseParse):
             "category_tag":categorytag,
             "category": category,  # 栏目
             "restype": restype,  #
-            "gallary": gallary  # 里面的所有图片地址
+            "gallary": gallary,#里面的所有图片地址
+            "video": video,
+            "audio": audio
         }
         SingleLogger().log.debug("=====sina======>%s" %sdata)
         self.db(sdata, articleid, title)
@@ -207,7 +205,7 @@ class SinaParse(BaseParse):
         soup = BeautifulSoup(html, "html.parser")  # 文档对象
         imgStr = ""
         for k in soup.find_all('img'):  # 获取img
-            imgStr += k['src'] + "、"
+            imgStr += k['src'] + ","
         return imgStr
 
     # 获取文字main
@@ -226,7 +224,7 @@ class SinaParse(BaseParse):
         soup = BeautifulSoup(html, "html.parser")  # 文档对象
         imgStr = ""
         for k in soup.find_all('video'):
-            imgStr += k['src'] + "、"
+            imgStr += k['src'] + ","
         return imgStr
 
     # 获取图片
@@ -259,7 +257,10 @@ class SinaParse(BaseParse):
 
         # 区分栏目
         category = ""  # 类型
-        category = params['channel'][0]
+        try:
+            category = params['channel'][0]
+        except:
+            SingleLogger().log.debug("=====category======>%s" % params)
         if category == "news_jingyao":
             category = "要闻"
             categorytag = self.categroytag["%s" % category]
@@ -273,6 +274,7 @@ class SinaParse(BaseParse):
             category = "图片"
             categorytag = self.categroytag["%s" % category]
         else:
+            SingleLogger().log.debug("=====有不正确的栏目======>%s" % category)
             SingleLogger().log.debug("有不正确的栏目")
             return
 

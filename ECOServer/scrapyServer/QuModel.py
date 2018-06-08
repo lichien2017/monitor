@@ -27,6 +27,8 @@ class QuParse(BaseParse):
         tab = ""  # 标签
         gallary = "" #详情图片，视频
         content = ""  # 内容
+        audio=''#音频
+        video=''#视频
         try:
             corner_type = data['tips']
             if corner_type == "":
@@ -35,6 +37,7 @@ class QuParse(BaseParse):
             elif corner_type == "视频":
                 restype = 3
                 content = self.getVideo(data['url'])
+                video=content
             elif corner_type == "广告":
                 return
         except:
@@ -51,9 +54,9 @@ class QuParse(BaseParse):
                 logo += i + ","
 
         gallary = self.getImg(url)
-        video = self.getVideo(url)
-        if video and video != '':
-            gallary = gallary + video
+        # 当等于视频时已得到视频地址 无需调用
+        if restype!=3 :
+            video += self.getVideo(url)
 
         crawltimestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(crawltime / 1000))
         publish_timestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(int(publish_time) / 1000))
@@ -85,7 +88,9 @@ class QuParse(BaseParse):
             "category_tag":categorytag,
             "category": category,
             "restype": restype,
-            "gallary": gallary
+            "gallary": gallary,#里面的所有图片地址
+            "video": video,
+            "audio": audio
         }
         self.db(sdata, articleid, title)
 
@@ -96,7 +101,7 @@ class QuParse(BaseParse):
         soup = BeautifulSoup(html, "html.parser")  # 文档对象
         imgStr = ""
         for k in soup.find_all('img'):  # 获取img
-            imgStr += k['src'] + "、"
+            imgStr += k['src'] + ","
         return imgStr
 
         # 获取文字main
@@ -119,7 +124,7 @@ class QuParse(BaseParse):
         soup = BeautifulSoup(html, "html.parser")  # 文档对象
         imgStr = ""
         for k in soup.find_all('video'):
-            imgStr += k['src'] + "、"
+            imgStr += k['src'] + ","
         return imgStr
 
         # 获取图片

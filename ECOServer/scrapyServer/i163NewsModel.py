@@ -14,13 +14,6 @@ from util.log import SingleLogger
 class WYNewsParse(BaseParse):
     # 解析网易新闻
     def Analysis_wyxw(self, data, category, crawltime, y,categorytag):
-        # try:
-        #    date = time.strftime('%Y%m%d%H%M%S',time.localtime(time.time()))#当前时间
-        #    f = open("E:\\" + category + date + ".txt",'a')
-        #    f.write(json.dumps(data))
-        #    f.close()
-        # except :
-        #    print("文件未保存")
         title = ""  # 标题
         articleid = ""  # 文章标识
         restype = 1  # 类型 1 图文 2 图片 3 视频
@@ -30,6 +23,8 @@ class WYNewsParse(BaseParse):
         content = ""  # 内容
         gallary = ""
         tab = ""  # 标签
+        video = ''  # 视频
+        audio = ''  # 音频
         try:
             title = data['title']
         except:
@@ -96,8 +91,6 @@ class WYNewsParse(BaseParse):
                 tab = data['interest']
                 if tab == "S":
                     tab = "置顶"
-                else:
-                    tab = ""
             except:
                 SingleLogger().log.debug("无interest")
             if category == "热点":
@@ -105,8 +98,6 @@ class WYNewsParse(BaseParse):
                     tab = data['recReason']
                     if tab == "大家都在看":
                         tab = "热"
-                    else:
-                        tab = ""
                 except:
                     SingleLogger().log.debug("无recReason")
         seq = y + 1  # 排序
@@ -135,6 +126,7 @@ class WYNewsParse(BaseParse):
                 content = news_detail['mp4_url']
             else:
                 content = data['videoinfo']['mp4_url']
+            video=content
         elif restype == 2:
             if category == "图片":
                 strarr = url.split('/')
@@ -181,16 +173,16 @@ class WYNewsParse(BaseParse):
                     video_list = news_detail['video']
                     for v in video_list:
                         if v['url_mp4'] != "":
-                            gallary += v['url_mp4'] + ","
+                            video += v['url_mp4'] + ","
                 except:
                     SingleLogger().log.debug("无视频")
                 content = news_detail['body']
                 # 读取
                 try:
                     spinfo_list = news_detail['spinfo']
-                    for s in video_list:
+                    for s in spinfo_list:
                         if s['spcontent'] != "":
-                            content += v['spcontent']
+                            content += s['spcontent']
                 except:
                     None
                 url = news_detail['shareLink']
@@ -215,7 +207,9 @@ class WYNewsParse(BaseParse):
             "category_tag":categorytag,
             "category": category,
             "restype": restype,
-            "gallary": gallary
+            "gallary": gallary,
+            "video": video,
+            "audio": audio
         }
         self.db(sdata, articleid, title)
 

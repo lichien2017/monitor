@@ -28,7 +28,8 @@ class JiKeParse(BaseParse):
         tab = ""  # 标签
         gallary = ""#文章中的图片
         content = ""  # 内容
-
+        video = ''  # 视频
+        audio = ''  # 音频
 
         if data['type']=='RECOMMENDED_MESSAGE':
             articleid = data['id']
@@ -36,10 +37,10 @@ class JiKeParse(BaseParse):
             try:
                 #视频资讯
                 videofind = data['item']['video']
-                video = 1
+                isvideo = 1
             except:
-                video = 0
-            if video == 1:
+                isvideo = 0
+            if isvideo == 1:
                 #视频资讯
                 restype = 3
                 #封面图
@@ -65,6 +66,8 @@ class JiKeParse(BaseParse):
             source =data['item']['topic']['content']
             #内容
             content =data['item']['content']
+            if restype==3:
+                video=content
             #时间
             publish_timestr = data['item']['createdAt'][:-5].replace("T", " ");
             timeArray = time.strptime(publish_timestr, "%Y-%m-%d %H:%M:%S")
@@ -108,7 +111,9 @@ class JiKeParse(BaseParse):
             "category_tag":categorytag,
             "category": category,
             "restype": restype,
-            "gallary": gallary
+            "gallary": gallary,#里面的所有图片地址
+            "video": video,
+            "audio": audio
         }
         self.db(sdata, articleid, title)
 

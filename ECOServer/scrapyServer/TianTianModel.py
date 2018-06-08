@@ -14,13 +14,8 @@ class TianTianParse(BaseParse):
 
     #解析天天快报
     def Analysis_ttkb(self,data,category,crawltime,y,categorytag):
-        #try:
-        #    date = time.strftime('%Y%m%d%H%M%S',time.localtime(time.time()))#当前时间
-        #    f = open("E:\\" + category + date + ".txt",'a')
-        #    f.write(json.dumps(data))
-        #    f.close()
-        #except:
-        #    print("文件未保存")
+        video = ''  # 视频
+        audio = ''  # 音频
         seq = y + 1#排序
         title = ""#标题
         articleid = ""#文章标识
@@ -48,7 +43,7 @@ class TianTianParse(BaseParse):
             if stick == 1:
                 tab = "置顶"
                 if articletype == "100":
-                     tab+="、专题"
+                     tab+=",专题"
         except:
             SingleLogger().log.debug("非置顶资讯")
         if category=="热点":
@@ -123,10 +118,10 @@ class TianTianParse(BaseParse):
                             gallary+=attribute[a]["url"] + ","
                     except:
                         try:
-                            gallary+=attribute[a]["playurl"] + ","
+                            video+=attribute[a]["playurl"] + ","
                         except:
                             try:
-                                gallary+=attribute[a]["murl"] + ","
+                                audio+=attribute[a]["murl"] + ","
                             except:
                                 SingleLogger().log.debug(json.dumps(attribute))
                 if category == "问答":
@@ -151,17 +146,18 @@ class TianTianParse(BaseParse):
                                         gallary+=attribute[a]["url"] + ","
                                 except:
                                     try:
-                                        gallary+=attribute[a]["playurl"] + ","
+                                        video+=attribute[a]["playurl"] + ","
                                     except:
                                         try:
-                                            gallary+=attribute[a]["murl"] + ","
+                                            audio+=attribute[a]["murl"] + ","
                                         except:
                                             SingleLogger().log.debug(json.dumps(attribute))
                         except:
                             None
 
         elif restype==3:
-             content = data['video_channel']['video']['playurl']#视频地址
+            content = data['video_channel']['video']['playurl']#视频地址
+            video=content
         #判断列表封面图末尾是否为，若是则进行删除
         logolen = len(logo)
         if logolen > 0:
@@ -189,7 +185,9 @@ class TianTianParse(BaseParse):
             "category_tag":categorytag,
             "category": category,
             "restype": restype,
-            "gallary": gallary
+            "gallary": gallary,
+            "video": video,
+            "audio": audio
         }
         self.db(sdata,articleid,title)
 
