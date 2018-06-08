@@ -12,7 +12,7 @@ import datetime
 import time
 from analysis.rule_level0_service import RuleServiceLevel1
 DEST_DIR = os.path.dirname(__file__) + "/files/"  # 服务启动后做映射过去
-log = SingleLogger().log
+# log = SingleLogger().log
 
 class MediaDownload(Thread):
     def __init__(self):
@@ -70,7 +70,7 @@ class MediaDownload(Thread):
                 future = executor.submit(self.download_one, cc)
                 to_do_map[future] = cc
                 msg = 'Scheduled for {}: {}'
-                log.debug(msg.format(cc, future))
+                SingleLogger().log.debug(msg.format(cc, future))
 
             results = []
             for future in futures.as_completed(to_do_map):
@@ -83,10 +83,10 @@ class MediaDownload(Thread):
                     error_msg = ''
                 if error_msg:
                     cc = to_do_map[future]  # <16>
-                    log.error('*** Error for {}: {}'.format(cc, error_msg))
+                    SingleLogger().log.error('*** Error for {}: {}'.format(cc, error_msg))
                 else:
                     msg = '{} result: {!r}'
-                    log.debug(msg.format(future, res))
+                    SingleLogger().log.debug(msg.format(future, res))
                     results.append(res)
 
         return len(results)
@@ -130,7 +130,7 @@ class MediaDownload(Thread):
                     for img in media:
                         jobs.append({"url": img, "dir": dir_name, "res_id": res_msg["res_id"]})
                     result = self.download_many(jobs)
-                    log.debug("result=%d" % result)
+                    SingleLogger().log.debug("result=%d" % result)
                     # 下载完成后发送到指定队列
                     SingleLogger().log.debug("Rule1server.add_resource_to_all_queue == %s", json.dumps(res_msg))
                     self.ruleServiceLevel1.add_resource_to_all_queue(json.dumps(res_msg))
