@@ -56,7 +56,7 @@ class BaseLevel1Rule(Rule,Thread):
                         continue
                     key_value = rel.decode("utf-8") # 检查结果值 -1 表示未处理，0 表示没有问题 1和不为空表示有问题
                     video_json = {} # 用于保存视频图片结果数据
-                    if key_value.isdigit() : # 如果是数字，可能的值是-1,0,1
+                    if key_value.isdigit() or key_value == "-1": # 如果是数字，可能的值是-1,0,1
                         rel = int(key_value) # 直接转成数值
                     else:
                         rel = 1 # 非数字表示视频的处理，所以这里肯定是因为有问题，那么直接赋值为1
