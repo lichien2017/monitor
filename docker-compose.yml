@@ -127,11 +127,12 @@ services:
     networks:
       - mobilephone
   imagedownload:
-    build: ECOServer/downloadServer/
+    build: ECOServer/
     restart: always
     volumes:
-      - /home/tymx/Documents/DockerContainer/ECOServer:/usr/local/imagedownload
-      - /mnt/download_media:/usr/local/imagedownload/downloadServer/files
+      - /home/tymx/Documents/DockerContainer/ECOServer:/usr/local/ECOServer
+      - /mnt/download_media:/usr/local/ECOServer/files
+    command: python /usr/local/ECOServer/media_download_server.py
     depends_on:
       - redis
       - mongo
