@@ -158,6 +158,7 @@ services:
     volumes:
       - /home/tymx/Documents/DockerContainer/ECOServer:/usr/local/ECOServer
       - /mnt/download_media:/usr/local/ECOServer/files
+      - /mnt/db/logs:/usr/local/ECOServer/logs
     command: python /usr/local/ECOServer/media_download_server.py
     depends_on:
       - redis
