@@ -47,14 +47,24 @@ class BaseLevel1Rule(Rule,Thread):
                 res_recv = item.decode("utf-8").split(",")  # res_id,time
                 sub_job = "sendjob:%s:%s" % (self.__class__.__name__, res_recv[0])  # 子任务消息key
                 SingleLogger().log.info(sub_job)
-                hset_keys = RedisHelper.strict_redis.hkeys(sub_job)
+                hset_keys = RedisHelper.strict_redis.hkeys(sub_job)  # 得到任务所有keys，用于检查是否完成校验，等到服务返回
                 remove_flag = 1  # 是否删除标示
                 inserted = 0  # 可以插入数据库
                 for key in hset_keys:
                     rel = RedisHelper.strict_redis.hget(sub_job, key)
                     if rel == None :
                         continue
-                    rel = int(rel.decode("utf-8"))
+                    key_value = rel.decode("utf-8") # 检查结果值 -1 表示未处理，0 表示没有问题 1和不为空表示有问题
+                    video_json = {} # 用于保存视频图片结果数据
+                    if key_value.isdigit() : # 如果是数字，可能的值是-1,0,1
+                        rel = int(key_value) # 直接转成数值
+                    else:
+                        rel = 1 # 非数字表示视频的处理，所以这里肯定是因为有问题，那么直接赋值为1
+                        video_json = json.loads(key_value) # 将传过来的json字符串进行反序列化
+                        pass
+
+
+                    #rel = int(rel.decode("utf-8")) # 得到结果，1表示有问题，0 表示没有问题
                     # SingleLogger().log.debug("ret = %d" % rel)
                     if rel == 1 and inserted == 0:
                         # 只要有一个为1，表示规则匹配成功，插入数据库
@@ -63,13 +73,16 @@ class BaseLevel1Rule(Rule,Thread):
                         table = self._mongodb[self._mongodb_tablename + res_recv[1]]
                         item = table.find_one({"res_id": "%s" % res_recv[0]})
                         if item == None:
+                            # 插入到指定有问题的数据表中，比如血腥暴力、色情表
                             table.insert({"res_id": "%s" % res_recv[0]})
+
                             # 同时将有问题的数据加入到每天的合计表中
                             total_table = self._mongodb["all_resource" + res_recv[1]]
                             total_item = total_table.find_one({"res_id": "%s" % res_recv[0]})
-                            if item == None :# 如果不存在就插入
+                            if total_item == None :# 如果不存在就插入
                                 tmp_res = self._get_resource("%s" % res_recv[0], res_recv[1])
                                 if not key.isdigit() :
+                                    # lzq 20180608 增加对视频的处理
                                     total_table.insert({"res_id": "%s" % res_recv[0],"badkey":"%s" % key.decode("utf-8"),"badcontent":tmp_res[key.decode("utf-8")],"app_tag":tmp_res["app_tag"],"category_tag":tmp_res["category_tag"]})
                                 else:
                                     logo = tmp_res["logo"].split(",")
@@ -85,6 +98,15 @@ class BaseLevel1Rule(Rule,Thread):
                                     else:
                                         total_table.insert(
                                         {"res_id": "%s" % res_recv[0], "badkey":"%s" % key.decode("utf-8"), "badcontent": gallary[key_index],"app_tag":tmp_res["app_tag"],"category_tag":tmp_res["category_tag"]})
+
+                        # 同时对于视频的结果要存入到视频记录表中 lzq add
+                        if key.startswith("video"):  # key是video开头表示视频
+                            video_table = self._mongodb["VideoPictures" + res_recv[1]]
+                            video_item = video_table.find_one({"res_id": "%s" % res_recv[0]})
+                            if video_item == None:
+                                video_table.insert({"res_id": "%s" % res_recv[0], "save_path": video_json["save_path"],
+                                                    "images": video_json["images"]})
+                            pass
                         inserted = 1
                     if rel == -1:
                         remove_flag = 0

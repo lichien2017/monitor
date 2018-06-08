@@ -87,8 +87,27 @@ class Rule:
         # title = resource["title"]
         # description = resource["description"]
         # content = resource["content"]
-        logo = resource["logo"].split(",")
-        images = resource["gallary"].split(",")
+
+
+        logo = []
+        if resource["logo"].find("、") >= 0:
+            logos = resource["logo"].split("、") # 无奈加上的，画个圈圈诅咒她-_-!!!
+        else:
+            logos = resource["logo"].split(",")
+
+        images = []
+        if resource["gallary"].find("、") >= 0:
+            images = resource["gallary"].split("、") # 无奈加上的，画个圈圈诅咒她-_-!!!
+        else:
+            images = resource["gallary"].split(",")
+
+        video = []
+        if "video" in resource:  # 如果有视频
+            video = resource["video"].split(",")
+            pass
+
+        # logo = resource["logo"].split(",")
+        # images = resource["gallary"].split(",")
         sub_job = self.build_sub_job_id(res_id) #"sendjob:%s:%s" % (self.__class__.__name__,res_id) #子任务消息key
 
         normal_msg = self.build_post_msg(sub_job,extra) #{"id":sub_job,"seq":"","data":[],"threshold":threshold,"resdata":"","resp":"recvjob:%s" %(self.__class__.__name__)}
@@ -130,6 +149,19 @@ class Rule:
                                   "%s/%s" % (media_savepath, Secret.md5(x))]
             normal_msg["resdata"] = "%s,%s" % (res_id,crawl_time_str)
             RedisHelper.strict_redis.lpush(self.queue_name_image, json.dumps(normal_msg))
+            index += 1
+
+        # 处理视频
+        index = 1
+        video = [x for x in video if x != '' and (x.startswith("http://") or x.startswith("https://"))]
+        for x in video:
+            RedisHelper.strict_redis.hset(sub_job, "video%s" % index, -1)
+            normal_msg["seq"] = "video%s" % index
+            normal_msg["data"] = [x, "%s/%s/%s" % (ConfigHelper.download_savepath, crawl_time_str, Secret.md5(x)),
+                                  "%s/%s" % (media_savepath, Secret.md5(x))]
+            normal_msg["resdata"] = "%s,%s" % (res_id, crawl_time_str)
+            # 将视频解析的任务发到视频处理消息队列中
+            RedisHelper.strict_redis.lpush(ConfigHelper.video_all_msgqueue, json.dumps(normal_msg))
             index += 1
 
 
