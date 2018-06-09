@@ -366,6 +366,53 @@ where create_date = '%s'
         for tag in self.tags:
             self.batchImportManualData(tag["tag"])
         pass
+        # Push数据同步到MySql
+        self.batchImportPushata()
+
+    #Push数据同步到MySql
+    def batchImportPushata(self):
+        yestoday = LocalTime.from_today(self.time_go)
+        yestoday_str = yestoday.strftime("%Y%m%d")
+        # runner_logs = self._database["push" + yestoday_str]
+        runner_logs = self._database["push20180603"]
+        mongo_cursor = runner_logs.find()
+        try:
+            conn = MySQLHelper.pool_connection.get_connection()
+            # 创建游标
+            mysql_cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+            for row in mongo_cursor:
+                sql_str = """INSERT INTO `analysis_data_normal_total`
+                                                                          (`res_id`,
+                                                                          `title`,
+                                                                          `description`,
+                                                                          `crawl_time`,
+                                                                          `XueXingBaoLiRule`,
+                                                                          `screenshot`,
+                                                                          `screen_index`,
+                                                                          `app_tag`,
+                                                                          `category_tag`,
+                                                                          `shorturl`,
+                                                                          `create_date`,
+                                                                          `SexyRule`,
+                                                                          `PoliticalRule`,
+                                                                          `ZongJiaoRule`,
+                                                                          `BiaoTiDangRule`)
+                                                                          VALUES
+                                                                          ('%s','%s','%s','%s',%d,'%s',%s,'%s','%s','%s','%s',%d,%d,%d,%d)
+                                                                          """ % (
+                    Secret.md5(row["imgfilename"]), row["msg"],"Push消息无详情",
+                    row["time"], 0, row["imgfilename"], 1,
+                    row["tag"], "", "", yestoday_str, 0, 0, 0, 0)
+
+                SingleLogger().log.debug(sql_str)
+                row_count = mysql_cursor.execute(sql_str)
+                SingleLogger().log.debug(row_count)
+        finally:
+            pass
+
+        pass
+
+
 
     def news_reader(self, tag):
         # 先找到有哪些表需要归档的，可以从规则表找

@@ -234,22 +234,22 @@ class DeviceRunner():
     #截屏，返回文件名和完整文件路径
     def _take_photo(self):
         #在这做一下区分，如果是华为白手机，用的截图方法不一样(暂时用版本号区分)
-        if self._settings["tag"] == 'jike' or self._settings["tag"] == 'zhihu':
-            image = self.adbClient.takeSnapshot()
-            t = str(int(round(time.time() * 1000)))
-            day = time.strftime('%Y%m%d', time.localtime(time.time()))
-            file_name = day + "_" + t + ".png"
-            full_file_name = self._cur_file_dir() + "/uploads/" + file_name
-            image.save(full_file_name)
-        else:
-            image = self.adbClient.newtakeSnapshot()
-            t = str(int(round(time.time() * 1000)))
-            day = time.strftime('%Y%m%d', time.localtime(time.time()))
-            file_name = day + "_" + t + ".png"
-            full_file_name = self._cur_file_dir() + "/uploads/" + file_name
-            with open(full_file_name, 'w') as fd:
-                for line in image:
-                    fd.write(line)
+        # if self._settings["tag"] == 'jike' or self._settings["tag"] == 'zhihu':
+        #     image = self.adbClient.takeSnapshot()
+        #     t = str(int(round(time.time() * 1000)))
+        #     day = time.strftime('%Y%m%d', time.localtime(time.time()))
+        #     file_name = day + "_" + t + ".png"
+        #     full_file_name = self._cur_file_dir() + "/uploads/" + file_name
+        #     image.save(full_file_name)
+        # else:
+        image = self.adbClient.newtakeSnapshot()
+        t = str(int(round(time.time() * 1000)))
+        day = time.strftime('%Y%m%d', time.localtime(time.time()))
+        file_name = day + "_" + t + ".png"
+        full_file_name = self._cur_file_dir() + "/uploads/" + file_name
+        with open(full_file_name, 'w') as fd:
+            for line in image:
+                fd.write(line)
 
         return (file_name,full_file_name)
 

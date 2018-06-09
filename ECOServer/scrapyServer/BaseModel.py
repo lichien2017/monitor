@@ -61,11 +61,11 @@ class BaseParse(object):
         msg = {"res_id":"%s"%articleid,"time":LocalTime.get_local_date(record_date_utc,"%Y-%m-%d %H:%M:%S").strftime("%Y%m%d")}
         SingleLogger().log.debug("Rule0server.execute_all == %s",json.dumps(msg))
         Rule0server.execute_all(json.dumps(msg)) # 插入的数据格式为json
-        SingleLogger().log.debug("Rule1server.add_resource_to_all_queue == %s", json.dumps(msg))
-        Rule1server.add_resource_to_all_queue(json.dumps(msg))
+        # SingleLogger().log.debug("Rule1server.add_resource_to_all_queue == %s", json.dumps(msg))
+        # Rule1server.add_resource_to_all_queue(json.dumps(msg))
         #分发给下载资源服务
-        # queue = MyQueue(db=ConfigHelper.redisdb, host=ConfigHelper.redisip)
-        # queue.push(ConfigHelper.download_msgqueue,json.dumps(msg))
+        queue = MyQueue(db=ConfigHelper.redisdb, host=ConfigHelper.redisip)
+        queue.push(ConfigHelper.download_msgqueue,json.dumps(msg))
     #每个App解析方法重载该方法
     def tryparse(self,str):
         None
