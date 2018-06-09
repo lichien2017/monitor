@@ -28,13 +28,23 @@ class MediaDownload(Thread):
             return None
         return rows[0]
 
-    # 保存图片
-    def save_media(self,media, job):  # <5>
+    def get_full_filename(self,job):
         filename = Secret.md5(job["url"])
-        path = os.path.join(DEST_DIR, job["dir"]) # 带上日期目录
+        path = os.path.join(DEST_DIR, job["dir"])  # 带上日期目录
         if not os.path.exists(path):
             os.makedirs(path)
-        full_filename = os.path.join(DEST_DIR, job["dir"], filename) #拼接成完整路径
+        full_filename = os.path.join(DEST_DIR, job["dir"], filename)  # 拼接成完整路径
+        return full_filename
+        pass
+    # 保存图片
+    def save_media(self,media, job):  # <5>
+        # filename = Secret.md5(job["url"])
+        # path = os.path.join(DEST_DIR, job["dir"]) # 带上日期目录
+        # if not os.path.exists(path):
+        #     os.makedirs(path)
+        # full_filename = os.path.join(DEST_DIR, job["dir"], filename) #拼接成完整路径
+
+        full_filename = self.get_full_filename(job)
         with open(full_filename, 'wb') as fp:
             fp.write(media)
 
@@ -47,6 +57,10 @@ class MediaDownload(Thread):
     def download_one(self,job):
         try:
             url = job["url"]
+            full_filename = self.get_full_filename(job)
+            if os.path.isfile(full_filename): #如果文件存在
+                return url
+
             media = self.get_media(url)
         # 捕获 requests.exceptions.HTTPError
         except requests.exceptions.HTTPError as exc:  #
