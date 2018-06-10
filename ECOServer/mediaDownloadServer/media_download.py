@@ -42,7 +42,7 @@ class MediaDownload(Thread):
         table = mongodb["download_url"]
         #row = table.find_one({"url": Secret.md5(url)})  # 检查url是否存在，
         #这里应该做剔除重复判断，但是并行处理可能会有问题，所以不做剔除重复
-        table.insert({"url": Secret.md5(url), "full_filename": full_filename})
+        table.insert({"url": Secret.md5(url), "full_filename": full_filename,"filename":full_filename.replace("/usr/local/ECOServer/mediaDownloadServer/files","")})
         pass
     # 构造被下载文件的完整路径
     def get_full_filename(self,job):
