@@ -27,7 +27,24 @@ class MediaDownload(Thread):
         if rows == None or rows.count() == 0:
             return None
         return rows[0]
-
+    # 检查要下载的文件是否存在数据库中，并且
+    def check_download_url(self,url):
+        mongodb = self._client['crawlnews']
+        table = mongodb["download_url"]
+        row = table.find_one({"url":Secret.md5(url)}) # 检查url是否存在，
+        if row == None :
+            return None
+        return row["full_filename"]
+        pass
+    # 将新的下载文件路径写入数据库
+    def write_download_url(self,url,full_filename):
+        mongodb = self._client['crawlnews']
+        table = mongodb["download_url"]
+        #row = table.find_one({"url": Secret.md5(url)})  # 检查url是否存在，
+        #这里应该做剔除重复判断，但是并行处理可能会有问题，所以不做剔除重复
+        table.insert({"url": Secret.md5(url), "full_filename": full_filename})
+        pass
+    # 构造被下载文件的完整路径
     def get_full_filename(self,job):
         filename = Secret.md5(job["url"])
         path = os.path.join(DEST_DIR, job["dir"])  # 带上日期目录
@@ -37,14 +54,14 @@ class MediaDownload(Thread):
         return full_filename
         pass
     # 保存图片
-    def save_media(self,media, job):  # <5>
+    def save_media(self,media, full_filename):  # <5>
         # filename = Secret.md5(job["url"])
         # path = os.path.join(DEST_DIR, job["dir"]) # 带上日期目录
         # if not os.path.exists(path):
         #     os.makedirs(path)
         # full_filename = os.path.join(DEST_DIR, job["dir"], filename) #拼接成完整路径
 
-        full_filename = self.get_full_filename(job)
+        # full_filename = self.get_full_filename(job)
         with open(full_filename, 'wb') as fp:
             fp.write(media)
 
@@ -56,8 +73,15 @@ class MediaDownload(Thread):
     # 下载媒体，并保存
     def download_one(self,job):
         try:
+            write = False
             url = job["url"]
-            full_filename = self.get_full_filename(job)
+            # 检查数据库是否有相同的下载路径
+            result = self.check_download_url(url)
+            if result == None:
+                write = True # 表示新生成了一个文件路径
+                full_filename = self.get_full_filename(job)
+            else:
+                full_filename = result
             if os.path.isfile(full_filename): #如果文件存在
                 return url
 
@@ -67,7 +91,10 @@ class MediaDownload(Thread):
             # 如果有异常 直接抛出
             raise
         else:
-            self.save_media(media, job)
+            self.save_media(media, full_filename)
+            # 将数据写入到数据库中
+            if write: # 新建的路径才需要写入数据库
+                self.write_download_url(url,full_filename)
         return url
     # 批量下载媒体文件
     def download_many(self,cc_list):
