@@ -4,6 +4,8 @@ MAINTAINER lichien@qq.com
 
 RUN mkdir /usr/local/ECOServer/
 
+RUN mkdir /usr/local/ECOServer/files
+
 COPY requirements.txt .
 
 RUN pip install --upgrade pip
