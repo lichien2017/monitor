@@ -93,10 +93,13 @@ class DeviceRunner():
     #     stdout, stderr = screenExecute.communicate()
 
     def _running(self):
+        log.debug("0000")
         # 调高亮度
         self.adbClient.luminance('150')
+        log.debug("1111")
         # 打开App
         result = self._launch_app(self._settings["categroy"] + "/" + self._settings["activity"])
+        log.debug("2222")
         if result !=0:
             return False
         # app唯一标识
