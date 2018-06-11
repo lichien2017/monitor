@@ -226,6 +226,19 @@ class Collector(Thread):
         cursor.close()
         conn.close()
         pass
+    # 移除掉空的数据
+    def remove_all_empty_data(self,date):
+        conn = MySQLHelper.pool_connection.get_connection()
+        # 创建游标
+        cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+
+        row_count = cursor.execute("""
+                                delete from `analysis_data_normal_total`
+                                where create_date = '%s' and (`BiaoTiDangRule`+`PoliticalRule`+`SexyRule`+`XueXingBaoLiRule`+`ZongJiaoRule`)=0
+                                """ % (date))
+        cursor.close()
+        conn.close()
+        pass
     # 统计指定时间的数据
     def total_count(self,date):
         conn = MySQLHelper.pool_connection.get_connection()
@@ -368,6 +381,10 @@ where create_date = '%s'
         pass
         # Push数据同步到MySql
         self.batchImportPushata()
+        # 删除空数据
+        yestoday = LocalTime.from_today(self.time_go)
+        yestoday_str = yestoday.strftime("%Y%m%d")
+        self.remove_all_empty_data(yestoday_str)
 
     #Push数据同步到MySql
     def batchImportPushata(self):
