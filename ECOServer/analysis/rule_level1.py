@@ -83,7 +83,12 @@ class BaseLevel1Rule(Rule,Thread):
                                 tmp_res = self._get_resource("%s" % res_recv[0], res_recv[1])
                                 if not key.isdigit() :
                                     # lzq 20180608 增加对视频的处理
-                                    total_table.insert({"res_id": "%s" % res_recv[0],"badkey":"%s" % key.decode("utf-8"),"badcontent":tmp_res[key.decode("utf-8")],"app_tag":tmp_res["app_tag"],"category_tag":tmp_res["category_tag"]})
+                                    tmp_content = ""
+                                    if key.decode("utf-8").startswith("video"):
+                                        tmp_content = tmp_res["video"]
+                                    else:
+                                        tmp_content = tmp_res[key.decode("utf-8")]
+                                    total_table.insert({"res_id": "%s" % res_recv[0],"badkey":"%s" % key.decode("utf-8"),"badcontent":tmp_content,"app_tag":tmp_res["app_tag"],"category_tag":tmp_res["category_tag"]})
                                 else:
                                     logo = tmp_res["logo"].split(",")
                                     images = tmp_res["gallary"].split(",")
