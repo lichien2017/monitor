@@ -232,9 +232,10 @@ class Collector(Thread):
         # 创建游标
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
-        row_count = cursor.execute("""
-                                delete from `analysis_data_normal_total`
-                                where create_date = '%s' and (`BiaoTiDangRule`+`PoliticalRule`+`SexyRule`+`XueXingBaoLiRule`+`ZongJiaoRule`)=0
+        row_count = cursor.execute("""delete `analysis_data_normal_total`
+                            where (`BiaoTiDangRule`+`PoliticalRule`+`SexyRule`+`XueXingBaoLiRule`+`ZongJiaoRule`
+                            +top_news+ad_news+hot_news+topic_news+we_media)=0 and create_date = '%s'
+                            and status =0 and app_tag not in (select tag from `app_information` where `isartificial`=1)
                                 """ % (date))
         cursor.close()
         conn.close()
