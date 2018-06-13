@@ -37,7 +37,7 @@ class Setting(Thread):
             # 对查询出的数据进行处理
             rulesv = "";
             for record in rulesdata:
-                v = "{'pkg':'%s','regStr':'%s'}" % (
+                v = "{'tag':'%s','regStr':'%s'}" % (
                     record[1], record[2])
                 rulesv += v + ","
             value = json.dumps(rulesv[:-1], ensure_ascii=False)
