@@ -76,7 +76,7 @@ class Setting(Thread):
                             record[6], record[9], record[7], record[1])
                         runv += v + ","
                     value = json.dumps(runv[:-1], ensure_ascii=False)
-                    value = "'deviceid': '%s'," % phonenum + "'repeattime': '%s'," % repeat_time \
+                    value = "'deviceid': '%s'," % phonenum + "'repeattime':'%s'," % repeat_time \
                             + "'runner': [" + value.replace("\"", "") + "]"
                     value = "{" + value.replace("\'", "\"") + "}"
                     group += value + ","
@@ -102,7 +102,7 @@ class Setting(Thread):
         cursor = self.sdb.cursor()
         self.applist(cursor)
         self.rules(cursor)
-        self.groupchannel(cursor)
+        # self.groupchannel(cursor)
         self.training_models(cursor)
 
 
