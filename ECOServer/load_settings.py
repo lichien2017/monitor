@@ -47,7 +47,7 @@ class Setting(Thread):
 
     def groupchannel(self, cursor):
         #  使用execute方法执行SQL语句
-        cursor.execute("SELECT * FROM crawl_rules")
+        cursor.execute("SELECT * FROM v_deviceinformation WHERE isonline=1")
         # 使用 fetchone() 方法获
         # 取一条数据
         phonedata = cursor.fetchall()
@@ -57,7 +57,7 @@ class Setting(Thread):
             # 对查询出的数据进行处理
             group = "";
             for record in phonedata:
-                repeat_time = record[1]
+                repeat_time = record[7]
                 phonenum = record[0]
                 sql = "SELECT * FROM crawl_runner WHERE device_serialnum='" + phonenum + "' AND isonline =1"
                 cursor.execute(sql)
