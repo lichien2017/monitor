@@ -114,10 +114,10 @@ class Setting(Thread):
         self.redis = redis.Redis(host=ConfigHelper.redisip, port=ConfigHelper.redisport, db=ConfigHelper.redisdb)
         # mysql使用cursor()方法获取操作游标
         cursor = self.sdb.cursor()
-        # self.applist(cursor)
-        # self.rules(cursor)
+        self.applist(cursor)
+        self.rules(cursor)
         self.groupchannel(cursor)
-        # self.training_models(cursor)
+        self.training_models(cursor)
 
 
 if __name__ == '__main__':
