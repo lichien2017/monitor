@@ -59,7 +59,7 @@ class Setting(Thread):
             for record in phonedata:
                 repeat_time = record[1]
                 phonenum = record[0]
-                sql = "SELECT * FROM crawl_runner WHERE device_serialnum='" + phonenum + "' AND isonline =1";
+                sql = "SELECT * FROM crawl_runner WHERE device_serialnum='" + phonenum + "' AND isonline =1"
                 cursor.execute(sql)
                 # 使用 fetchone() 方法获取一条数据
                 rundata = cursor.fetchall()
@@ -68,18 +68,32 @@ class Setting(Thread):
                 else:
                     runv = ""
                     for record in rundata:
-                        v = "{'activity':'%s','categroy':'%s','clickpoint':'%s','endpoint':'%s','headscreencount':'%s','imgserver':'%s'," \
-                            "'imp_class':'%s','imp_module':'%s','reference':'%s','setuptime':'%s','sleeptime':'%s'" \
-                            ",'speed':'%s','startpoint':'%s','tag':'%s'}" % (
-                            record[2], record[3], record[5], record[8], record[14],
-                            record[10], record[12], record[11], record[13], record[4],
-                            record[6], record[9], record[7], record[1])
-                        runv += v + ","
+                        appsql = "SELECT * FROM app_information WHERE tag = '"+record[1] +"'AND isonline = 1"
+                        cursor.execute(appsql)
+                        # 使用 fetchone() 方法获取一条数据
+                        appdata = cursor.fetchall()
+                        if bool(appdata) != True:
+                            print("( ⊙ o ⊙ )啊哦，App下线了？")
+                            return
+                        referencesql ="SELECT * FROM app_category WHERE app_tag= '"+record[1]+"' AND tag='"+record[13]+"' AND isonline=1"
+                        cursor.execute(referencesql)
+                        # 使用 fetchone() 方法获取一条数据
+                        referencedata = cursor.fetchall()
+                        if bool(referencedata) != True:
+                            print("( ⊙ o ⊙ )啊哦，App栏目下线了？")
+                            return
+                        dict = {'activity':record[2],'categroy':record[3],'clickpoint':record[5],'endpoint': record[8],
+                                'headscreencount':record[14],'imgserver':record[10],'imp_class':record[12],
+                                'imp_module':record[11],'reference':record[13],'setuptime':record[4],
+                                'sleeptime':record[6],'speed':record[9],'startpoint':record[7],'tag':record[1]}
+                        runv += str(dict) + ","
                     value = json.dumps(runv[:-1], ensure_ascii=False)
                     value = "'deviceid': '%s'," % phonenum + "'repeattime':'%s'," % repeat_time \
                             + "'runner': [" + value.replace("\"", "") + "]"
                     value = "{" + value.replace("\'", "\"") + "}"
                     group += value + ","
+            group = group.replace("\"repeattime\":\"", "\"repeattime\":")
+            group = group.replace("\",\"runner\":", ",\"runner\":")
             self.redis.set('groupchannel', "[" + group[:-1] + "]")
 
     def training_models(self, cursor):
@@ -100,10 +114,10 @@ class Setting(Thread):
         self.redis = redis.Redis(host=ConfigHelper.redisip, port=ConfigHelper.redisport, db=ConfigHelper.redisdb)
         # mysql使用cursor()方法获取操作游标
         cursor = self.sdb.cursor()
-        self.applist(cursor)
-        self.rules(cursor)
-        # self.groupchannel(cursor)
-        self.training_models(cursor)
+        # self.applist(cursor)
+        # self.rules(cursor)
+        self.groupchannel(cursor)
+        # self.training_models(cursor)
 
 
 if __name__ == '__main__':
