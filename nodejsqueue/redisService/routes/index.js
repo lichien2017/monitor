@@ -160,6 +160,7 @@ var insertPushData = function(db, insertData,callback) {
     //             (mydate.getDate() >= 10 ? mydate.getDate() : '0' + mydate.getDate())
 
     var day = insertData.time.substr(0,10);
+    day = day.replace("-","");
     var tablename = "push" + day;
     //统一时间格式
     insertData.imgfilename =insertData.imgfilename.replace("_","/")
