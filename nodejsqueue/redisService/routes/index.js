@@ -161,6 +161,7 @@ var insertPushData = function(db, insertData,callback) {
 
     var day = insertData.time.substr(0,10);
     day = day.replace("-","");
+    day = day.replace("-","");
     var tablename = "push" + day;
     //统一时间格式
     insertData.imgfilename =insertData.imgfilename.replace("_","/")
