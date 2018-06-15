@@ -65,7 +65,7 @@ class ZhiHuParse(BaseParse):
                 title = data['target']['title']
                 logo = data['target']['image_url']
                 Id = str(data['target']['id'])
-                url = "https://zhuanlan.zhihu.com/p/"+Id+"?utm_source=qq&utm_medium=social"
+                url = "https://zhuanlan.zhihu.com/p/"+Id
             articleid = uuid.uuid1();
             #摘要
             abstract = data['target']['excerpt']
