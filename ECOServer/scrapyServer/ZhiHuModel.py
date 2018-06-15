@@ -10,6 +10,8 @@ import hashlib
 import uuid
 import sys
 from util.log import SingleLogger
+import requests as rq
+from bs4 import BeautifulSoup
 #log = Logger()
 
 class ZhiHuParse(BaseParse):
@@ -42,8 +44,7 @@ class ZhiHuParse(BaseParse):
             if videos == 1:
                 #文章中有视频
                 restype = 3
-                gallary = data['target']['thumbnail_extra_info']['playlist']['hd']['url']
-                video=gallary
+                video = data['target']['thumbnail_extra_info']['playlist']['hd']['url']
             try:
                 # 普通文章
                 questionfind = data['target']['question']
@@ -73,7 +74,8 @@ class ZhiHuParse(BaseParse):
             publish_time = data['target']['created_time']
             publish_timestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(int(publish_time) / 1000))
 
-            content = url
+            content = self.getWen(url)
+            gallary = self.getImg(url)
         elif category == "热榜":
             hottype =  data['target']['label_area']['type']
             if hottype == 'text':
@@ -88,7 +90,8 @@ class ZhiHuParse(BaseParse):
             # 没有发布时间，用当前时间暂替
             publish_time = crawltime
             publish_timestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(crawltime / 1000))
-            content = url
+            content = self.getWen(url)
+            gallary = self.getImg(url)
         crawltimestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(crawltime / 1000))
 
         SingleLogger().log.debug(title)
@@ -141,4 +144,60 @@ class ZhiHuParse(BaseParse):
         list = data['data']
         for y, x in enumerate(list):
             self.Analysis_bdxw(x, category, crawltime, y,categorytag)
+
+
+   # 获取图片main
+
+    def getImgMain(self):
+        html = rq.get(urls).text
+        soup = BeautifulSoup(html, "html.parser")  # 文档对象
+        imgStr = ""
+        for k in soup.find_all('img'):  # 获取img
+            imgStr += k['src'] + ","
+        return imgStr
+
+        # 获取文字main
+
+    def getWenMain(self):
+        html = rq.get(urls).text
+        soup = BeautifulSoup(html, "html.parser")  # 文档对象
+        # imgStrArr = soup.find_all('div', class_="Nfgz6aIyFCi3vZUoFGKEr")
+        imgStrArr = soup.find_all('body')
+        print(len(imgStrArr))
+        if len(imgStrArr) == 0:
+            return ''
+        else:
+            return imgStrArr[0]
+
+        # 获取视频main
+
+    def getVideoMain(self):
+        html = rq.get(urls).text
+        soup = BeautifulSoup(html, "html.parser")  # 文档对象
+        imgStr = ""
+        for k in soup.find_all('video'):
+            imgStr += k['src'] + ","
+        return imgStr
+
+        # 获取图片
+
+    def getImg(self, link):
+        global urls
+        urls = link
+        return self.getImgMain()
+
+        # 获取图文
+
+    def getWen(self, link):
+        global urls
+        urls = link
+        return str(self.getWenMain())
+
+        # 获取视频
+
+    def getVideo(self, link):
+        global urls
+        urls = link
+        return self.getVideoMain()
+
 
