@@ -6,7 +6,7 @@ import sys
 from time import sleep
 from pymongo import MongoClient
 from util import *
-
+from bs4 import BeautifulSoup
 # log = Logger()
 #消息队列
 class MyQueue(object):
@@ -70,7 +70,38 @@ class BaseParse(object):
     #每个App解析方法重载该方法
     def tryparse(self,str):
         None
+    # 获取html中的图片列表
+    def getHtmlImages(self,url):
+        # html = rq.get(urls).text
+        html = Http.get(url)
+        soup = BeautifulSoup(html, "html.parser")  # 文档对象
+        imgStr = ""
+        for k in soup.find_all('img'):  # 获取img
+            imgStr += k['src'] + ","
+        return imgStr
 
+    # 获取html的body内容
+    def getHtmlBody(self,url):
+        # html = rq.get(urls).text
+        html = Http.get(url)
+        soup = BeautifulSoup(html, "html.parser")  # 文档对象
+        # imgStrArr = soup.find_all('div', class_="Nfgz6aIyFCi3vZUoFGKEr")
+        body = soup.find('body')
+        # print(len(imgStrArr))
+        if body == None :
+            return ''
+        else:
+            return body
+
+    # 获取html中的视频列表
+    def getHtmlVideos(self,url):
+        # html = rq.get(urls).text
+        html = Http.get(url)
+        soup = BeautifulSoup(html, "html.parser")  # 文档对象
+        imgStr = ""
+        for k in soup.find_all('video'):
+            imgStr += k['src'] + ","
+        return imgStr
 #生成md5
 def genearteMD5(strs):
     return Secret.md5(strs)

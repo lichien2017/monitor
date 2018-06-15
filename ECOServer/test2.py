@@ -33,7 +33,7 @@ def go(index):
     finally:
         mongodb_client.close()
 if __name__ == '__main__':
-
+    body = Http.get("http://zhuanlan.zhihu.com/p/34987004")
     # for index in range(4,31):
     #     go(index)
     index = 1

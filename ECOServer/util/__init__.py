@@ -5,10 +5,11 @@ from util.tools import Secret
 from util.tools import Tools
 from util.log import SingleLogger
 from util.db import RedisHelper
+from util.http import Http
 __version__ = '1.0.0'
 VERSION = tuple(map(int, __version__.split('.')))
 
 
 __all__ = [
-    'Logger',"LocalTime","ConfigHelper","Secret","Tools","SingleLogger","RedisHelper"
+    'Logger',"LocalTime","ConfigHelper","Secret","Tools","SingleLogger","RedisHelper","Http"
 ]
