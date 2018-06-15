@@ -34,7 +34,7 @@ class BaseLevel1Rule(Rule,Thread):
                 resource = self._get_resource(res_msg["res_id"], res_msg["time"])
                 if resource != None:
                     SingleLogger().log.debug("%s 获取到数据:%s" % (self.__class__.__name__, resource))
-                    self.execute_other(res_msg["res_id"], resource, res_msg["time"], self._extra_data)  # 扩展数据里面可能是阈值
+                    self.execute_other(res_msg["res_id"], resource, res_msg["time"], res_msg["record_time"],self._extra_data)  # 扩展数据里面可能是阈值
             else:
                 time.sleep(1)
         pass
