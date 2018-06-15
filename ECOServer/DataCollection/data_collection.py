@@ -391,8 +391,7 @@ where create_date = '%s'
     def batchImportPushata(self):
         yestoday = LocalTime.from_today(self.time_go)
         yestoday_str = yestoday.strftime("%Y%m%d")
-        # runner_logs = self._database["push" + yestoday_str]
-        runner_logs = self._database["push20180603"]
+        runner_logs = self._database["push" + yestoday_str]
         mongo_cursor = runner_logs.find()
         try:
             conn = MySQLHelper.pool_connection.get_connection()
