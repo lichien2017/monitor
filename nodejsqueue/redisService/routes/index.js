@@ -155,9 +155,11 @@ function mkdirsSync(dirpath, mode) {
  */
 var insertPushData = function(db, insertData,callback) {
     //以时间来分表
-    var mydate = new Date();
-    var day = mydate.getFullYear()+ (mydate.getMonth() + 1 >= 10 ? mydate.getMonth() + 1 : '0' + (mydate.getMonth() + 1)) +
-                (mydate.getDate() >= 10 ? mydate.getDate() : '0' + mydate.getDate())
+    // var mydate = new Date();
+    // var day = mydate.getFullYear()+ (mydate.getMonth() + 1 >= 10 ? mydate.getMonth() + 1 : '0' + (mydate.getMonth() + 1)) +
+    //             (mydate.getDate() >= 10 ? mydate.getDate() : '0' + mydate.getDate())
+
+    var day = insertData.time.substr(0,10);
     var tablename = "push" + day;
     //统一时间格式
     insertData.imgfilename =insertData.imgfilename.replace("_","/")
