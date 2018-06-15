@@ -34,7 +34,7 @@ class BaseLevel1Rule(Rule,Thread):
                 resource = self._get_resource(res_msg["res_id"], res_msg["time"])
                 if resource != None:
                     SingleLogger().log.debug("%s 获取到数据:%s" % (self.__class__.__name__, resource))
-                    self.execute_other(res_msg["res_id"], resource, res_msg["time"], self._extra_data)  # 扩展数据里面可能是阈值
+                    self.execute_other(res_msg["res_id"], resource, res_msg["time"], res_msg["record_time"],self._extra_data)  # 扩展数据里面可能是阈值
             else:
                 time.sleep(1)
         pass
@@ -74,7 +74,7 @@ class BaseLevel1Rule(Rule,Thread):
                         item = table.find_one({"res_id": "%s" % res_recv[0]})
                         if item == None:
                             # 插入到指定有问题的数据表中，比如血腥暴力、色情表
-                            table.insert({"res_id": "%s" % res_recv[0],"record_time":res_recv[3]})
+                            table.insert({"res_id": "%s" % res_recv[0],"record_time":res_recv[len(res_recv)-1]})
 
                             # 同时将有问题的数据加入到每天的合计表中
                             total_table = self._mongodb["all_resource" + res_recv[1]]
