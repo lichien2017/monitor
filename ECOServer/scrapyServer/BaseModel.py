@@ -58,7 +58,8 @@ class BaseParse(object):
         my_originnews.save(sdata)
         # 把数据分发给打标服务，服务分为两类，一类基础服务（0），一类高级服务（1）
         # 数据包里面要包含标示和日期，所以要重新构建包 lzq
-        msg = {"res_id":"%s"%articleid,"time":LocalTime.get_local_date(record_date_utc,"%Y-%m-%d %H:%M:%S").strftime("%Y%m%d")}
+        msg = {"res_id":"%s"%articleid,"time":LocalTime.get_local_date(record_date_utc,"%Y-%m-%d %H:%M:%S").strftime("%Y%m%d"),
+               "record_time":sdata["crawltimestr"]}
         SingleLogger().log.debug("Rule0server.execute_all == %s",json.dumps(msg))
         Rule0server.execute_all(json.dumps(msg)) # 插入的数据格式为json
         # SingleLogger().log.debug("Rule1server.add_resource_to_all_queue == %s", json.dumps(msg))

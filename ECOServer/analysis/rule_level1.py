@@ -44,7 +44,7 @@ class BaseLevel1Rule(Rule,Thread):
             if item != None:
                 SingleLogger().log.debug(item)
                 # print(self._mongodb_tablename)
-                res_recv = item.decode("utf-8").split(",")  # res_id,time
+                res_recv = item.decode("utf-8").split(",")  # res_id,time,record_time|res_id,time,video,record_time
                 sub_job = "sendjob:%s:%s" % (self.__class__.__name__, res_recv[0])  # 子任务消息key
                 SingleLogger().log.info(sub_job)
                 hset_keys = RedisHelper.strict_redis.hkeys(sub_job)  # 得到任务所有keys，用于检查是否完成校验，等到服务返回
@@ -74,7 +74,7 @@ class BaseLevel1Rule(Rule,Thread):
                         item = table.find_one({"res_id": "%s" % res_recv[0]})
                         if item == None:
                             # 插入到指定有问题的数据表中，比如血腥暴力、色情表
-                            table.insert({"res_id": "%s" % res_recv[0]})
+                            table.insert({"res_id": "%s" % res_recv[0],"record_time":res_recv[3]})
 
                             # 同时将有问题的数据加入到每天的合计表中
                             total_table = self._mongodb["all_resource" + res_recv[1]]

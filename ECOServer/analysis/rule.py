@@ -41,7 +41,7 @@ class Rule:
     # 通过资源id和资源抓取的时间找到资源详情
     def _get_resource(self,res_id,date):
         SingleLogger().log.debug("_get_resource:%s" % res_id)
-        SingleLogger().log.debug("_mongodb = %s",'crawlnews'+LocalTime.get_local_date(date,"%Y%m%d").strftime("%Y%m"))
+        #SingleLogger().log.debug("_mongodb = %s",'crawlnews'+LocalTime.get_local_date(date,"%Y%m%d").strftime("%Y%m"))
         self._mongodb = self._mongodb_client['crawlnews']
         # 从指定日期的分表中查询数据
         SingleLogger().log.debug("table = %s", "originnews"+date)
@@ -51,7 +51,7 @@ class Rule:
         SingleLogger().log.debug(res)
         return res
     # 0 level规则处理函数
-    def _level0_execute(self,res_id,resource,table,extra=None):
+    def _level0_execute(self,res_id,resource,table,record_time,extra=None):
         if self._res_columns == None or self._extra_data == None :
             SingleLogger().log.debug("_level0_execute 函数没有可用的数据执行")
             return
@@ -61,7 +61,7 @@ class Rule:
                 if resource[col] == keyword or resource[col].find(keyword) >=0:  # 匹配关键字
                     # 关键字匹配上了，插入到对应的数据表格中
                     #table = self._mongodb[self._mongodb_tablename+LocalTime.now_str()]
-                    table.insert({"res_id": res_id})
+                    table.insert({"res_id": res_id,"record_time":record_time})
                     return
     # 创建子任务id
     def build_sub_job_id(self,res_id):
@@ -80,7 +80,7 @@ class Rule:
 
         return normal_msg
     # 非0 level规则处理函数
-    def execute_other(self,res_id,resource,crawl_time_str,extra=None):
+    def execute_other(self,res_id,resource,crawl_time_str,record_time,extra=None):
         SingleLogger().log.debug('其他处理方式') # 但是这里不需要实现，由各实现类的线程函数直接处理了，如果实现了，那实质上是同步调用方式
         if resource == None :
             return
@@ -118,7 +118,7 @@ class Rule:
                 RedisHelper.strict_redis.hset(sub_job, col, -1)
                 normal_msg["seq"] = col
                 normal_msg["data"] = [resource[col]]
-                normal_msg["resdata"] = "%s,%s" % (res_id,crawl_time_str)
+                normal_msg["resdata"] = "%s,%s,%s" % (res_id,crawl_time_str,record_time)
                 SingleLogger().log.debug("title package:%s", normal_msg)
                 # 将数据插入到指定的处理消息队列
                 RedisHelper.strict_redis.lpush(self.queue_name_text, json.dumps(normal_msg))
@@ -137,7 +137,7 @@ class Rule:
             RedisHelper.strict_redis.hset(sub_job, index, -1)
             normal_msg["seq"] = index
             normal_msg["data"] = [x,"%s/%s/%s"%(ConfigHelper.download_savepath,crawl_time_str,Secret.md5(x)),"%s/%s" % (media_savepath,Secret.md5(x))]
-            normal_msg["resdata"] = "%s,%s" % (res_id,crawl_time_str)
+            normal_msg["resdata"] = "%s,%s,%s" % (res_id,crawl_time_str,record_time)
             RedisHelper.strict_redis.lpush(self.queue_name_image, json.dumps(normal_msg))
             index += 1
 
@@ -147,7 +147,7 @@ class Rule:
             normal_msg["seq"] = index
             normal_msg["data"] = [x, "%s/%s/%s" % (ConfigHelper.download_savepath,crawl_time_str, Secret.md5(x)),
                                   "%s/%s" % (media_savepath, Secret.md5(x))]
-            normal_msg["resdata"] = "%s,%s" % (res_id,crawl_time_str)
+            normal_msg["resdata"] = "%s,%s,%s" % (res_id,crawl_time_str,record_time)
             RedisHelper.strict_redis.lpush(self.queue_name_image, json.dumps(normal_msg))
             index += 1
 
@@ -159,7 +159,7 @@ class Rule:
             normal_msg["seq"] = "video%s" % index
             normal_msg["data"] = [x, "%s/%s/%s" % (ConfigHelper.download_savepath, crawl_time_str, Secret.md5(x)),
                                   "%s" % (media_savepath)]
-            normal_msg["resdata"] = "%s,%s,%s:video" % (res_id, crawl_time_str,self.__class__.__name__)
+            normal_msg["resdata"] = "%s,%s,%s:video,%s" % (res_id, crawl_time_str,self.__class__.__name__,record_time)
             # 将视频解析的任务发到视频处理消息队列中
             RedisHelper.strict_redis.lpush(ConfigHelper.video_all_msgqueue, json.dumps(normal_msg))
             index += 1
@@ -179,9 +179,9 @@ class Rule:
                 rows = table.find({"res_id": item["res_id"]})
                 if rows.count() == 0:  # 如果不存在数据表中，则开始判断是否能匹配上规则
                     if self._level == 0 :
-                        self._level0_execute(item["res_id"],resource,table,extra)
+                        self._level0_execute(item["res_id"],resource,table,item["record_time"],extra)
                     else:
-                        self.execute_other(item["res_id"],resource,item["time"],extra)
+                        self.execute_other(item["res_id"],resource,item["time"],item["record_time"],extra)
             except Exception as e:
                 SingleLogger().log.error(e)
                 pass
