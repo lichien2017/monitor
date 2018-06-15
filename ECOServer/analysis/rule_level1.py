@@ -74,7 +74,7 @@ class BaseLevel1Rule(Rule,Thread):
                         item = table.find_one({"res_id": "%s" % res_recv[0]})
                         if item == None:
                             # 插入到指定有问题的数据表中，比如血腥暴力、色情表
-                            table.insert({"res_id": "%s" % res_recv[0],"record_time":res_recv[3]})
+                            table.insert({"res_id": "%s" % res_recv[0],"record_time":res_recv[len(res_recv)-1]})
 
                             # 同时将有问题的数据加入到每天的合计表中
                             total_table = self._mongodb["all_resource" + res_recv[1]]
