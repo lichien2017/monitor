@@ -58,18 +58,23 @@ class BaseParse(object):
                 SingleLogger().log.debug("有相同的title数据=%s" % title)
                 return
         #插入数据库
-        my_originnews.save(sdata)
-        # 把数据分发给打标服务，服务分为两类，一类基础服务（0），一类高级服务（1）
-        # 数据包里面要包含标示和日期，所以要重新构建包 lzq
-        msg = {"res_id":"%s"%articleid,"time":LocalTime.get_local_date(record_date_utc,"%Y-%m-%d %H:%M:%S").strftime("%Y%m%d"),
-               "record_time":"%s" % sdata["crawltimestr"]}
-        SingleLogger().log.debug("Rule0server.execute_all == %s",json.dumps(msg))
-        Rule0server.execute_all(json.dumps(msg)) # 插入的数据格式为json
-        # SingleLogger().log.debug("Rule1server.add_resource_to_all_queue == %s", json.dumps(msg))
-        # Rule1server.add_resource_to_all_queue(json.dumps(msg))
-        #分发给下载资源服务
-        queue = MyQueue(db=ConfigHelper.redisdb, host=ConfigHelper.redisip)
-        queue.push(ConfigHelper.download_msgqueue,json.dumps(msg))
+        SingleLogger().log.debug("save db5 %s" % "originnews" + record_date.strftime("%Y%m%d"))
+        try:
+            my_originnews.save(sdata)
+        except Exception as ex :
+            SingleLogger().log.error(ex)
+        else:
+            # 把数据分发给打标服务，服务分为两类，一类基础服务（0），一类高级服务（1）
+            # 数据包里面要包含标示和日期，所以要重新构建包 lzq
+            msg = {"res_id":"%s"%articleid,"time":LocalTime.get_local_date(record_date_utc,"%Y-%m-%d %H:%M:%S").strftime("%Y%m%d"),
+                   "record_time":"%s" % sdata["crawltimestr"]}
+            SingleLogger().log.debug("Rule0server.execute_all == %s",json.dumps(msg))
+            Rule0server.execute_all(json.dumps(msg)) # 插入的数据格式为json
+            # SingleLogger().log.debug("Rule1server.add_resource_to_all_queue == %s", json.dumps(msg))
+            # Rule1server.add_resource_to_all_queue(json.dumps(msg))
+            #分发给下载资源服务
+            queue = MyQueue(db=ConfigHelper.redisdb, host=ConfigHelper.redisip)
+            queue.push(ConfigHelper.download_msgqueue,json.dumps(msg))
     #每个App解析方法重载该方法
     def tryparse(self,str):
         None
