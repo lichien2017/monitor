@@ -34,18 +34,19 @@ class BaseParse(object):
     #插入mongodb
     def db(self,sdata,articleid,title):
         conn = MongoClient(ConfigHelper.mongodbip, ConfigHelper.mongodbport)
-
+        SingleLogger().log.debug("save db1 %s" % articleid)
         # 待插入数据的时期
         record_date = LocalTime.get_local_date(sdata["crawltimestr"],"%Y-%m-%d %H:%M:%S")
         pub_date = LocalTime.get_local_date(sdata["pubtimestr"], "%Y-%m-%d %H:%M:%S")
-
+        SingleLogger().log.debug("save db2 %s" % articleid)
         record_date_utc = sdata["crawltimestr"]
         # 时间修正一下，改为本地时间
         sdata["crawltimestr"] = record_date.strftime("%Y-%m-%d %H:%M:%S")
         sdata["pubtimestr"]= pub_date.strftime("%Y-%m-%d %H:%M:%S")
-
+        SingleLogger().log.debug("save db3 %s" % articleid)
         db = conn["crawlnews"]  #连接crawlnews数据库 ,这里按月来分库
         my_originnews = db["originnews"+record_date.strftime("%Y%m%d")]  # lzq 修改，把数据存入每天的分表
+        SingleLogger().log.debug("save db4 %s" % "originnews"+record_date.strftime("%Y%m%d"))
         #查询是否存在此唯一标识的数据
         artcount= my_originnews.find({"identity": str(articleid)}).count()
         if artcount>0:
