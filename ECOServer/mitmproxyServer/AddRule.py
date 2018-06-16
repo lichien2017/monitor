@@ -39,7 +39,7 @@ class AddRule:
             # print(flow.request.method)
             # print("result=%s"%flow.response.content.decode("utf-8"))
             post_data = {}
-            post_data["tag"] = ""
+            post_data["tag"] = tag
             post_data["url"] = flow.request.url
             post_data["data"] = flow.response.content.decode("utf-8")
             post_data["post"] = flow.request.content.decode("utf-8")
