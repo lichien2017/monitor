@@ -95,33 +95,38 @@ class ZhiHuParse(BaseParse):
         crawltimestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(crawltime / 1000))
 
         SingleLogger().log.debug(title)
-        sdata = {
-            "title": title,
-            "description": abstract,
-            "content": content,
-            "source": source,
-            "pubtimestr": publish_timestr,
-            "pubtime": publish_time,
-            "crawltimestr": crawltimestr,
-            "crawltime": crawltime,
-            "status": 0,
-            "shorturl": url,
-            "logo": logo,
-            "labels": tab,
-            "keyword": "",
-            "seq": seq,
-            "identity": str(articleid),
-            "appname": self.appname,
-            "app_tag": self.apptag,
-            "category_tag":categorytag,
-            "category": category,
-            "restype": restype,
-            "gallary": gallary,
-            "video": video,
-            "audio": audio
-        }
-        SingleLogger().log.debug(sdata)
-        self.db(sdata, articleid, title)
+        try:
+            sdata = {
+                "title": title,
+                "description": abstract,
+                "content": content,
+                "source": source,
+                "pubtimestr": publish_timestr,
+                "pubtime": publish_time,
+                "crawltimestr": crawltimestr,
+                "crawltime": crawltime,
+                "status": 0,
+                "shorturl": url,
+                "logo": logo,
+                "labels": tab,
+                "keyword": "",
+                "seq": seq,
+                "identity": str(articleid),
+                "appname": self.appname,
+                "app_tag": self.apptag,
+                "category_tag":categorytag,
+                "category": category,
+                "restype": restype,
+                "gallary": gallary,
+                "video": video,
+                "audio": audio
+            }
+        except Exception as ex :
+            SingleLogger().log.error(ex)
+            pass
+        else:
+            SingleLogger().log.debug(sdata)
+            self.db(sdata, articleid, title)
 
     def tryparse(self, str):
         # 转换编码格式
