@@ -99,7 +99,7 @@ class BaseParse(object):
         if body == None :
             return ''
         else:
-            return body
+            return body.text
 
     # 获取html中的视频列表
     def getHtmlVideos(self,url):
