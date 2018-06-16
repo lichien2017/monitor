@@ -74,7 +74,7 @@ class ZhiHuParse(BaseParse):
             publish_time = data['target']['created_time']
             publish_timestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(int(publish_time) / 1000))
 
-            content = self.getHtmlBody(url)
+            content = self.getHtmlBodyInnerText(url)
             gallary = self.getHtmlImages(url)
         elif category == "热榜":
             hottype =  data['target']['label_area']['type']
@@ -90,7 +90,7 @@ class ZhiHuParse(BaseParse):
             # 没有发布时间，用当前时间暂替
             publish_time = crawltime
             publish_timestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(crawltime / 1000))
-            content = self.getHtmlBody(url)
+            content = self.getHtmlBodyInnerText(url)
             gallary = self.getHtmlImages(url)
         crawltimestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(crawltime / 1000))
 

@@ -89,7 +89,7 @@ class BaseParse(object):
         return imgStr
 
     # 获取html的body内容
-    def getHtmlBody(self,url):
+    def getHtmlBodyInnerText(self,url):
         # html = rq.get(urls).text
         html = Http.get(url)
         soup = BeautifulSoup(html, "html.parser")  # 文档对象
