@@ -125,7 +125,7 @@ class ZhiHuParse(BaseParse):
             SingleLogger().log.error(ex)
             pass
         else:
-            SingleLogger().log.debug(sdata)
+            #SingleLogger().log.debug(sdata)
             self.db(sdata, articleid, title)
 
     def tryparse(self, str):

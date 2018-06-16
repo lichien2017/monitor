@@ -49,10 +49,12 @@ class BaseParse(object):
         #查询是否存在此唯一标识的数据
         artcount= my_originnews.find({"identity": str(articleid)}).count()
         if artcount>0:
+            SingleLogger().log.debug("有相同的id数据=%s" % articleid)
             sdata['identity']=genearteMD5(title+str(articleid))
             #查询是否存在此标题的数据
             titlecount= my_originnews.find({"title": str(title)}).count()
             if titlecount>0:
+                SingleLogger().log.debug("有相同的title数据=%s" % title)
                 return
         #插入数据库
         my_originnews.save(sdata)
