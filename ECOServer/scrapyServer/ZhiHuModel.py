@@ -120,6 +120,7 @@ class ZhiHuParse(BaseParse):
             "video": video,
             "audio": audio
         }
+        SingleLogger().log.debug(sdata)
         self.db(sdata, articleid, title)
 
     def tryparse(self, str):
