@@ -16,36 +16,36 @@ class Collector(Thread):
         self.thread_stop = False
         pass
     # 处理单列的有害数据
-    def copy_data_one_column(self,table_name,rule_tag,date):
-        if table_name == None:
-            SingleLogger().log.debug("table_name is None")
-            return
-        table = self._database[table_name]
-        rows = table.find() # 查询出所有数据
-        conn = MySQLHelper.pool_connection.get_connection()
-        # 创建游标
-        cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-        for row in rows :
-            res = self.get_resource(date, row["res_id"])
-            if res == None:
-                SingleLogger().log.error("resid = %s,没有找到详情信息，所以跳过"% row["res_id"])
-                continue
-            # insert_sql =
-            # 执行SQL，并返回收影响行数
-            try:
-                row_count = cursor.execute("""insert into `analysis_data_total`(`res_id`,`create_date`,`rule_tag`,`app_tag`,
-                                `category_tag`,`deleted`,`title`,`description`,`shorturl`,`changed`,`crawl_time`)
-                                VALUES('%s','%s','%s','%s','%s',0,'%s','%s','%s',0,'%s')  ON DUPLICATE Key UPDATE res_id = '%s'
-                             """ % (row["res_id"],date,rule_tag,res["app_tag"],res["category_tag"],pymysql.escape_string(res["title"]),
-                                    pymysql.escape_string(res["description"]),res["shorturl"],res["crawltimestr"],row["res_id"]))
-                conn.commit()
-                SingleLogger().log.debug(row)
-            except Exception as e:
-                SingleLogger().log.error(e)
-            pass
-        cursor.close()
-        conn.close()
-        pass
+    # def copy_data_one_column(self,table_name,rule_tag,date):
+    #     if table_name == None:
+    #         SingleLogger().log.debug("table_name is None")
+    #         return
+    #     table = self._database[table_name]
+    #     rows = table.find() # 查询出所有数据
+    #     conn = MySQLHelper.pool_connection.get_connection()
+    #     # 创建游标
+    #     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+    #     for row in rows :
+    #         res = self.get_resource(date, row["res_id"])
+    #         if res == None:
+    #             SingleLogger().log.error("resid = %s,没有找到详情信息，所以跳过"% row["res_id"])
+    #             continue
+    #         # insert_sql =
+    #         # 执行SQL，并返回收影响行数
+    #         try:
+    #             row_count = cursor.execute("""insert into `analysis_data_total`(`res_id`,`create_date`,`rule_tag`,`app_tag`,
+    #                             `category_tag`,`deleted`,`title`,`description`,`shorturl`,`changed`,`crawl_time`)
+    #                             VALUES('%s','%s','%s','%s','%s',0,'%s','%s','%s',0,'%s')  ON DUPLICATE Key UPDATE res_id = '%s'
+    #                          """ % (row["res_id"],date,rule_tag,res["app_tag"],res["category_tag"],pymysql.escape_string(res["title"]),
+    #                                 pymysql.escape_string(res["description"]),res["shorturl"],res["crawltimestr"],row["res_id"]))
+    #             conn.commit()
+    #             SingleLogger().log.debug(row)
+    #         except Exception as e:
+    #             SingleLogger().log.error(e)
+    #         pass
+    #     cursor.close()
+    #     conn.close()
+    #     pass
     # 汇总数据将违规项分列进行
     def copy_data_to_total(self,table_name,rule_tag,date):
         if table_name == None:
@@ -70,7 +70,7 @@ class Collector(Thread):
                 row_count = cursor.execute("""select res_id from analysis_data_normal_total 
                                   where res_id = '%s' and create_date = '%s'""" % (row["res_id"],date))
                 if row_count == 0 :#插入新的数据
-                    sql_str = """INSERT INTO `analysis_data_normal_total`
+                    sql_str = """INSERT ignore INTO `analysis_data_normal_total`
                                     (`res_id`,
                                     `title`,
                                     `description`,
@@ -115,38 +115,38 @@ class Collector(Thread):
         return res
         pass
     # 处理ORC的数据，识别资源是第几屏幕
-    def copy_data_screen_orc(self,table_name,rule_tag,date):
-        if table_name == None:
-            SingleLogger().log.debug("table_name is None")
-            return
-
-        table = self._database[table_name]
-        rows = table.find()
-        conn = MySQLHelper.pool_connection.get_connection()
-        # 创建游标
-        cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-        for row in rows:
-            if row["screen_index"] !=-1:
-                res = self.get_resource(date,row["res_id"])
-                if res == None :
-                    continue
-                try:
-                    row_count = cursor.execute("""insert into `analysis_data_total`(`res_id`,`create_date`,`rule_tag`,`screenshot`,
-                                      `screen_index`,
-                                      `app_tag`,`category_tag`,`deleted`,`title`,`description`,`shorturl`,`changed`,`crawl_time`)
-                                            VALUES('%s','%s','%s','%s','%s','%s','%s',0,'%s','%s','%s',0,'%s')  
-                                            ON DUPLICATE Key UPDATE res_id = '%s'
-                                         """ % (row["res_id"], date, rule_tag, row["image"],row["screen_index"],
-                                                res["app_tag"],res["category_tag"],pymysql.escape_string(res["title"]),pymysql.escape_string(res["description"]),
-                                                res["shorturl"],res["crawltimestr"],row["res_id"]))
-                    conn.commit()
-                except Exception as e:
-                    SingleLogger().log.error(e)
-            SingleLogger().log.debug(row)
-            pass
-        cursor.close()
-        conn.close()
-        pass
+    # def copy_data_screen_orc(self,table_name,rule_tag,date):
+    #     if table_name == None:
+    #         SingleLogger().log.debug("table_name is None")
+    #         return
+    #
+    #     table = self._database[table_name]
+    #     rows = table.find()
+    #     conn = MySQLHelper.pool_connection.get_connection()
+    #     # 创建游标
+    #     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+    #     for row in rows:
+    #         if row["screen_index"] !=-1:
+    #             res = self.get_resource(date,row["res_id"])
+    #             if res == None :
+    #                 continue
+    #             try:
+    #                 row_count = cursor.execute("""insert into `analysis_data_total`(`res_id`,`create_date`,`rule_tag`,`screenshot`,
+    #                                   `screen_index`,
+    #                                   `app_tag`,`category_tag`,`deleted`,`title`,`description`,`shorturl`,`changed`,`crawl_time`)
+    #                                         VALUES('%s','%s','%s','%s','%s','%s','%s',0,'%s','%s','%s',0,'%s')
+    #                                         ON DUPLICATE Key UPDATE res_id = '%s'
+    #                                      """ % (row["res_id"], date, rule_tag, row["image"],row["screen_index"],
+    #                                             res["app_tag"],res["category_tag"],pymysql.escape_string(res["title"]),pymysql.escape_string(res["description"]),
+    #                                             res["shorturl"],res["crawltimestr"],row["res_id"]))
+    #                 conn.commit()
+    #             except Exception as e:
+    #                 SingleLogger().log.error(e)
+    #         SingleLogger().log.debug(row)
+    #         pass
+    #     cursor.close()
+    #     conn.close()
+    #     pass
     # ocr在总表中匹配图片
     def copy_data_to_total_screen_orc(self,table_name,rule_tag,date):
         if table_name == None:
@@ -168,7 +168,7 @@ class Collector(Thread):
                                                   from analysis_data_normal_total 
                                                   where res_id = '%s' and create_date = '%s'""" % (row["res_id"], date))
                     if row_count == 0:  # 插入新的数据
-                        sql_str = """INSERT INTO `analysis_data_normal_total`
+                        sql_str = """INSERT ignore INTO `analysis_data_normal_total`
                                                         (`res_id`,
                                                         `title`,
                                                         `description`,
@@ -215,11 +215,6 @@ class Collector(Thread):
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
         # 执行SQL，并返回收影响行数
         row_count = cursor.execute("""
-                delete from `analysis_data_total`
-                where create_date = '%s'
-                """ % (date))
-
-        row_count = cursor.execute("""
                         delete from `analysis_data_normal_total`
                         where create_date = '%s'
                         """ % (date))
@@ -255,16 +250,11 @@ where create_date = '%s'
         # 总条数
         table = self._database["originnews" + date]
         count = table.count()
-        # 删除数据
-        row_count = cursor.execute("""
-        delete from `analysis_collectCount`
-        where create_date = '%s'
-                """ % (date))
         # 执行SQL，并返回收影响行数
         row_count = cursor.execute("""
         insert into `analysis_collectCount`(`create_date`,`bad_count`,`count`)
-        values('%s',%d,%d) 
-        """ % (date,bad_count,count))
+        values('%s',%d,%d) ON DUPLICATE KEY UPDATE bad_count = %d,count= %d
+        """ % (date,bad_count,count,bad_count,count))
 
         cursor.close()
         conn.close()
@@ -305,7 +295,9 @@ where create_date = '%s'
         result = cursor.fetchone()
         yestoday = LocalTime.from_today(self.time_go)
         yestoday_str = yestoday.strftime("%Y%m%d")
-        self.remove_all_table_data(yestoday_str)  # 清除当天数据
+        # 这里修改了一下，对于重复的数据插入进行了调整，不会报错也不会有重复数据，所以放心插入吧
+        #self.remove_all_table_data(yestoday_str)  # 清除某一天数据
+        #
         while result != None:
             SingleLogger().log.debug(result)
             table_name = "%s%s" % (result["mongodb_tablename"], yestoday_str)
@@ -332,6 +324,7 @@ where create_date = '%s'
         conn.close()
         pass
 
+    # 导入纯人工审核数据
     def batchImportManualData(self,tag):
         yestoday = LocalTime.from_today(self.time_go)
         yestoday_str = yestoday.strftime("%Y%m%d")
@@ -345,7 +338,7 @@ where create_date = '%s'
             # 创建游标
             mysql_cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
             for row in mongo_cursor:
-                sql_str = """INSERT INTO `analysis_data_normal_total`
+                sql_str = """INSERT ignore INTO `analysis_data_normal_total`
                                                                         (`res_id`,
                                                                         `title`,
                                                                         `description`,
@@ -398,7 +391,7 @@ where create_date = '%s'
             # 创建游标
             mysql_cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
             for row in mongo_cursor:
-                sql_str = """INSERT INTO `analysis_data_normal_total`
+                sql_str = """INSERT ignore INTO `analysis_data_normal_total`
                                                                           (`res_id`,
                                                                           `title`,
                                                                           `description`,
