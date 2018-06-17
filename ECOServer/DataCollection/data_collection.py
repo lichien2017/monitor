@@ -226,12 +226,14 @@ class Collector(Thread):
         conn = MySQLHelper.pool_connection.get_connection()
         # 创建游标
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-
-        row_count = cursor.execute("""delete `analysis_data_normal_total`
+        sql = """delete `analysis_data_normal_total`
                             where (`BiaoTiDangRule`+`PoliticalRule`+`SexyRule`+`XueXingBaoLiRule`+`ZongJiaoRule`
                             +top_news+ad_news+hot_news+topic_news+we_media)=0 and create_date = '%s'
                             and status =0 and app_tag not in (select tag from `app_information` where `isartificial`=1)
-                                """ % (date))
+                                """ % (date)
+        SingleLogger().log.debug(sql)
+        row_count = cursor.execute(sql)
+
         cursor.close()
         conn.close()
         pass
