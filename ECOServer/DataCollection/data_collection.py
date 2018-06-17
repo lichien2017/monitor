@@ -339,30 +339,32 @@ where create_date = '%s'
             mysql_cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
             for row in mongo_cursor:
                 sql_str = """INSERT ignore INTO `analysis_data_normal_total`
-                                                                        (`res_id`,
-                                                                        `title`,
-                                                                        `description`,
-                                                                        `crawl_time`,
-                                                                        `XueXingBaoLiRule`,
-                                                                        `screenshot`,
-                                                                        `screen_index`,
-                                                                        `app_tag`,
-                                                                        `category_tag`,
-                                                                        `shorturl`,
-                                                                        `create_date`,
-                                                                        `SexyRule`,
-                                                                        `PoliticalRule`,
-                                                                        `ZongJiaoRule`,
-                                                                        `BiaoTiDangRule`)
-                                                                        VALUES
-                                                                        ('%s','%s','%s','%s',%d,'%s',%s,'%s','%s','%s','%s',%d,%d,%d,%d)
-                                                                        """ % (
+                                (`res_id`,
+                                `title`,
+                                `description`,
+                                `crawl_time`,
+                                `XueXingBaoLiRule`,
+                                `screenshot`,
+                                `screen_index`,
+                                `app_tag`,
+                                `category_tag`,
+                                `shorturl`,
+                                `create_date`,
+                                `SexyRule`,
+                                `PoliticalRule`,
+                                `ZongJiaoRule`,
+                                `BiaoTiDangRule`)
+                                VALUES
+                                ('%s','%s','%s','%s',%d,'%s',%s,'%s','%s','%s','%s',%d,%d,%d,%d)
+                                """ % (
                     Secret.md5(row["screenshot"]), "人工审核无标题","",
                     row["time"], 0, row["screenshot"], row["screen"],
                     row["tag"], row["reference"], "", yestoday_str, 0, 0, 0, 0)
 
                 SingleLogger().log.debug(sql_str)
                 row_count = mysql_cursor.execute(sql_str)
+        except Exception as ex:
+            SingleLogger().log.error(ex)
         finally:
             pass
 
@@ -392,24 +394,24 @@ where create_date = '%s'
             mysql_cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
             for row in mongo_cursor:
                 sql_str = """INSERT ignore INTO `analysis_data_normal_total`
-                                                                          (`res_id`,
-                                                                          `title`,
-                                                                          `description`,
-                                                                          `crawl_time`,
-                                                                          `XueXingBaoLiRule`,
-                                                                          `screenshot`,
-                                                                          `screen_index`,
-                                                                          `app_tag`,
-                                                                          `category_tag`,
-                                                                          `shorturl`,
-                                                                          `create_date`,
-                                                                          `SexyRule`,
-                                                                          `PoliticalRule`,
-                                                                          `ZongJiaoRule`,
-                                                                          `BiaoTiDangRule`)
-                                                                          VALUES
-                                                                          ('%s','%s','%s','%s',%d,'%s',%s,'%s','%s','%s','%s',%d,%d,%d,%d)
-                                                                          """ % (
+                              (`res_id`,
+                              `title`,
+                              `description`,
+                              `crawl_time`,
+                              `XueXingBaoLiRule`,
+                              `screenshot`,
+                              `screen_index`,
+                              `app_tag`,
+                              `category_tag`,
+                              `shorturl`,
+                              `create_date`,
+                              `SexyRule`,
+                              `PoliticalRule`,
+                              `ZongJiaoRule`,
+                              `BiaoTiDangRule`)
+                              VALUES
+                              ('%s','%s','%s','%s',%d,'%s',%s,'%s','%s','%s','%s',%d,%d,%d,%d)
+                              """ % (
                     Secret.md5(row["imgfilename"]), row["msg"],"Push消息无详情",
                     row["time"], 0, row["imgfilename"], 1,
                     row["tag"], "", "", yestoday_str, 0, 0, 0, 0)
@@ -417,6 +419,8 @@ where create_date = '%s'
                 SingleLogger().log.debug(sql_str)
                 row_count = mysql_cursor.execute(sql_str)
                 SingleLogger().log.debug(row_count)
+        except Exception as ex:
+            SingleLogger().log.error(ex)
         finally:
             pass
 
