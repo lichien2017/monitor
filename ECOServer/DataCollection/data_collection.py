@@ -398,11 +398,9 @@ where create_date = '%s'
         else:
             yestoday_str = LocalTime.now_str()
             SingleLogger().log.debug("======day=======>%s" % yestoday_str)
-            d1 = datetime.datetime.now() - datetime.timedelta(hours=1)
-            yestoday_time = d1.strftime("%Y-%m-%d %H:%S:%M")
             #这里需要修改时间
-            yestoday_time = LocalTime.get_local_date(yestoday_time, "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d %H:%M:%S")
-            yestoday_nowtime = LocalTime.from_today(self.time_go).strftime("%Y%m%d %H:%M:%S")
+            yestoday_time = LocalTime.nowtime_str()
+            yestoday_nowtime = LocalTime.from_today(self.time_go).strftime("%Y-%m-%d %H:%M:%S")
             SingleLogger().log.debug("======yestoday_time=======>%s" % yestoday_time)
             SingleLogger().log.debug("======yestoday_nowtime=======>%s" % yestoday_nowtime)
 
