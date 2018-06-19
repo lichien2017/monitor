@@ -267,13 +267,13 @@ router.post('/pkg', function (req, res) {
  */
 router.get('/filename', function (req, res) {
     try{
-        var path = req.param('path');
-        if (path == undefined|| path == null)
-            path = uploadpath;
-        var filePath = path.join(path, req.query.fn);
+        var tmp_path = req.param('path');
+        if (tmp_path == undefined|| tmp_path == null)
+            tmp_path = uploadpath;
+        var filePath = path.join(tmp_path, req.query.fn);
         console.log('filePath='+filePath);
         fs.exists(filePath, function (exists) {
-            res.sendfile(exists ? filePath : path.join(uploadpath, ""));
+            res.sendfile(exists ? filePath : path.join(tmp_path, ""));
         });
 
     }catch (e){
