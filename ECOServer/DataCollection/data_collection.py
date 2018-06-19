@@ -4,13 +4,15 @@ from threading import Thread
 import pymysql
 from util import *
 from mysqldb.mysql_helper import MySQLHelper
+import datetime
 
 
 class Collector(Thread):
-    time_go = -1
-    def __init__(self,time_go=-1):
+    # 不必要获前一天的数据，改为获取当天每小时同步
+    time_go = 0
+    def __init__(self,time_go=0):
         Thread.__init__(self)
-        self.time_go = time_go
+        self.time_go = 0
         self._client = MongoClient(ConfigHelper.mongodbip, ConfigHelper.mongodbport)
         self._database = self._client["crawlnews"]
         self.thread_stop = False
@@ -372,55 +374,82 @@ where create_date = '%s'
 
         pass
     def run(self):
-        self.tags = self.queryManualApp() # 查询人工审核的tags
-        self.batchImportMachineData()
-        for tag in self.tags:
-            self.batchImportManualData(tag["tag"])
-        pass
+        # self.tags = self.queryManualApp() # 查询人工审核的tags
+        # self.batchImportMachineData()
+        # for tag in self.tags:
+        #     self.batchImportManualData(tag["tag"])
+        # pass
         # Push数据同步到MySql
         self.batchImportPushata()
         # 删除空数据
-        yestoday = LocalTime.from_today(self.time_go)
-        yestoday_str = yestoday.strftime("%Y%m%d")
-        self.remove_all_empty_data(yestoday_str)
+        # yestoday = LocalTime.from_today(self.time_go)
+        # yestoday_str = yestoday.strftime("%Y%m%d")
+        # self.remove_all_empty_data(yestoday_str)
 
     #Push数据同步到MySql
     def batchImportPushata(self):
-        yestoday = LocalTime.from_today(self.time_go)
-        yestoday_str = yestoday.strftime("%Y%m%d")
+        yestoday = LocalTime.from_today(self.time_go).strftime("%H")
+         # 时间修正一下，改为本地时间  
+        yestoday_h = LocalTime.get_local_date(yestoday, "%H").strftime("%H")
+        SingleLogger().log.debug("======h=======>%s" % yestoday_h)  
+        if yestoday_h == 00:
+            # 跨天需要隔表查询
+            yestoday = LocalTime.from_today(-1).strftime("%Y%m%d")
+            # 时间修正一下，改为本地时间 
+            yestoday_str = LocalTime.get_local_date(yestoday, "%Y-%m-%d").strftime("%Y-%m-%d")    
+            
+            yestoday_time = yestoday_str+ " 23:00:00"
+            yestoday_nowtime = yestoday_str +" 24:00:00"
+        else:
+            today = LocalTime.from_today(self.time_go).strftime("%Y%m%d")
+            # 时间修正一下，改为本地时间
+            yestoday_str = LocalTime.get_local_date(today, "%Y-%m-%d").strftime("%Y-%m-%d")    
+            SingleLogger().log.debug("======day=======>%s" % yestoday_str)
+            d1 = datetime.datetime.now() - datetime.timedelta(hours=1)
+            yestoday_time = d1.strftime("%Y-%m-%d %H:%S:%M")
+            yestoday_time = LocalTime.get_local_date(yestoday_time, "%Y-%m-%d %H:%S:%M").strftime("%Y-%m-%d %H:%S:%M") 
+            yestoday_nowtime = yestoday.strftime("%Y%m%d %H:%M:%S")
+            yestoday_nowtime = LocalTime.get_local_date(yestoday_nowtime, "%Y-%m-%d %H:%S:%M").strftime("%Y-%m-%d %H:%S:%M")
+
+            SingleLogger().log.debug("======yestoday_time=======>%s" % yestoday_time)
+            SingleLogger().log.debug("======yestoday_nowtime=======>%s" % yestoday_nowtime)
+
         runner_logs = self._database["push" + yestoday_str]
-        mongo_cursor = runner_logs.find()
+        mongo_cursor = runner_logs.find({'time': {'$gte': yestoday_time, '$lte': yestoday_nowtime}})
         try:
             conn = MySQLHelper.pool_connection.get_connection()
             # 创建游标
             mysql_cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
             for row in mongo_cursor:
-                sql_str = """INSERT ignore INTO `analysis_data_normal_total`
-                              (`res_id`,
-                              `title`,
-                              `description`,
-                              `crawl_time`,
-                              `XueXingBaoLiRule`,
-                              `screenshot`,
-                              `screen_index`,
-                              `app_tag`,
-                              `category_tag`,
-                              `shorturl`,
-                              `create_date`,
-                              `SexyRule`,
-                              `PoliticalRule`,
-                              `ZongJiaoRule`,
-                              `BiaoTiDangRule`)
-                              VALUES
-                              ('%s','%s','%s','%s',%d,'%s',%s,'%s','%s','%s','%s',%d,%d,%d,%d)
-                              """ % (
-                    Secret.md5(row["imgfilename"]), row["msg"],"Push消息无详情",
-                    row["time"], 0, row["imgfilename"], 1,
-                    row["tag"], "", "", yestoday_str, 0, 0, 0, 0)
+                # sql_str = """INSERT ignore INTO `analysis_data_normal_total`
+                #               (`res_id`,
+                #               `title`,
+                #               `description`,
+                #               `crawl_time`,
+                #               `XueXingBaoLiRule`,
+                #               `screenshot`,
+                #               `screen_index`,
+                #               `app_tag`,
+                #               `category_tag`,
+                #               `shorturl`,
+                #               `create_date`,
+                #               `SexyRule`,
+                #               `PoliticalRule`,
+                #               `ZongJiaoRule`,
+                #               `BiaoTiDangRule`)
+                #               VALUES
+                #               ('%s','%s','%s','%s',%d,'%s',%s,'%s','%s','%s','%s',%d,%d,%d,%d)
+                #               """ % (
+                #     Secret.md5(row["imgfilename"]), row["msg"],"Push消息无详情",
+                #     row["time"], 0, row["imgfilename"], 1,
+                #     row["tag"], "", "", yestoday_str, 0, 0, 0, 0)
+                #
+                # SingleLogger().log.debug(sql_str)
+                # row_count = mysql_cursor.execute(sql_str)
+                # SingleLogger().log.debug(row_count)
+                #将数据插入到指定的处理消息队列(id，日期)
+                RedisHelper.strict_redis.lpush("newslist", Secret.md5(row["imgfilename"])+","+yestoday_str)
 
-                SingleLogger().log.debug(sql_str)
-                row_count = mysql_cursor.execute(sql_str)
-                SingleLogger().log.debug(row_count)
         except Exception as ex:
             SingleLogger().log.error(ex)
         finally:
