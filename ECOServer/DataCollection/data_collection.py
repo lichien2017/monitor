@@ -399,7 +399,7 @@ where create_date = '%s'
             yestoday_str = LocalTime.now_str()
             SingleLogger().log.debug("======day=======>%s" % yestoday_str)
             #这里需要修改时间
-            yestoday_time = LocalTime.nowtime_str()
+            yestoday_time = LocalTime.nowtime_str(-1).strftime("%Y-%m-%d %H:%M:%S")
             yestoday_nowtime = LocalTime.from_today(self.time_go).strftime("%Y-%m-%d %H:%M:%S")
             SingleLogger().log.debug("======yestoday_time=======>%s" % yestoday_time)
             SingleLogger().log.debug("======yestoday_nowtime=======>%s" % yestoday_nowtime)
