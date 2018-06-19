@@ -53,6 +53,14 @@ class LocalTime:
         pass
 
     @classmethod
+    def nowtime_str(cls, format="%Y-%m-%d %H:%M:%S"):
+        # 获取当前时间前一个小时的时间
+        now = LocalTime.now().strftime(format)
+        from_todaytime = now + timedelta(days=-1)
+        return from_todaytime
+        pass
+
+    @classmethod
     def from_today(cls,days):
         now = LocalTime.now()
         from_today = now + timedelta(days=days)
