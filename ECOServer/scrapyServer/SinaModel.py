@@ -157,15 +157,15 @@ class SinaParse(BaseParse):
                 # 防止报错
                 if url != '':
                     try:
-                        gallary = self.getImg(url)
+                        gallary = self.getHtmlImages(url)
                     except:
                         SingleLogger().log.debug("没有gallary")
                     try:
-                        content = self.getWen(url)
+                        content = self.getHtmlBodyInnerText(url)
                     except:
                         SingleLogger().log.debug("没有图文详情")
                     try:
-                        videos = self.getVideo(url)
+                        videos = self.getHtmlVideos(url)
                         if videos != '':
                             video += videos
                     except:
@@ -199,51 +199,7 @@ class SinaParse(BaseParse):
         SingleLogger().log.debug("=====sina======>%s" %sdata)
         self.db(sdata, articleid, title)
 
-    # 获取图片main
-    def getImgMain(self):
-        html = rq.get(urls).text
-        soup = BeautifulSoup(html, "html.parser")  # 文档对象
-        imgStr = ""
-        for k in soup.find_all('img'):  # 获取img
-            imgStr += k['src'] + ","
-        return imgStr
 
-    # 获取文字main
-    def getWenMain(self):
-        html = rq.get(urls).text
-        soup = BeautifulSoup(html, "html.parser")  # 文档对象
-        imgStrArr = soup.find_all('article', class_="art_box")
-        if len(imgStrArr) == 0:
-            return ''
-        else:
-            return imgStrArr[0]
-
-    # 获取视频main
-    def getVideoMain(self):
-        html = rq.get(urls).text
-        soup = BeautifulSoup(html, "html.parser")  # 文档对象
-        imgStr = ""
-        for k in soup.find_all('video'):
-            imgStr += k['src'] + ","
-        return imgStr
-
-    # 获取图片
-    def getImg(self,link):
-        global urls
-        urls = link
-        return self.getImgMain()
-
-    # 获取图文
-    def getWen(self,link):
-        global urls
-        urls = link
-        return str(self.getWenMain())
-
-    # 获取视频
-    def getVideo(self,link):
-        global urls
-        urls = link
-        return self.getVideoMain()
 
     def tryparse(self, str):
         # 转换编码格式
