@@ -18,7 +18,6 @@ var redisPort = 6379
 var mongodbIp = "mongodb";//container里面的mongodb名称
 var mongodbPort = 27017
 var uploadpath = '/usr/local/nodejsqueue/redisService/uploads/';//图片保存路径
-
 if (debug){
     redisIp = '192.168.10.177';
     mongodbIp= '192.168.10.177';
@@ -268,7 +267,10 @@ router.post('/pkg', function (req, res) {
  */
 router.get('/filename', function (req, res) {
     try{
-        var filePath = path.join(uploadpath, req.query.fn);
+        var path = req.param('path');
+        if (path == undefined|| path == null)
+            path = uploadpath;
+        var filePath = path.join(path, req.query.fn);
         console.log('filePath='+filePath);
         fs.exists(filePath, function (exists) {
             res.sendfile(exists ? filePath : path.join(uploadpath, ""));
