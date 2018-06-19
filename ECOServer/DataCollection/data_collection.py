@@ -389,28 +389,20 @@ where create_date = '%s'
     #Push数据同步到MySql
     def batchImportPushata(self):
         yestoday_h = LocalTime.from_today(self.time_go).strftime("%H")
-        #  # 时间修正一下，改为本地时间  
-        # yestoday_h = LocalTime.get_local_date(yestoday, "%H").strftime("%H")
         SingleLogger().log.debug("======h=======>%s" % yestoday_h)  
         if yestoday_h == 00:
             # 跨天需要隔表查询
-            yestoday_str = LocalTime.from_today(-1).strftime("%Y%m%d")
-            # # 时间修正一下，改为本地时间 
-            # yestoday_str = LocalTime.get_local_date(yestoday, "%Y-%m-%d").strftime("%Y-%m-%d")
-            
+            yestoday_str = LocalTime.yestoday_str()
             yestoday_time = LocalTime.from_today(-1).strftime("%Y-%m-%d")+ " 23:00:00"
             yestoday_nowtime = LocalTime.from_today(-1).strftime("%Y-%m-%d") +" 24:00:00"
         else:
-            yestoday_str = LocalTime.from_today(self.time_go).strftime("%Y%m%d")
-            # 时间修正一下，改为本地时间
-            # yestoday_str = LocalTime.get_local_date(today, "%Y-%m-%d").strftime("%Y-%m-%d")
+            yestoday_str = LocalTime.now_str()
             SingleLogger().log.debug("======day=======>%s" % yestoday_str)
             d1 = datetime.datetime.now() - datetime.timedelta(hours=1)
             yestoday_time = d1.strftime("%Y-%m-%d %H:%S:%M")
-            # yestoday_time = LocalTime.get_local_date(yestoday_time, "%Y-%m-%d %H:%S:%M").strftime("%Y-%m-%d %H:%S:%M")
+            #这里需要修改时间
+            yestoday_time = LocalTime.get_local_date(yestoday_time, "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d %H:%M:%S")
             yestoday_nowtime = LocalTime.from_today(self.time_go).strftime("%Y%m%d %H:%M:%S")
-            # yestoday_nowtime = LocalTime.get_local_date(yestoday_nowtime, "%Y-%m-%d %H:%S:%M").strftime("%Y-%m-%d %H:%S:%M")
-
             SingleLogger().log.debug("======yestoday_time=======>%s" % yestoday_time)
             SingleLogger().log.debug("======yestoday_nowtime=======>%s" % yestoday_nowtime)
 
