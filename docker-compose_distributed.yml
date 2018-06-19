@@ -75,6 +75,7 @@ services:
     volumes:
       - /home/tymx/Documents/DockerContainer/nodejsqueue:/usr/local/nodejsqueue
       - /mnt/upload_files:/usr/local/nodejsqueue/redisService/uploads
+      - /mnt/analysis_media:/mnt/analysis_media
     networks:
       - mobilephone_release
     depends_on:
