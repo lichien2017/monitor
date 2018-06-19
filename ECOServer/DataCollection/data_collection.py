@@ -54,7 +54,14 @@ class Collector(Thread):
             SingleLogger().log.debug("table_name is None")
             return
         table = self._database[table_name]
-        rows = table.find() # 查询出所有数据
+
+        yestoday_time = LocalTime.nowtime_str(-1).strftime("%Y-%m-%d %H:%M:%S")
+        yestoday_nowtime = LocalTime.from_today(self.time_go).strftime("%Y-%m-%d %H:%M:%S")
+        SingleLogger().log.debug("======yestoday_time=======>%s" % yestoday_time)
+        SingleLogger().log.debug("======yestoday_nowtime=======>%s" % yestoday_nowtime)
+
+        rows = table.find({'record_time': {'$gte': yestoday_time, '$lte': yestoday_nowtime}})
+        
         conn = MySQLHelper.pool_connection.get_connection()
         # 创建游标
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
@@ -96,6 +103,8 @@ class Collector(Thread):
 
                     SingleLogger().log.debug(sql_str)
                     row_count = cursor.execute(sql_str)
+                    #将数据插入到指定的处理消息队列(id，日期)
+                    RedisHelper.strict_redis.lpush("newslist",row["res_id"]+","+date)
                     pass
                 # 更新相对应的规则字段
                 row_count = cursor.execute("""update analysis_data_normal_total 
@@ -333,10 +342,14 @@ where create_date = '%s'
         yestoday = LocalTime.from_today(self.time_go)
         yestoday_str = yestoday.strftime("%Y%m%d")
         runner_logs = self._database["runner_logs"+yestoday_str]
-        query = {}
-        query["tag"] = tag
 
-        mongo_cursor = runner_logs.find(query)
+        yestoday_time = LocalTime.nowtime_str(-1).strftime("%Y-%m-%d %H:%M:%S")
+        yestoday_nowtime = LocalTime.from_today(self.time_go).strftime("%Y-%m-%d %H:%M:%S")
+        SingleLogger().log.debug("======yestoday_time=======>%s" % yestoday_time)
+        SingleLogger().log.debug("======yestoday_nowtime=======>%s" % yestoday_nowtime)
+
+        mongo_cursor = runner_logs.find({'time': {'$gte': yestoday_time, '$lte': yestoday_nowtime},"tag": tag})
+
         try:
             conn = MySQLHelper.pool_connection.get_connection()
             # 创建游标
@@ -367,6 +380,9 @@ where create_date = '%s'
 
                 SingleLogger().log.debug(sql_str)
                 row_count = mysql_cursor.execute(sql_str)
+                #将数据插入到指定的处理消息队列(id，日期)
+                RedisHelper.strict_redis.lpush("newslist", Secret.md5(row["screenshot"])+","+yestoday_str)
+
         except Exception as ex:
             SingleLogger().log.error(ex)
         finally:
@@ -374,17 +390,17 @@ where create_date = '%s'
 
         pass
     def run(self):
-        # self.tags = self.queryManualApp() # 查询人工审核的tags
-        # self.batchImportMachineData()
-        # for tag in self.tags:
-        #     self.batchImportManualData(tag["tag"])
-        # pass
+        self.tags = self.queryManualApp() # 查询人工审核的tags
+        self.batchImportMachineData()
+        for tag in self.tags:
+            self.batchImportManualData(tag["tag"])
+        pass
         # Push数据同步到MySql
         self.batchImportPushata()
         # 删除空数据
-        # yestoday = LocalTime.from_today(self.time_go)
-        # yestoday_str = yestoday.strftime("%Y%m%d")
-        # self.remove_all_empty_data(yestoday_str)
+        yestoday = LocalTime.from_today(self.time_go)
+        yestoday_str = yestoday.strftime("%Y%m%d")
+        self.remove_all_empty_data(yestoday_str)
 
     #Push数据同步到MySql
     def batchImportPushata(self):
@@ -398,7 +414,6 @@ where create_date = '%s'
         else:
             yestoday_str = LocalTime.now_str()
             SingleLogger().log.debug("======day=======>%s" % yestoday_str)
-            #这里需要修改时间
             yestoday_time = LocalTime.nowtime_str(-1).strftime("%Y-%m-%d %H:%M:%S")
             yestoday_nowtime = LocalTime.from_today(self.time_go).strftime("%Y-%m-%d %H:%M:%S")
             SingleLogger().log.debug("======yestoday_time=======>%s" % yestoday_time)
@@ -411,32 +426,32 @@ where create_date = '%s'
             # 创建游标
             mysql_cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
             for row in mongo_cursor:
-                # sql_str = """INSERT ignore INTO `analysis_data_normal_total`
-                #               (`res_id`,
-                #               `title`,
-                #               `description`,
-                #               `crawl_time`,
-                #               `XueXingBaoLiRule`,
-                #               `screenshot`,
-                #               `screen_index`,
-                #               `app_tag`,
-                #               `category_tag`,
-                #               `shorturl`,
-                #               `create_date`,
-                #               `SexyRule`,
-                #               `PoliticalRule`,
-                #               `ZongJiaoRule`,
-                #               `BiaoTiDangRule`)
-                #               VALUES
-                #               ('%s','%s','%s','%s',%d,'%s',%s,'%s','%s','%s','%s',%d,%d,%d,%d)
-                #               """ % (
-                #     Secret.md5(row["imgfilename"]), row["msg"],"Push消息无详情",
-                #     row["time"], 0, row["imgfilename"], 1,
-                #     row["tag"], "", "", yestoday_str, 0, 0, 0, 0)
-                #
-                # SingleLogger().log.debug(sql_str)
-                # row_count = mysql_cursor.execute(sql_str)
-                # SingleLogger().log.debug(row_count)
+                sql_str = """INSERT ignore INTO `analysis_data_normal_total`
+                              (`res_id`,
+                              `title`,
+                              `description`,
+                              `crawl_time`,
+                              `XueXingBaoLiRule`,
+                              `screenshot`,
+                              `screen_index`,
+                              `app_tag`,
+                              `category_tag`,
+                              `shorturl`,
+                              `create_date`,
+                              `SexyRule`,
+                              `PoliticalRule`,
+                              `ZongJiaoRule`,
+                              `BiaoTiDangRule`)
+                              VALUES
+                              ('%s','%s','%s','%s',%d,'%s',%s,'%s','%s','%s','%s',%d,%d,%d,%d)
+                              """ % (
+                    Secret.md5(row["imgfilename"]), row["msg"],"Push消息无详情",
+                    row["time"], 0, row["imgfilename"], 1,
+                    row["tag"], "", "", yestoday_str, 0, 0, 0, 0)
+
+                SingleLogger().log.debug(sql_str)
+                row_count = mysql_cursor.execute(sql_str)
+                SingleLogger().log.debug(row_count)
                 #将数据插入到指定的处理消息队列(id，日期)
                 RedisHelper.strict_redis.lpush("newslist", Secret.md5(row["imgfilename"])+","+yestoday_str)
 
