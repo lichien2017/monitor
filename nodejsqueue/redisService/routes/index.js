@@ -147,6 +147,92 @@ function mkdirsSync(dirpath, mode) {
     return true;
 }
 
+var sendToMediaQueue=function (data) {
+    try{
+        var client  = redis.createClient('6379', redisIp);
+        client.on('connect', function() {
+            console.log('connected');
+            client.set('media:download',JSON.stringify(data));
+        });
+        // redis 链接错误
+        client.on("error", function(error) {
+            console.log(error);
+        });
+
+    }catch (e){
+        console.log(e);
+    }
+}
+/**
+ * 生成guid
+ * @returns {string}
+ */
+function guid() {
+    function S4() {
+        return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+    }
+    return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+}
+
+/**
+ * 将数据插入原始数据表
+ * @param db
+ * @param insertData
+ * @param callback
+ */
+var insertPushDataToOriginDb = function (db,insertData,callback) {
+    var day = insertData.time.substr(0,10);
+    day = day.replace("-","");
+    day = day.replace("-","");
+    var tablename = "originnews" + day;
+
+
+    var timestamp = Date.parse(new Date(insertData.time));
+
+
+    //统一时间格式
+    insertData.imgfilename =insertData.imgfilename.replace("_","/")
+    console.log('insertData:'+ insertData.imgfilename);
+
+    var originNews = {};
+    originNews.title = insertData.msg;
+    originNews.description = "";
+    originNews.content = "";
+    originNews.source = "";
+    originNews.pubtimestr = insertData.time;
+    originNews.pubtime = timestamp;
+    originNews.crawltimestr = insertData.time;
+    originNews.crawltime = timestamp;
+    originNews.status = 0;
+    originNews.shorturl = "";
+    originNews.logo = "";
+    originNews.labels = "";
+    originNews.keyword = "";
+    originNews.seq = 1;
+    originNews.identity = guid();
+    originNews.appname = insertData.tag;
+    originNews.app_tag = insertData.tag;
+    originNews.category_tag = "";
+    originNews.category = "";
+    originNews.restype = 4; //通知类型
+    originNews.gallary = insertData.imgfilename;
+    originNews.video = "";
+    originNews.audio = "";
+
+
+    //连接到表
+    var collection = db.collection(tablename);
+    //插入数据
+    collection.insertOne(insertData,function (err,result) {
+        if(err)
+        {
+            console.log('Error:'+ err);
+            return;
+        }
+        //如果成功了，需要一个消息给处理队列
+        callback(originNews,day);
+    });
+}
 /**
  * 插入原始push消息数据
  * @param db mongodb数据库
@@ -184,22 +270,6 @@ router.post("/push",function (req,res) {
     console.log("收到push消息："+req.body);
     try{
 
-        // var mongoClient = new MongoClient(new Server(mongodbIp, 27017));
-        // mongoClient.open(function(err, mongoClient) {
-        //     if(err){
-        //         console.log(err);
-        //         return;
-        //     }
-        //     console.log("mongodb连接成功！");
-        //     var db1 = mongoClient.db("crawlnews");
-        //
-        //     insertPushData(db1, req.body,function(result) {
-        //         console.log(result);
-        //         mongoClient.close();
-        //         res.json({"status": "success"});
-        //     });
-        //
-        // });
 
         var MongoClient = mongodb.MongoClient;
         MongoClient.connect(DB_CONN_STR, function(err, db) {
@@ -207,8 +277,18 @@ router.post("/push",function (req,res) {
             //将接收到的数据插入数据库
             insertPushData(db.db('crawlnews'), req.body,function(result) {
                 console.log(result);
-                db.close();
-                res.json({"status": "success"});
+                insertPushDataToOriginDb(db.db('crawlnews'),req.body,function (result,day) {
+                    db.close();
+                    if (result!=undefined || result != null){
+                        var mediaObj = {};
+                        mediaObj.res_id = result.identity;
+                        mediaObj.time = day;
+                        mediaObj.record_time = result.crawltimestr;
+                        sendToMediaQueue(mediaObj);
+                    }
+
+                    res.json({"status": "success"});
+                })
             });
          });
 
