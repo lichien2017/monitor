@@ -146,5 +146,14 @@
       "app_tag":"kuaishou",
       "categroy":{"发现":"发现"}
     }
-  }
+  }, {
+  "modname": "scrapyServer.ChangDuModel",
+    "classname": "ChangParse",
+    "queuename": "origin:changdu",
+    "apppinfo":{
+      "app_name":"畅读",
+      "app_tag":"changdu",
+      "categroy":{"精选":"精选"}
+    }
+}
 ]
