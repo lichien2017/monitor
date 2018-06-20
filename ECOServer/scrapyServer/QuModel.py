@@ -33,10 +33,10 @@ class QuParse(BaseParse):
             corner_type = data['tips']
             if corner_type == "":
                 restype = 1
-                content = self.getWen(data['url'])
+                content = self.getHtmlBodyInnerText(data['url'])
             elif corner_type == "视频":
                 restype = 3
-                content = self.getVideo(data['url'])
+                content = self.getHtmlVideos(data['url'])
                 video=content
             elif corner_type == "广告":
                 return
@@ -53,10 +53,10 @@ class QuParse(BaseParse):
             if i != "":
                 logo += i + ","
 
-        gallary = self.getImg(url)
+        gallary = self.getHtmlImages(url)
         # 当等于视频时已得到视频地址 无需调用
         if restype!=3 :
-            video += self.getVideo(url)
+            video += self.getHtmlVideos(url)
 
         crawltimestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(crawltime / 1000))
         publish_timestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(int(publish_time) / 1000))
@@ -93,60 +93,6 @@ class QuParse(BaseParse):
             "audio": audio
         }
         self.db(sdata, articleid, title)
-
-        # 获取图片main
-
-    def getImgMain(self):
-        html = rq.get(urls).text
-        soup = BeautifulSoup(html, "html.parser")  # 文档对象
-        imgStr = ""
-        for k in soup.find_all('img'):  # 获取img
-            imgStr += k['src'] + ","
-        return imgStr
-
-        # 获取文字main
-
-    def getWenMain(self):
-        html = rq.get(urls).text
-        soup = BeautifulSoup(html, "html.parser")  # 文档对象
-        # imgStrArr = soup.find_all('div', class_="Nfgz6aIyFCi3vZUoFGKEr")
-        imgStrArr = soup.find_all('body')
-        print(len(imgStrArr))
-        if len(imgStrArr) == 0:
-            return ''
-        else:
-            return imgStrArr[0]
-
-        # 获取视频main
-
-    def getVideoMain(self):
-        html = rq.get(urls).text
-        soup = BeautifulSoup(html, "html.parser")  # 文档对象
-        imgStr = ""
-        for k in soup.find_all('video'):
-            imgStr += k['src'] + ","
-        return imgStr
-
-        # 获取图片
-
-    def getImg(self, link):
-        global urls
-        urls = link
-        return self.getImgMain()
-
-        # 获取图文
-
-    def getWen(self, link):
-        global urls
-        urls = link
-        return str(self.getWenMain())
-
-        # 获取视频
-
-    def getVideo(self, link):
-        global urls
-        urls = link
-        return self.getVideoMain()
 
 
 

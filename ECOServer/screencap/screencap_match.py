@@ -12,7 +12,7 @@ from util import *
 
 time_format = "%Y-%m-%d %H:%M:%S"
 interval = 10 #10分钟间隔
-DAYS = 0 # 与今天的差异，0 标示处理当天，-1标示处理前一天
+DAYS = -1 # 与今天的差异，0 标示处理当天，-1标示处理前一天
 
 
 # pool = redis.ConnectionPool(host=ConfigHelper.redisip, port=ConfigHelper.redisport, db=ConfigHelper.redisdb)
@@ -119,7 +119,7 @@ class ScreenCaptureMatch(Thread):
 
         collection = self._database["screencapocr" + date.strftime("%Y%m%d")]
 
-        start_time = date + datetime.timedelta(minutes=-5)
+        start_time = date + datetime.timedelta(minutes=-8)
         # 查询条件
         query = {}
         query["status"] = Int64(0)

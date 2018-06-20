@@ -28,12 +28,13 @@ class HuiParse(BaseParse):
         gallary = "" #详情图片，视频
         content = ""  # 内容
         audio='' #音频
+        url = data['url']
         #头条栏目暂时看到的都是图文新闻
         restype = 1
-        content = self.getWen(data['url'])
+        content = self.getHtmlBodyInnerText(url)
 
         title = data['topic']
-        url = data['url']
+
         source = data['source']
         articleid = data['rowkey']
 
@@ -43,8 +44,8 @@ class HuiParse(BaseParse):
             if i['src'] != "":
                 logo += i['src'] + ","
 
-        gallary = self.getImg(url)
-        video = self.getVideo(url)
+        gallary = self.getHtmlImages(url)
+        video = self.getHtmlVideos(url)
 
         crawltimestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(crawltime / 1000))
         publish_timestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(int(publish_time) / 1000))
@@ -81,60 +82,6 @@ class HuiParse(BaseParse):
             "audio": audio
         }
         self.db(sdata, articleid, title)
-
-        # 获取图片main
-
-    def getImgMain(self):
-        html = rq.get(urls).text
-        soup = BeautifulSoup(html, "html.parser")  # 文档对象
-        imgStr = ""
-        for k in soup.find_all('img'):  # 获取img
-            imgStr += k['src'] + ","
-        return imgStr
-
-        # 获取文字main
-
-    def getWenMain(self):
-        html = rq.get(urls).text
-        soup = BeautifulSoup(html, "html.parser")  # 文档对象
-        # imgStrArr = soup.find_all('div', class_="Nfgz6aIyFCi3vZUoFGKEr")
-        imgStrArr = soup.find_all('body')
-        print(len(imgStrArr))
-        if len(imgStrArr) == 0:
-            return ''
-        else:
-            return imgStrArr[0]
-
-        # 获取视频main
-
-    def getVideoMain(self):
-        html = rq.get(urls).text
-        soup = BeautifulSoup(html, "html.parser")  # 文档对象
-        imgStr = ""
-        for k in soup.find_all('video'):
-            imgStr += k['src'] + ","
-        return imgStr
-
-        # 获取图片
-
-    def getImg(self, link):
-        global urls
-        urls = link
-        return self.getImgMain()
-
-        # 获取图文
-
-    def getWen(self, link):
-        global urls
-        urls = link
-        return str(self.getWenMain())
-
-        # 获取视频
-
-    def getVideo(self, link):
-        global urls
-        urls = link
-        return self.getVideoMain()
 
 
 
