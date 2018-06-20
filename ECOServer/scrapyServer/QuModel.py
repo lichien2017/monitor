@@ -1,18 +1,12 @@
 # coding=utf-8
 from scrapyServer.BaseModel import BaseParse
-import urllib.parse
+
 import json
-import requests
-from pymongo import MongoClient
-import time
-import datetime
-import hashlib
-import uuid
-import sys
-from util.log import SingleLogger
-import requests as rq
 from bs4 import BeautifulSoup
-#log = Logger()
+import time
+from util import *
+from util.log import SingleLogger
+
 
 class QuParse(BaseParse):
     # 解析趣头条
@@ -33,10 +27,10 @@ class QuParse(BaseParse):
             corner_type = data['tips']
             if corner_type == "":
                 restype = 1
-                content = self.getHtmlBodyInnerText(data['url'])
+                content = self.getHtmlBodyInnerText(data['share_url'])
             elif corner_type == "视频":
                 restype = 3
-                content = self.getHtmlVideos(data['url'])
+                content = self.getHtmlVideos(data['share_url'])
                 video=content
             elif corner_type == "广告":
                 return
@@ -44,7 +38,7 @@ class QuParse(BaseParse):
             SingleLogger().log.debug("非视频/图片资讯")
         title = data['title']
         abstract = data['introduction']
-        url = data['url']
+        url = data['share_url']
         source = data['source_name']
         articleid = data['id']
         publish_time = data['publish_time']
@@ -54,6 +48,15 @@ class QuParse(BaseParse):
                 logo += i + ","
 
         gallary = self.getHtmlImages(url)
+
+        # 判断图末尾是否为，若是则进行删除
+        gallarylen = len(gallary)
+        if gallarylen > 0:
+            gallarystr = gallary[gallarylen - 1]
+            if gallarystr == ",":
+                gallary = gallary[:-1]
+
+
         # 当等于视频时已得到视频地址 无需调用
         if restype!=3 :
             video += self.getHtmlVideos(url)
@@ -94,7 +97,20 @@ class QuParse(BaseParse):
         }
         self.db(sdata, articleid, title)
 
-
+    def getHtmlImages(self, url):
+        html = Http.get(url)
+        soup = BeautifulSoup(html, "html.parser")  # 文档对象
+        imgStr = ""
+        for k in soup.find_all('img'):  # 获取img
+            try:
+                imgStr += k['data-src'] + ","
+            except:
+                SingleLogger().log.debug("没有找到标签")
+            try:
+                imgStr += k['src'] + ","
+            except:
+                SingleLogger().log.debug("没有找到src标签")
+        return imgStr
 
     def tryparse(self, str):
         # 转换编码格式

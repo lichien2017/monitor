@@ -37,7 +37,7 @@ class ChangParse(BaseParse):
         gallary = self.getHtmlImages(url)
        # video = self.getHtmlVideos(url)
         logo = dataitems['img']
-        # 判断列表封面图末尾是否为，若是则进行删除
+        # 判断图末尾是否为，若是则进行删除
         logolen = len(gallary)
         if logolen > 0:
             logostr = gallary[logolen - 1]
@@ -79,12 +79,14 @@ class ChangParse(BaseParse):
         imgStr = ""
         for k in soup.find_all('img'):  # 获取img
             try:
-                imgStr += k['src'] + ","
                 imgStr += k['data-src'] + ","
             except:
-                SingleLogger().log.debug("没有找到标签")
+                SingleLogger().log.debug("没有找到data-src标签")
+            try:
+                imgStr += k['src'] + ","
+            except:
+                SingleLogger().log.debug("没有找到src标签")
         return imgStr
-
 
 
     def tryparse(self, str):
