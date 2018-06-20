@@ -85,7 +85,10 @@ class BaseParse(object):
         soup = BeautifulSoup(html, "html.parser")  # 文档对象
         imgStr = ""
         for k in soup.find_all('img'):  # 获取img
-            imgStr += k['src'] + ","
+            try:
+                imgStr += k['src'] + ","
+            except:
+                SingleLogger().log.debug("没有找到标签")
         return imgStr
 
     # 获取html的body内容
