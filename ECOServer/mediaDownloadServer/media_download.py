@@ -145,6 +145,9 @@ class MediaDownload(Thread):
                 if res != None:
                     if res["crawltimestr"] < "2018-06-08 15:50:28":
                         continue
+                    if res["restype"] == 4: # 如果是消息推送，直接加入处理队列
+                        SingleLogger().log.debug("Push Msg Rule1server.add_resource_to_all_queue == %s", json.dumps(res_msg))
+                        self.ruleServiceLevel1.add_resource_to_all_queue(json.dumps(res_msg))
                     # 读取资源中的图片
                     logos = []
                     if res["logo"].find("、")>=0 :
