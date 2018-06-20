@@ -152,7 +152,7 @@ var sendToMediaQueue=function (data) {
         var client  = redis.createClient('6379', redisIp);
         client.on('connect', function() {
             console.log('connected');
-            client.set('media:download',JSON.stringify(data));
+            client.lpush('media:download',JSON.stringify(data))
         });
         // redis 链接错误
         client.on("error", function(error) {
