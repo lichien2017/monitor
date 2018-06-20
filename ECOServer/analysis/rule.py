@@ -123,7 +123,8 @@ class Rule:
                 # 将数据插入到指定的处理消息队列
                 RedisHelper.strict_redis.lpush(self.queue_name_text, json.dumps(normal_msg))
 
-
+        if resource["restype"] == 4:#如果是PUSH，到此为止不继续
+            return
         index = 1
 
         # 创建image

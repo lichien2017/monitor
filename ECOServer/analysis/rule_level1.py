@@ -182,6 +182,8 @@ class ScreenCapORCRule(BaseLevel1Rule):
                 SingleLogger().log.debug("%s 获取到数据:%s" % (self.__class__.__name__,res_msg["res_id"]))
                 resource = self._get_resource(res_msg["res_id"],res_msg["time"])
                 if resource !=None :
+                    if resource["restype"] == 4:
+                        continue
                     SingleLogger().log.debug("%s 获取到数据:%s" % (self.__class__.__name__,resource))
                     table = self._mongodb[self._mongodb_tablename+res_msg["time"]] #得到数据表对象
                     item = table.find_one({"res_id": "%s" % res_msg["res_id"]}) #是否

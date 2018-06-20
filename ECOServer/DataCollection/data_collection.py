@@ -79,6 +79,11 @@ class Collector(Thread):
                 row_count = cursor.execute("""select res_id from analysis_data_normal_total 
                                   where res_id = '%s' and create_date = '%s'""" % (row["res_id"],date))
                 if row_count == 0 :#插入新的数据
+                    screenshot = ""
+                    screen_index = -1
+                    if res["restype"] == 4 :
+                        screenshot = res["gallary"]
+                        screen_index = 1
                     sql_str = """INSERT ignore INTO `analysis_data_normal_total`
                                     (`res_id`,
                                     `title`,
@@ -98,7 +103,7 @@ class Collector(Thread):
                                     VALUES
                                     ('%s','%s','%s','%s',%d,'%s',%d,'%s','%s','%s','%s',%d,%d,%d,%d,%d,%d,%d,%d,%d,'%s','%s',%d)
                                     """ % (
-                                    row["res_id"],pymysql.escape_string(res["title"]),pymysql.escape_string(res["description"]),res["crawltimestr"],0,'',-1,
+                                    row["res_id"],pymysql.escape_string(res["title"]),pymysql.escape_string(res["description"]),res["crawltimestr"],0,screenshot,screen_index,
                                     res["app_tag"], res["category_tag"], res["shorturl"],date, 0,0,0,0, 0,0,0,0,0,res["source"],res["content"],res["restype"])
 
                     SingleLogger().log.debug(sql_str)
@@ -396,7 +401,7 @@ where create_date = '%s'
             self.batchImportManualData(tag["tag"])
         pass
         # Push数据同步到MySql
-        self.batchImportPushata()
+        #self.batchImportPushata() lzq屏蔽的，已经改为统一处理了
         # 删除空数据
         yestoday = LocalTime.from_today(self.time_go)
         yestoday_str = yestoday.strftime("%Y%m%d")
