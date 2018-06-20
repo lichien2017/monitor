@@ -4,13 +4,15 @@ from threading import Thread
 import pymysql
 from util import *
 from mysqldb.mysql_helper import MySQLHelper
+import datetime
 
 
 class Collector(Thread):
-    time_go = -1
-    def __init__(self,time_go=-1):
+    # 不必要获前一天的数据，改为获取当天每小时同步
+    time_go = 0
+    def __init__(self,time_go=0):
         Thread.__init__(self)
-        self.time_go = time_go
+        self.time_go = 0
         self._client = MongoClient(ConfigHelper.mongodbip, ConfigHelper.mongodbport)
         self._database = self._client["crawlnews"]
         self.thread_stop = False
@@ -52,7 +54,14 @@ class Collector(Thread):
             SingleLogger().log.debug("table_name is None")
             return
         table = self._database[table_name]
-        rows = table.find() # 查询出所有数据
+
+        yestoday_time = LocalTime.nowtime_str(-1).strftime("%Y-%m-%d %H:%M:%S")
+        yestoday_nowtime = LocalTime.from_today(self.time_go).strftime("%Y-%m-%d %H:%M:%S")
+        SingleLogger().log.debug("======yestoday_time=======>%s" % yestoday_time)
+        SingleLogger().log.debug("======yestoday_nowtime=======>%s" % yestoday_nowtime)
+
+        rows = table.find({'record_time': {'$gte': yestoday_time, '$lte': yestoday_nowtime}})
+        
         conn = MySQLHelper.pool_connection.get_connection()
         # 创建游标
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
@@ -94,6 +103,8 @@ class Collector(Thread):
 
                     SingleLogger().log.debug(sql_str)
                     row_count = cursor.execute(sql_str)
+                    #将数据插入到指定的处理消息队列(id，日期)
+                    RedisHelper.strict_redis.lpush("newslist",row["res_id"]+","+date)
                     pass
                 # 更新相对应的规则字段
                 row_count = cursor.execute("""update analysis_data_normal_total 
@@ -331,10 +342,14 @@ where create_date = '%s'
         yestoday = LocalTime.from_today(self.time_go)
         yestoday_str = yestoday.strftime("%Y%m%d")
         runner_logs = self._database["runner_logs"+yestoday_str]
-        query = {}
-        query["tag"] = tag
 
-        mongo_cursor = runner_logs.find(query)
+        yestoday_time = LocalTime.nowtime_str(-1).strftime("%Y-%m-%d %H:%M:%S")
+        yestoday_nowtime = LocalTime.from_today(self.time_go).strftime("%Y-%m-%d %H:%M:%S")
+        SingleLogger().log.debug("======yestoday_time=======>%s" % yestoday_time)
+        SingleLogger().log.debug("======yestoday_nowtime=======>%s" % yestoday_nowtime)
+
+        mongo_cursor = runner_logs.find({'time': {'$gte': yestoday_time, '$lte': yestoday_nowtime},"tag": tag})
+
         try:
             conn = MySQLHelper.pool_connection.get_connection()
             # 创建游标
@@ -365,6 +380,9 @@ where create_date = '%s'
 
                 SingleLogger().log.debug(sql_str)
                 row_count = mysql_cursor.execute(sql_str)
+                #将数据插入到指定的处理消息队列(id，日期)
+                RedisHelper.strict_redis.lpush("newslist", Secret.md5(row["screenshot"])+","+yestoday_str)
+
         except Exception as ex:
             SingleLogger().log.error(ex)
         finally:
@@ -386,10 +404,23 @@ where create_date = '%s'
 
     #Push数据同步到MySql
     def batchImportPushata(self):
-        yestoday = LocalTime.from_today(self.time_go)
-        yestoday_str = yestoday.strftime("%Y%m%d")
+        yestoday_h = LocalTime.from_today(self.time_go).strftime("%H")
+        SingleLogger().log.debug("======h=======>%s" % yestoday_h)  
+        if yestoday_h == 00:
+            # 跨天需要隔表查询
+            yestoday_str = LocalTime.yestoday_str()
+            yestoday_time = LocalTime.from_today(-1).strftime("%Y-%m-%d")+ " 23:00:00"
+            yestoday_nowtime = LocalTime.from_today(-1).strftime("%Y-%m-%d") +" 24:00:00"
+        else:
+            yestoday_str = LocalTime.now_str()
+            SingleLogger().log.debug("======day=======>%s" % yestoday_str)
+            yestoday_time = LocalTime.nowtime_str(-1).strftime("%Y-%m-%d %H:%M:%S")
+            yestoday_nowtime = LocalTime.from_today(self.time_go).strftime("%Y-%m-%d %H:%M:%S")
+            SingleLogger().log.debug("======yestoday_time=======>%s" % yestoday_time)
+            SingleLogger().log.debug("======yestoday_nowtime=======>%s" % yestoday_nowtime)
+
         runner_logs = self._database["push" + yestoday_str]
-        mongo_cursor = runner_logs.find()
+        mongo_cursor = runner_logs.find({'time': {'$gte': yestoday_time, '$lte': yestoday_nowtime}})
         try:
             conn = MySQLHelper.pool_connection.get_connection()
             # 创建游标
@@ -421,6 +452,9 @@ where create_date = '%s'
                 SingleLogger().log.debug(sql_str)
                 row_count = mysql_cursor.execute(sql_str)
                 SingleLogger().log.debug(row_count)
+                #将数据插入到指定的处理消息队列(id，日期)
+                RedisHelper.strict_redis.lpush("newslist", Secret.md5(row["imgfilename"])+","+yestoday_str)
+
         except Exception as ex:
             SingleLogger().log.error(ex)
         finally:

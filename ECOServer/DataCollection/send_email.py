@@ -109,7 +109,7 @@ class MongodbConn(Thread):
         # 发件人的邮箱
         sender_qq_mail = '429205398@qq.com'
         # 收件人邮箱
-        receiver = ['zq_li@7coloring.com', '2602306038@qq.com']
+        receiver = ['zq_li@7coloring.com', '2602306038@qq.com','c_lin@7coloring.com']
         # 邮件的正文内容
         mail_content = '你好%s' % appname + '暂无数据！'
         # 邮件标题
