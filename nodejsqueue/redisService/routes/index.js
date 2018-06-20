@@ -186,13 +186,13 @@ var insertPushDataToOriginDb = function (db,insertData,callback) {
     day = day.replace("-","");
     var tablename = "originnews" + day;
 
-
+    console.log("insertPushDataToOriginDb！"+tablename);
     var timestamp = Date.parse(new Date(insertData.time));
 
 
     //统一时间格式
     insertData.imgfilename =insertData.imgfilename.replace("_","/")
-    console.log('insertData:'+ insertData.imgfilename);
+    //console.log('insertData:'+ insertData.imgfilename);
 
     var originNews = {};
     originNews.title = insertData.msg;
@@ -219,11 +219,11 @@ var insertPushDataToOriginDb = function (db,insertData,callback) {
     originNews.video = "";
     originNews.audio = "";
 
-
+    console.log(originNews);
     //连接到表
     var collection = db.collection(tablename);
     //插入数据
-    collection.insertOne(insertData,function (err,result) {
+    collection.insertOne(originNews,function (err,result) {
         if(err)
         {
             console.log('Error:'+ err);
