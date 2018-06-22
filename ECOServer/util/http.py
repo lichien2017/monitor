@@ -1,5 +1,7 @@
 import urllib.request
 import requests
+from util.log import SingleLogger
+
 
 class Http():
     @staticmethod
@@ -15,6 +17,8 @@ class Http():
 
         response = requests.get(url,headers=headers)
         if response.status_code == 200 :
+            SingleLogger().log.debug("==========response.text===========>%s" % response.text)
+            SingleLogger().log.debug("==========response.content===========>%s" % response.content)
             return response.content
         else:
             return ""
