@@ -146,7 +146,8 @@
       "app_tag":"kuaishou",
       "categroy":{"发现":"发现"}
     }
-  }, {
+  },
+  {
   "modname": "scrapyServer.ChangDuModel",
     "classname": "ChangParse",
     "queuename": "origin:changdu",
@@ -156,4 +157,15 @@
       "categroy":{"精选":"精选"}
     }
 }
+,
+  {
+    "modname": "scrapyServer.DFtoutiaoModel",
+    "classname": "dftoutiaoParse",
+    "queuename": "origin:dftoutiao",
+    "apppinfo":{
+      "app_name":"东方头条",
+      "app_tag":"dftoutiao",
+      "categroy":{"推荐":"推荐","热点":"热点","视频":"视频"}
+    }
+  }
 ]
