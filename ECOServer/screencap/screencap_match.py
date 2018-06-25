@@ -12,7 +12,7 @@ from util import *
 
 time_format = "%Y-%m-%d %H:%M:%S"
 interval = 10 #10分钟间隔
-DAYS = -1 # 与今天的差异，0 标示处理当天，-1标示处理前一天
+DAYS = 0 # 与今天的差异，0 标示处理当天，-1标示处理前一天
 
 
 # pool = redis.ConnectionPool(host=ConfigHelper.redisip, port=ConfigHelper.redisport, db=ConfigHelper.redisdb)
@@ -85,8 +85,8 @@ class ScreenCaptureMatch(Thread):
         # SingleLogger().log.debug(res)
         return res
 
-    def write_to_queue(self,res_id,title,pics,seqs):
-        data =  {"resid":res_id,"title":title,"imgs":pics,"seqs":seqs}
+    def write_to_queue(self,res_id,title,pics,seqs,datetime):
+        data =  {"resid":res_id,"title":title,"imgs":pics,"seqs":seqs,"datetime":datetime}
         json_str = json.dumps(data)
         SingleLogger().log.debug(json_str)
         RedisHelper.strict_redis.lpush("ocr:queue",json_str)
@@ -138,7 +138,7 @@ class ScreenCaptureMatch(Thread):
                 pictures, seqs = self.queryPictures(date.strftime("%Y%m%d"),item["time"],item["app_tag"],item["category_tag"])
                 if len(pictures) > 0:
                     SingleLogger().log.debug("找到了图片，长度为:%d",len(pictures))
-                    self.write_to_queue(item["res_id"], res["title"], pictures, seqs)
+                    self.write_to_queue(item["res_id"], res["title"], pictures, seqs,date.strftime("%Y%m%d"))
                     SingleLogger().log.debug("update screencap id = %s status=%d", item["_id"],1)
                     self.update_status(collection, item["_id"], 1)
                 else:
@@ -173,7 +173,7 @@ class ScreenCaptureMatch(Thread):
                     }
             }
             # query["_id"]["$in"].append(_id)
-            collection.update(query, update_set, False, True)
+            self._database["screencapocr" + item["datetime"]].update(query, update_set, False, True)
         pass
 
     def run(self):
