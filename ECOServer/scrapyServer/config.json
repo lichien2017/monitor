@@ -156,8 +156,7 @@
       "app_tag":"changdu",
       "categroy":{"精选":"精选"}
     }
-}
-,
+  },
   {
     "modname": "scrapyServer.DFtoutiaoModel",
     "classname": "dftoutiaoParse",
@@ -166,6 +165,16 @@
       "app_name":"东方头条",
       "app_tag":"dftoutiao",
       "categroy":{"推荐":"推荐","热点":"热点","视频":"视频"}
+    }
+  },
+  {
+    "modname": "scrapyServer.FlipboardModel",
+    "classname": "FlipboardParse",
+    "queuename": "origin:flipboard",
+    "apppinfo":{
+      "app_name":"红板报新闻",
+      "app_tag":"flipboard",
+      "categroy":{"首页":"首页"}
     }
   }
 ]
