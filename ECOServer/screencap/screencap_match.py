@@ -180,6 +180,6 @@ class ScreenCaptureMatch(Thread):
         while not self.thread_stop:
             collection = self.send_data()
             self.recv_data(collection)
-            time.sleep(3)
+            time.sleep(1)
 
         pass
