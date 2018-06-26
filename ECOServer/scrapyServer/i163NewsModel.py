@@ -119,13 +119,18 @@ class WYNewsParse(BaseParse):
         # 若restype=3为视频资讯 取视频地址
         if restype == 3:
             url = 'https://c.m.163.com/nc/video/detail/' + str(articleid) + '.html'
-            if category == "视频":
-                content = data['mp4_url']
-            elif category == "热点":
+            try:
                 news_detail = requests.get(url, headers=headers).json()
-                content = news_detail['mp4_url']
-            else:
-                content = data['videoinfo']['mp4_url']
+                content = news_detail['vurl']
+            except:
+                content=url
+            #if category == "视频":
+                #content = data['mp4_url']
+            #elif category == "热点":
+                #news_detail = requests.get(url, headers=headers).json()
+                #content = news_detail['mp4_url']
+            #else:
+                #content = data['videoinfo']['mp4_url']
             video=content
         elif restype == 2:
             if category == "图片":
