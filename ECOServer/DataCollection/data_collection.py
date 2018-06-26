@@ -55,10 +55,18 @@ class Collector(Thread):
             return
         table = self._database[table_name]
 
-        yestoday_time = LocalTime.nowtime_str(-1).strftime("%Y-%m-%d %H:%M:%S")
-        yestoday_nowtime = LocalTime.from_today(self.time_go).strftime("%Y-%m-%d %H:%M:%S")
-        SingleLogger().log.debug("======yestoday_time=======>%s" % yestoday_time)
-        SingleLogger().log.debug("======yestoday_nowtime=======>%s" % yestoday_nowtime)
+        #获取当前时间，如果是零点查询前一天的时间
+        yestoday_h = LocalTime.from_today(self.time_go).strftime("%H")
+        SingleLogger().log.debug("======h=======>%s" % yestoday_h)
+        if yestoday_h == 00:
+            # 跨天需要隔表查询
+            yestoday_time = LocalTime.from_today(-1).strftime("%Y-%m-%d") + " 23:00:00"
+            yestoday_nowtime = LocalTime.from_today(-1).strftime("%Y-%m-%d") + " 24:00:00"
+        else:
+            yestoday_time = LocalTime.nowtime_str(-1).strftime("%Y-%m-%d %H:%M:%S")
+            yestoday_nowtime = LocalTime.from_today(self.time_go).strftime("%Y-%m-%d %H:%M:%S")
+            SingleLogger().log.debug("======yestoday_time=======>%s" % yestoday_time)
+            SingleLogger().log.debug("======yestoday_nowtime=======>%s" % yestoday_nowtime)
 
         rows = table.find({'record_time': {'$gte': yestoday_time, '$lte': yestoday_nowtime}})
         
@@ -311,8 +319,18 @@ where create_date = '%s'
         row_count = cursor.execute("select * from analysis_rules where isonline = 1")
         # 获取所有数据
         result = cursor.fetchone()
-        yestoday = LocalTime.from_today(self.time_go)
+
+        #查询时间是否要查询前一天的
+        yestoday_h = LocalTime.from_today(self.time_go).strftime("%H")
+        if(yestoday_h == 00):
+            yestoday = LocalTime.from_today(-1)
+        else:
+            yestoday = LocalTime.from_today(self.time_go)
+
         yestoday_str = yestoday.strftime("%Y%m%d")
+
+
+
         # 这里修改了一下，对于重复的数据插入进行了调整，不会报错也不会有重复数据，所以放心插入吧
         #self.remove_all_table_data(yestoday_str)  # 清除某一天数据
         #
@@ -344,14 +362,32 @@ where create_date = '%s'
 
     # 导入纯人工审核数据
     def batchImportManualData(self,tag):
-        yestoday = LocalTime.from_today(self.time_go)
+        # 查询时间是否要查询前一天的
+        yestoday_h = LocalTime.from_today(self.time_go).strftime("%H")
+        if (yestoday_h == 00):
+            yestoday = LocalTime.from_today(-1)
+        else:
+            yestoday = LocalTime.from_today(self.time_go)
+
         yestoday_str = yestoday.strftime("%Y%m%d")
         runner_logs = self._database["runner_logs"+yestoday_str]
 
-        yestoday_time = LocalTime.nowtime_str(-1).strftime("%Y-%m-%d %H:%M:%S")
-        yestoday_nowtime = LocalTime.from_today(self.time_go).strftime("%Y-%m-%d %H:%M:%S")
-        SingleLogger().log.debug("======yestoday_time=======>%s" % yestoday_time)
-        SingleLogger().log.debug("======yestoday_nowtime=======>%s" % yestoday_nowtime)
+        # 获取当前时间，如果是零点查询前一天的时间
+        yestoday_h = LocalTime.from_today(self.time_go).strftime("%H")
+        SingleLogger().log.debug("======h=======>%s" % yestoday_h)
+        if yestoday_h == 00:
+            # 跨天需要隔表查询
+            yestoday_time = LocalTime.from_today(-1).strftime("%Y-%m-%d") + " 23:00:00"
+            yestoday_nowtime = LocalTime.from_today(-1).strftime("%Y-%m-%d") + " 24:00:00"
+        else:
+            yestoday_time = LocalTime.nowtime_str(-1).strftime("%Y-%m-%d %H:%M:%S")
+            yestoday_nowtime = LocalTime.from_today(self.time_go).strftime("%Y-%m-%d %H:%M:%S")
+            SingleLogger().log.debug("======yestoday_time=======>%s" % yestoday_time)
+            SingleLogger().log.debug("======yestoday_nowtime=======>%s" % yestoday_nowtime)
+
+
+
+
 
         mongo_cursor = runner_logs.find({'time': {'$gte': yestoday_time, '$lte': yestoday_nowtime},"tag": tag})
 
