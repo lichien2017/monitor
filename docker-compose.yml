@@ -73,7 +73,7 @@ services:
       - /etc/localtime:/etc/localtime
       - /etc/timezone:/etc/timezone
       - /mnt/elasticsearch:/usr/share/elasticsearch/data
-  networks:
+    networks:
       - mobilephone
   graylog:
     image: graylog2/server:2.1.1-1
