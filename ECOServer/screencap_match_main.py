@@ -1,6 +1,9 @@
 
-from screencap.screencap_match import ScreenCaptureMatch
-
+from screencap.screencap_match_recv import ScreenCaptureMatchRecv
+from screencap.screencap_match_senddata import ScreenCaptureMatchSendData
+from concurrent import futures
+import requests
+import os
 from util import *
 import  sys
 import json
@@ -30,11 +33,49 @@ import time
 
 
 
-def main():
-    r = ScreenCaptureMatch()
-    r.start()
-    pass
+# def main():
+#     r = ScreenCaptureMatch()
+#     r.start()
+#     pass
 
 if __name__ == "__main__" :
     SingleLogger().log.debug("测试")
-    main()
+    # main()
+    recv = ScreenCaptureMatchRecv()
+    send = ScreenCaptureMatchSendData()
+    with futures.ThreadPoolExecutor(max_workers=2) as executor:
+        to_do_map = {}
+
+        future = executor.submit(recv.start)
+        to_do_map[future] = "ScreenCaptureMatchRecv"
+        future = executor.submit(send.start)
+        to_do_map[future] = "ScreenCaptureMatchSendData"
+        # msg = 'Scheduled for {}: {}'
+        # SingleLogger().log.debug(msg.format(cc, future))
+        #
+        # for cc in cc_list:
+        #     # if cc == None or cc == "" :
+        #     #     continue
+        #     future = executor.submit(self.download_one, cc)
+        #     to_do_map[future] = cc
+        #     msg = 'Scheduled for {}: {}'
+        #     SingleLogger().log.debug(msg.format(cc, future))
+
+        results = []
+        for future in futures.as_completed(to_do_map):
+            try:
+                res = future.result()
+            except requests.exceptions.HTTPError as exc:
+                # 处理可能出现的异常
+                error_msg = '{} result {}'.format(cc, exc)
+            else:
+                error_msg = ''
+            if error_msg:
+                cc = to_do_map[future]  # <16>
+                SingleLogger().log.error('*** Error for {}: {}'.format(cc, error_msg))
+            else:
+                msg = '{} result: {!r}'
+                SingleLogger().log.debug(msg.format(future, res))
+                results.append(res)
+        count = len(results)
+    pass

@@ -132,6 +132,10 @@ class ScreenCaptureMatch(Thread):
 
         screencap_cursor = collection.find(query, limit=10)
         try:
+            if screencap_cursor.count() == 0:
+                time.sleep(1)
+                return
+
             for item in screencap_cursor:
                 SingleLogger().log.debug(item)
                 res = self.__get_resource(item["res_id"],date.strftime("%Y%m%d"))  # 获取资源详情
@@ -145,11 +149,9 @@ class ScreenCaptureMatch(Thread):
                     self.update_status(collection, item["_id"], -1)
         finally:
             pass
-            # self._client.close()
-        return collection
         pass
     # 回写状态
-    def recv_data(self,collection):
+    def recv_data(self):
         data = RedisHelper.strict_redis.rpop("ocr:result")
         if data != None:
             SingleLogger().log.debug(data)
@@ -174,12 +176,14 @@ class ScreenCaptureMatch(Thread):
             }
             # query["_id"]["$in"].append(_id)
             self._database["screencapocr" + item["datetime"]].update(query, update_set, False, True)
+        else:
+            time.sleep(1)
         pass
 
     def run(self):
-        while not self.thread_stop:
-            collection = self.send_data()
-            self.recv_data(collection)
-            time.sleep(1)
+        # while not self.thread_stop:
+        #     collection = self.send_data()
+        #     self.recv_data()
+        #     time.sleep(1)
 
         pass
