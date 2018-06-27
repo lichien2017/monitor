@@ -43,7 +43,7 @@ class Logger(logging.Logger):
         ch.setFormatter(formatter)
 
         # 给logger添加handler
-        self.addHandler(fh)
+        # self.addHandler(fh)
         self.addHandler(ch)
 
 class SingleLogger(Singleton):
