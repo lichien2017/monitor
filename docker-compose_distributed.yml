@@ -10,6 +10,11 @@ services:
       - /dev/bus/usb:/dev/bus/usb
     privileged: true
     network_mode: "host"
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://192.168.10.177:12201"
+        tag: adbd
   rethinkdb:
     image: rethinkdb
     restart: always
@@ -21,6 +26,11 @@ services:
       - "/mnt/db/rethinkdb:/data"
     network_mode: "host"
     command: "rethinkdb --bind all --cache-size 2048"
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://192.168.10.177:12201"
+        tag: rethinkdb
   stf-local:
     image: openstf/stf
     restart: always
@@ -34,6 +44,11 @@ services:
       - "7400-7500:7400-7500"
     network_mode: "host"
     command: stf local --public-ip 192.168.10.177
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://192.168.10.177:12201"
+        tag: stf
   redis:
     image: redis
     restart: always
@@ -44,6 +59,11 @@ services:
       - /mnt/db/redisdb:/data
     networks:
       - mobilephone_release
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://192.168.10.177:12201"
+        tag: redis
   mongo:
     image: mongo
     restart: always
@@ -54,6 +74,11 @@ services:
       - /mnt/db/mongodbData:/data/db
     networks:
       - mobilephone_release
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://192.168.10.177:12201"
+        tag: mongo
   mysql:
     image: mysql
     restart: always
@@ -66,6 +91,11 @@ services:
       MYSQL_ROOT_PASSWORD: 123456
     networks:
       - mobilephone_release
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://192.168.10.177:12201"
+        tag: mysql
   nodejsqueue:
     build: nodejsqueue/
     container_name: nodejsqueue
@@ -81,6 +111,11 @@ services:
     depends_on:
       - redis
       - mongo
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://192.168.10.177:12201"
+        tag: nodejsqueue
   mitmproxy:
     build: mitmproxy/
     restart: always
@@ -98,6 +133,11 @@ services:
       - redis
     networks:
       - mobilephone_release
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://192.168.10.177:12201"
+        tag: mitmproxy
   anyproxy:
     build: anyproxy4_x/
     restart: always
@@ -116,6 +156,11 @@ services:
       - nodejsqueue
     networks:
       - mobilephone_release
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://192.168.10.177:12201"
+        tag: anyproxy
   ecologicalmonitor:
     build: monkeyrunner/
     restart: always
@@ -128,6 +173,11 @@ services:
       - adbd
     networks:
       - mobilephone_release
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://192.168.10.177:12201"
+        tag: ecologicalmonitor
   ecoserver:
     build: ECOServer/
     restart: always
@@ -140,6 +190,11 @@ services:
       - mysql
     networks:
       - mobilephone_release
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://192.168.10.177:12201"
+        tag: ecoserver
   ocrserver:
     build: ECOServer/
     restart: always
@@ -153,6 +208,11 @@ services:
       - mysql
     networks:
       - mobilephone_release
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://192.168.10.177:12201"
+        tag: ocrserver
   imagedownload:
     build: ECOServer/
     restart: always
@@ -166,6 +226,11 @@ services:
       - mongo
     networks:
       - mobilephone_release
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://192.168.10.177:12201"
+        tag: imagedownload
   dockerui:
     image: abh1nav/dockerui:latest
     restart: always
@@ -180,6 +245,11 @@ services:
       - mysql
     networks:
       - mobilephone_release
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://192.168.10.177:12201"
+        tag: dockerui
 
 
 networks:

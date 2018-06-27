@@ -1,0 +1,42 @@
+version: '2'
+services:
+  log-mongo:
+    image: "mongo:3"
+    restart: always
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /etc/timezone:/etc/timezone
+      - /mnt/db/graylog_mongodb:/data/db
+  log-elasticsearch:
+    image: "elasticsearch:2"
+    restart: always
+    command: "elasticsearch -Des.cluster.name='graylog'"
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /etc/timezone:/etc/timezone
+      - /mnt/db/graylog_elasticsearch:/usr/share/elasticsearch/data
+  graylog:
+    image: graylog2/server:2.1.1-1
+    restart: always
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /etc/timezone:/etc/timezone
+      - /mnt/db/graylog/data/journal:/usr/share/graylog/data/journal
+      - /mnt/db/graylog/config:/usr/share/graylog/data/config
+    environment:
+      GRAYLOG_PASSWORD_SECRET: somepasswordpepper
+      GRAYLOG_ROOT_PASSWORD_SHA2: 8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918
+      #这个地址需要配置成你要访问的地址，比如你的容器部署在192.168.1.2，你需要通过192.168.1.2来访问服务的话，你需要配置成http://192.168.1.2:9000/api，否则访问会报错
+      GRAYLOG_WEB_ENDPOINT_URI: http://192.168.10.177:9000/api
+    depends_on:
+      - log-elasticsearch
+      - log-mongo
+    links:
+      - log-mongo:mongo
+      - log-elasticsearch:elasticsearch
+    ports:
+      #web界面端口
+      - "9000:9000"
+      #gelf收集日志的端口，如果需要添加graylog收集器，可以新增暴露出来的端口
+      - "192.168.10.177:12201:12201/udp"
+      - "192.168.10.177:1514:1514/udp"
