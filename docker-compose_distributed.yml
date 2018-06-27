@@ -10,11 +10,6 @@ services:
       - /dev/bus/usb:/dev/bus/usb
     privileged: true
     network_mode: "host"
-    logging:
-      driver: "gelf"
-      options:
-        gelf-address: "udp://192.168.10.177:12201"
-        tag: adbd
   rethinkdb:
     image: rethinkdb
     restart: always
@@ -26,11 +21,6 @@ services:
       - "/mnt/db/rethinkdb:/data"
     network_mode: "host"
     command: "rethinkdb --bind all --cache-size 2048"
-    logging:
-      driver: "gelf"
-      options:
-        gelf-address: "udp://192.168.10.177:12201"
-        tag: rethinkdb
   stf-local:
     image: openstf/stf
     restart: always
@@ -44,58 +34,6 @@ services:
       - "7400-7500:7400-7500"
     network_mode: "host"
     command: stf local --public-ip 192.168.10.177
-    logging:
-      driver: "gelf"
-      options:
-        gelf-address: "udp://192.168.10.177:12201"
-        tag: stf
-  redis:
-    image: redis
-    restart: always
-    ports: 
-        - "6379:6379"
-    container_name: redisdb
-    volumes:
-      - /mnt/db/redisdb:/data
-    networks:
-      - mobilephone_release
-    logging:
-      driver: "gelf"
-      options:
-        gelf-address: "udp://192.168.10.177:12201"
-        tag: redis
-  mongo:
-    image: mongo
-    restart: always
-    ports: 
-        - "27017:27017"
-    container_name: mongodb
-    volumes:
-      - /mnt/db/mongodbData:/data/db
-    networks:
-      - mobilephone_release
-    logging:
-      driver: "gelf"
-      options:
-        gelf-address: "udp://192.168.10.177:12201"
-        tag: mongo
-  mysql:
-    image: mysql
-    restart: always
-    ports: 
-        - "3306:3306"
-    container_name: mysqldb
-    volumes:
-      - /mnt/db/mysqldata:/var/lib/mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: 123456
-    networks:
-      - mobilephone_release
-    logging:
-      driver: "gelf"
-      options:
-        gelf-address: "udp://192.168.10.177:12201"
-        tag: mysql
   nodejsqueue:
     build: nodejsqueue/
     container_name: nodejsqueue
@@ -108,9 +46,6 @@ services:
       - /mnt/analysis_media:/mnt/analysis_media
     networks:
       - mobilephone_release
-    depends_on:
-      - redis
-      - mongo
     logging:
       driver: "gelf"
       options:
@@ -129,8 +64,6 @@ services:
       - /home/tymx/Documents/DockerContainer/mitmproxy/crt:/root/.mitmproxy
       - /home/tymx/Documents/DockerContainer/ECOServer/mitmproxyServer:/tmp/script
     command: mitmweb --web-iface 0.0.0.0 --ssl-insecure -s /tmp/script/AddRule.py
-    depends_on:
-      - redis
     networks:
       - mobilephone_release
     logging:
@@ -168,8 +101,6 @@ services:
       - /home/tymx/Documents/DockerContainer/monkeyrunner/ecological:/usr/local/monkeyrunner/ecological
       - /mnt/db/logs:/usr/local/monkeyrunner/ecological/logs
     depends_on:
-      - redis
-      - mongo
       - adbd
     networks:
       - mobilephone_release
@@ -184,10 +115,6 @@ services:
     volumes:
       - /home/tymx/Documents/DockerContainer/ECOServer:/usr/local/ECOServer
       - /mnt/db/logs:/usr/local/ECOServer/logs
-    depends_on:
-      - redis
-      - mongo
-      - mysql
     networks:
       - mobilephone_release
     logging:
@@ -202,10 +129,6 @@ services:
       - /home/tymx/Documents/DockerContainer/ECOServer:/usr/local/ECOServer
       - /mnt/db/logs:/usr/local/ECOServer/logs
     command: python /usr/local/ECOServer/screencap_match_main.py
-    depends_on:
-      - redis
-      - mongo
-      - mysql
     networks:
       - mobilephone_release
     logging:
@@ -221,9 +144,6 @@ services:
       - /mnt/download_media:/usr/local/ECOServer/mediaDownloadServer/files
       - /mnt/db/logs:/usr/local/ECOServer/logs
     command: python /usr/local/ECOServer/media_download_server.py
-    depends_on:
-      - redis
-      - mongo
     networks:
       - mobilephone_release
     logging:
@@ -231,26 +151,6 @@ services:
       options:
         gelf-address: "udp://192.168.10.177:12201"
         tag: imagedownload
-  dockerui:
-    image: abh1nav/dockerui:latest
-    restart: always
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    ports: 
-      - "19000:9000"
-    privileged: true
-    depends_on:
-      - redis
-      - mongo
-      - mysql
-    networks:
-      - mobilephone_release
-    logging:
-      driver: "gelf"
-      options:
-        gelf-address: "udp://192.168.10.177:12201"
-        tag: dockerui
-
 
 networks:
   mobilephone_release:
