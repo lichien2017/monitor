@@ -213,9 +213,6 @@ services:
       - mysql
     networks:
       - mobilephone
-
-
-
 networks:
   mobilephone:
     driver: bridge
