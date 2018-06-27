@@ -148,7 +148,6 @@ services:
       - redis
       - mongo
       - mysql
-      - graylog
     networks:
       - mobilephone
     logging:
