@@ -186,7 +186,7 @@ services:
     logging:
       driver: "gelf"
       options:
-        gelf-address: "udp://graylog:12201"
+        gelf-address: "udp://graylogserver:12201"
         tag: ecoserver
   ocrserver:
     build: ECOServer/
