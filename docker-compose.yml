@@ -66,6 +66,38 @@ services:
       MYSQL_ROOT_PASSWORD: 123456
     networks:
       - mobilephone
+  log-elasticsearch:
+    image: "elasticsearch:2"
+    command: "elasticsearch -Des.cluster.name='graylog'"
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /etc/timezone:/etc/timezone
+      - /mnt/elasticsearch:/usr/share/elasticsearch/data
+  networks:
+      - mobilephone
+  graylog:
+    image: graylog2/server:2.1.1-1
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /etc/timezone:/etc/timezone
+      - /mnt/graylog/data/journal:/usr/share/graylog/data/journal
+      - /mnt/graylog/config:/usr/share/graylog/data/config
+    environment:
+      GRAYLOG_PASSWORD_SECRET: somepasswordpepper
+      GRAYLOG_ROOT_PASSWORD_SHA2: 8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918
+      #这个地址需要配置成你要访问的地址，比如你的容器部署在192.168.1.2，你需要通过192.168.1.2来访问服务的话，你需要配置成http://192.168.1.2:9000/api，否则访问会报错
+      GRAYLOG_WEB_ENDPOINT_URI: http://192.168.10.176:9000/api
+    depends_on:
+      - log-elasticsearch
+      - mongo
+    ports:
+      #web界面端口
+      - "9000:9000"
+      #gelf收集日志的端口，如果需要添加graylog收集器，可以新增暴露出来的端口
+      - "12201:12201/udp"
+      - "1514:1514/udp"
+    networks:
+      - mobilephone
   nodejsqueue:
     build: nodejsqueue/
     container_name: nodejsqueue
@@ -150,6 +182,11 @@ services:
       - mysql
     networks:
       - mobilephone
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://graylog:12201"
+        tag: ecoserver
   ocrserver:
     build: ECOServer/
     restart: always
@@ -176,6 +213,7 @@ services:
       - mysql
     networks:
       - mobilephone
+
 
 
 networks:
