@@ -1,2 +1,2 @@
 #!/bin/bash
-sudo docker-compose -f base_server.yml up -d
+sudo docker-compose -f database/docker-compose.yml up -d
