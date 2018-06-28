@@ -1,3 +1,3 @@
 #!/bin/bash
-docker-compose -f /home/tymx/Documents/DockerContainer/docker-compose_distributed.yml restart mitmproxy
-docker-compose -f /home/tymx/Documents/DockerContainer/docker-compose_distributed.yml restart ecoserver
+docker-compose -f ../pub/docker-compose.yml restart mitmproxy
+docker-compose -f ../pub/docker-compose.yml restart ecoserver

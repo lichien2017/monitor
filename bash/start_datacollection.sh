@@ -1,2 +1,2 @@
 #!/bin/bash
-docker run --rm --net=dockercontainer_mobilephone_release -v /home/tymx/Documents/DockerContainer/ECOServer:/usr/local/ECOServer -v /mnt/train_files:/tmp dockercontainer_ecoserver python /usr/local/ECOServer/data_collection_main.py
+docker run --rm --net=pub_mobilephone_release -v /home/tymx/Documents/DockerContainer/ECOServer:/usr/local/ECOServer -v /mnt/train_files:/tmp dockercontainer_ecoserver python /usr/local/ECOServer/data_collection_main.py
