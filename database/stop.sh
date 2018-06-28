@@ -1,2 +1,2 @@
 #!/bin/bash
-sudo docker-compose down
+sudo docker-compose -f database/docker-compose.yml down
