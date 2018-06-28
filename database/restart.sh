@@ -1,2 +1,3 @@
 #!/bin/bash
-sudo docker-compose -f database/docker-compose.yml restart
+cd database
+sudo docker-compose restart
