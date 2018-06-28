@@ -1,2 +1,2 @@
 #!/bin/bash
-docker-compose -f ../pub/docker-compose.yml restart imagedownload
+docker-compose -f ./pub/docker-compose.yml restart imagedownload
