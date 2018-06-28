@@ -148,6 +148,7 @@ class MediaDownload(Thread):
                     if res["restype"] == 4: # 如果是消息推送，直接加入处理队列
                         SingleLogger().log.debug("Push Msg Rule1server.add_resource_to_all_queue == %s", json.dumps(res_msg))
                         self.ruleServiceLevel1.add_resource_to_all_queue(json.dumps(res_msg))
+                        continue
                     # 读取资源中的图片
                     logos = []
                     if res["logo"].find("、")>=0 :
