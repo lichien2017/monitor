@@ -177,5 +177,7 @@ class MediaDownload(Thread):
                     # 下载完成后发送到指定队列
                     SingleLogger().log.debug("Rule1server.add_resource_to_all_queue == %s", json.dumps(res_msg))
                     self.ruleServiceLevel1.add_resource_to_all_queue(json.dumps(res_msg))
-            time.sleep(2)
+            else:
+                SingleLogger().log.debug("No data")
+                time.sleep(2)
     pass
