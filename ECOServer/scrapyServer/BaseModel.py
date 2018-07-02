@@ -2,7 +2,7 @@
 import redis
 import json
 import threadpool
-import sys
+import time
 from time import sleep
 from pymongo import MongoClient
 from util import *
@@ -30,6 +30,45 @@ class BaseParse(object):
         self.apptag = apptag
         self.categroytag = categroytag
         print(name)
+
+
+
+    # def sdata(self,title,abstract,content,source,publish_timestr,publish_time,
+    #         crawltimestr,crawltime,url,logo,tab,keyword,seq,articleid,appname,
+    #         apptag,categorytag,category,restype,gallary,video,audio):
+    #     sdata = {
+    #         "title": title,
+    #         "description": abstract,
+    #         "content": content,
+    #         "source": source,
+    #         "pubtimestr": publish_timestr,
+    #         "pubtime": publish_time,
+    #         "crawltimestr": crawltimestr,
+    #         "crawltime": crawltime,
+    #         "status": 0,
+    #         "shorturl": url,
+    #         "logo": logo,
+    #         "labels": tab,
+    #         "keyword": keyword,
+    #         "seq": seq,
+    #         "identity": str(articleid),
+    #         "appname": appname,
+    #         "app_tag": apptag,
+    #         "category_tag": categorytag,
+    #         "category": category,
+    #         "restype": restype,
+    #         "gallary": gallary,
+    #         "video": video,
+    #         "audio": audio
+    #     }
+    #
+    #     return  sdata
+    #
+    #
+    # def timeStr(self,timestr):
+    #     timestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(timestr / 1000))
+    #     return timestr;
+
 
     #插入mongodb
     def db(self,sdata,articleid,title):
@@ -68,8 +107,8 @@ class BaseParse(object):
             # 数据包里面要包含标示和日期，所以要重新构建包 lzq
             msg = {"res_id":"%s"%articleid,"time":LocalTime.get_local_date(record_date_utc,"%Y-%m-%d %H:%M:%S").strftime("%Y%m%d"),
                    "record_time":"%s" % sdata["crawltimestr"]}
-            SingleLogger().log.debug("Rule0server.execute_all == %s",json.dumps(msg))
-            Rule0server.execute_all(json.dumps(msg)) # 插入的数据格式为json
+            # SingleLogger().log.debug("Rule0server.execute_all == %s",json.dumps(msg))
+            # Rule0server.execute_all(json.dumps(msg)) # 插入的数据格式为json
             # SingleLogger().log.debug("Rule1server.add_resource_to_all_queue == %s", json.dumps(msg))
             # Rule1server.add_resource_to_all_queue(json.dumps(msg))
             #分发给下载资源服务
@@ -154,22 +193,21 @@ def flowparse(confdata):
 #2、将监控App插入到消息队列
 #3、启动线程池
 class MainControl(object):
-    def __init__(self, confpath='config.json', sleeptime=180, poolsize=10,rule0server=None,rule1server=None):
+    def __init__(self, confpath='config.json', sleeptime=180, poolsize=10):
         self.poolsize = poolsize
         self.pool = threadpool.ThreadPool(poolsize)
         self.confpath = confpath
         self.sleeptime = sleeptime
-        global Rule0server
-        global Rule1server
-        Rule0server = rule0server
-        Rule1server = rule1server
+        # global Rule0server
+        # global Rule1server
+        # Rule0server = rule0server
+        # Rule1server = rule1server
 
     #获取配置文件的数据（需要监控的app参数）
     def getconfdatas(self):
         with open(self.confpath) as f:
             confs = json.load(f)
             return confs
-
 
     #启动线程解析
     def startthread(self):
