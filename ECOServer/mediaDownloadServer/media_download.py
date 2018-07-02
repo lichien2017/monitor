@@ -8,6 +8,7 @@ import json
 from util import *
 import time
 from analysis.rule_level0_service import RuleServiceLevel1
+from analysis.rule_level0_service import RuleServiceLevel0
 DEST_DIR = os.path.dirname(__file__) + "/files/"  # 服务启动后做映射过去
 # log = SingleLogger().log
 
@@ -19,6 +20,9 @@ class MediaDownload(Thread):
         self.thread_stop = False
         self.ruleServiceLevel1 = RuleServiceLevel1(ConfigHelper.load_rule_time)
         self.ruleServiceLevel1.load_rules(1)
+        self.ruleServiceLevel0 = RuleServiceLevel0(ConfigHelper.load_rule_time)
+        self.ruleServiceLevel0.load_rules(0)
+        self.ruleServiceLevel1.execute_all()
         pass
     # 查询mongodb的资源详情
     def get_resource(self,res_msg):
@@ -177,7 +181,9 @@ class MediaDownload(Thread):
                     SingleLogger().log.debug("result=%d" % result)
                     # 下载完成后发送到指定队列
                     SingleLogger().log.debug("Rule1server.add_resource_to_all_queue == %s", json.dumps(res_msg))
+                    self.ruleServiceLevel0.execute_all(json.dumps(res_msg))
                     self.ruleServiceLevel1.add_resource_to_all_queue(json.dumps(res_msg))
+
             else:
                 SingleLogger().log.debug("No data")
                 time.sleep(2)
