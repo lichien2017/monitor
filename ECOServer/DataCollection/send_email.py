@@ -31,7 +31,7 @@ class MongodbConn(Thread):
         # mysql使用cursor()方法获取操作游标
         cursor = self.sdb.cursor()
         # 使用execute方法执行SQL语句
-        cursor.execute("SELECT * FROM app_information WHERE isartificial = 0")
+        cursor.execute("SELECT * FROM app_information WHERE isonline = 1 AND isartificial=0")
         # 使用 fetchone() 方法获取一条数据
         data = cursor.fetchall()
         if bool(data) != True:
