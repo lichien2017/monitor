@@ -13,11 +13,11 @@ from analysis.rule_level0_service import RuleServiceLevel1
 # log = Logger()
 
 if __name__ == "__main__":
-    ruleServiceLevel0 = RuleServiceLevel0(ConfigHelper.load_rule_time)
-    ruleServiceLevel0.load_rules(0)
-    ruleServiceLevel1 = RuleServiceLevel1(ConfigHelper.load_rule_time)
-    ruleServiceLevel1.load_rules(1)
-    ruleServiceLevel1.execute_all()
+    # ruleServiceLevel0 = RuleServiceLevel0(ConfigHelper.load_rule_time)
+    # ruleServiceLevel0.load_rules(0)
+    # ruleServiceLevel1 = RuleServiceLevel1(ConfigHelper.load_rule_time)
+    # ruleServiceLevel1.load_rules(1)
+    # ruleServiceLevel1.execute_all()
     parser = argparse.ArgumentParser()
     # Optional arguments: input file.
     parser.add_argument(
@@ -53,5 +53,5 @@ if __name__ == "__main__":
 
     print(args)
 
-    control = MainControl(args.input_file, args.sleeptime, args.number,ruleServiceLevel0,ruleServiceLevel1)
+    control = MainControl(args.input_file, args.sleeptime, args.number)
     control.startthread()
