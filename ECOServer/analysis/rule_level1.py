@@ -81,6 +81,7 @@ class BaseLevel1Rule(Rule,Thread):
                                 # 获取当前的时分秒
                                 nowtime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
                                 nowtime = LocalTime.get_local_date(nowtime, "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d %H:%M:%S")
+                                SingleLogger().log.debug("=========nowtime=========>%s" %nowtime)
                                 restable.insert({"res_id": "%s" % res_recv[0], "res_level": "%s" % res_recv[4],
                                                  "res_time":"%s" % nowtime,"res_rule":"%s" % res_recv[2].split(":")[0]})
 
