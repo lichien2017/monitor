@@ -44,7 +44,7 @@ class BaseLevel1Rule(Rule,Thread):
             if item != None:
                 SingleLogger().log.debug(item)
                 # print(self._mongodb_tablename)
-                res_recv = item.decode("utf-8").split(",")  # res_id,time,record_time|res_id,time,video,record_time
+                res_recv = item.decode("utf-8").split(",")  # res_id,time,video,record_time,mmm
                 sub_job = "sendjob:%s:%s" % (self.__class__.__name__, res_recv[0])  # 子任务消息key
                 SingleLogger().log.info(sub_job)
                 hset_keys = RedisHelper.strict_redis.hkeys(sub_job)  # 得到任务所有keys，用于检查是否完成校验，等到服务返回
@@ -70,11 +70,30 @@ class BaseLevel1Rule(Rule,Thread):
                         # 只要有一个为1，表示规则匹配成功，插入数据库
                         SingleLogger().log.info(self._mongodb_tablename + res_recv[1])
                         self._mongodb = self._mongodb_client['crawlnews']
+                        #新增资源级别分类表，按当前时间分表
+                        day= time.strftime('%Y-%m-%d', time.localtime(time.time()))
+                        # 时间修正一下，改为本地时间
+                        record_date = LocalTime.get_local_date(day, "%Y-%m-%d").strftime("%Y-%m-%d")
+                        restable = self._mongodb["reslevel%s" % record_date]
+                        SingleLogger().log.debug("========== record_date===========>%s" % record_date)
+                        if  res_recv.lenth() == 5 :
+                            SingleLogger().log.debug("========== res_recv.lenth()===========>%s" % res_recv.lenth())
+                            resitem = restable.find_one({"res_id": "%s" % res_recv[0]})
+                            if item == None:
+                                # 获取当前的时分秒
+                                nowtime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+                                nowtime = LocalTime.get_local_date(nowtime, "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d %H:%M:%S")
+                                restable.insert({"res_id": "%s" % res_recv[0], "res_level": res_recv[4],
+                                                 "res_time":"%s" % nowtime})
+
+
+
+
                         table = self._mongodb[self._mongodb_tablename + res_recv[1]]
                         item = table.find_one({"res_id": "%s" % res_recv[0]})
                         if item == None:
                             # 插入到指定有问题的数据表中，比如血腥暴力、色情表
-                            table.insert({"res_id": "%s" % res_recv[0],"record_time":res_recv[len(res_recv)-1]})
+                            table.insert({"res_id": "%s" % res_recv[0],"record_time":res_recv[3]})
 
                             # 同时将有问题的数据加入到每天的合计表中
                             total_table = self._mongodb["all_resource" + res_recv[1]]
