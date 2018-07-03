@@ -78,7 +78,7 @@ class BaseLevel1Rule(Rule,Thread):
                         if  len(res_recv) == 5 :
                             SingleLogger().log.debug("========== res_recvlenth===========>%s" % len(res_recv))
                             resitem = restable.find_one({"res_id": "%s" % res_recv[0]})
-                            if item == None:
+                            if resitem == None:
                                 # 获取当前的时分秒
                                 nowtime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
                                 nowtime = LocalTime.get_local_date(nowtime, "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d %H:%M:%S")
