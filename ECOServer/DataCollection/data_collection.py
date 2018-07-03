@@ -469,7 +469,7 @@ where create_date = '%s'
             # 创建游标
             mysql_cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
             row_count = mysql_cursor.execute(sql)
-            print("=======row_count======>%s" % sql)
+            print("=======row_count======>%s" % row_count)
 
 
 
