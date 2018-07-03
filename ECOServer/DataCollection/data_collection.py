@@ -107,12 +107,15 @@ class Collector(Thread):
                                     `SexyRule`,
                                     `PoliticalRule`,
                                     `ZongJiaoRule`,
-                                    `BiaoTiDangRule`,top_news,ad_news,hot_news,topic_news,we_media,source,contents,res_type)
+                                    `BiaoTiDangRule`,top_news,ad_news,hot_news,
+                                    topic_news,we_media,source,contents,res_type,
+                                    `XueXingBaoLiRuleLevel`,`SexyRuleLevel`,`PoliticalRuleLevel`,
+                                    `ZongJiaoRuleLevel`,`BiaoTiDangRuleLevel`)
                                     VALUES
-                                    ('%s','%s','%s','%s',%d,'%s',%d,'%s','%s','%s','%s',%d,%d,%d,%d,%d,%d,%d,%d,%d,'%s','%s',%d)
+                                    ('%s','%s','%s','%s',%d,'%s',%d,'%s','%s','%s','%s',%d,%d,%d,%d,%d,%d,%d,%d,%d,'%s','%s',%d,%d)
                                     """ % (
                                     row["res_id"],pymysql.escape_string(res["title"]),pymysql.escape_string(res["description"]),res["crawltimestr"],0,screenshot,screen_index,
-                                    res["app_tag"], res["category_tag"], res["shorturl"],date, 0,0,0,0, 0,0,0,0,0,res["source"],res["content"],res["restype"])
+                                    res["app_tag"], res["category_tag"], res["shorturl"],date, 0,0,0,0, 0,0,0,0,0,res["source"],res["content"],res["restype"],0,0,0,0,0)
 
                     SingleLogger().log.debug(sql_str)
                     row_count = cursor.execute(sql_str)
@@ -207,13 +210,15 @@ class Collector(Thread):
                                                         `SexyRule`,
                                                         `PoliticalRule`,
                                                         `ZongJiaoRule`,
-                                                        `BiaoTiDangRule`)
+                                                        `BiaoTiDangRule`,
+                                                         `XueXingBaoLiRuleLevel`,`SexyRuleLevel`,`PoliticalRuleLevel`,
+                                                         `ZongJiaoRuleLevel`,`BiaoTiDangRuleLevel`)
                                                         VALUES
-                                                        ('%s','%s','%s','%s',%d,'%s',%s,'%s','%s','%s','%s',%d,%d,%d,%d)
+                                                        ('%s','%s','%s','%s',%d,'%s',%s,'%s','%s','%s','%s',%d,%d,%d,%d,%d)
                                                         """ % (
                             row["res_id"], pymysql.escape_string(res["title"]), pymysql.escape_string(res["description"]),
                             res["crawltimestr"], 0, row["image"],row["screen_index"],
-                            res["app_tag"], res["category_tag"], res["shorturl"], date, 0, 0, 0, 0)
+                            res["app_tag"], res["category_tag"], res["shorturl"], date, 0, 0, 0,0,0,0,0,0,0)
 
                         SingleLogger().log.debug(sql_str)
                         row_count = cursor.execute(sql_str)
@@ -411,13 +416,15 @@ where create_date = '%s'
                                 `SexyRule`,
                                 `PoliticalRule`,
                                 `ZongJiaoRule`,
-                                `BiaoTiDangRule`)
+                                `BiaoTiDangRule`,
+                                `XueXingBaoLiRuleLevel`,`SexyRuleLevel`,`PoliticalRuleLevel`,
+                                `ZongJiaoRuleLevel`,`BiaoTiDangRuleLevel`)
                                 VALUES
-                                ('%s','%s','%s','%s',%d,'%s',%s,'%s','%s','%s','%s',%d,%d,%d,%d)
+                                ('%s','%s','%s','%s',%d,'%s',%s,'%s','%s','%s','%s',%d,%d,%d,%d,%d)
                                 """ % (
                     Secret.md5(row["screenshot"]), "人工审核无标题","",
                     row["time"], 0, row["screenshot"], row["screen"],
-                    row["tag"], row["reference"], "", yestoday_str, 0, 0, 0, 0)
+                    row["tag"], row["reference"], "", yestoday_str, 0, 0, 0, 0,0,0,0,0,0)
 
                 SingleLogger().log.debug(sql_str)
                 row_count = mysql_cursor.execute(sql_str)
@@ -436,72 +443,33 @@ where create_date = '%s'
         for tag in self.tags:
             self.batchImportManualData(tag["tag"])
         pass
-        # Push数据同步到MySql
-        #self.batchImportPushata() lzq屏蔽的，已经改为统一处理了
+
+        #更改资源级别字段
+        self.updateLevel()
+
         # 删除空数据
         yestoday = LocalTime.from_today(self.time_go)
         yestoday_str = yestoday.strftime("%Y%m%d")
         self.remove_all_empty_data(yestoday_str)
 
-    #Push数据同步到MySql
-    def batchImportPushata(self):
-        yestoday_h = LocalTime.from_today(self.time_go).strftime("%H")
-        SingleLogger().log.debug("======h=======>%s" % yestoday_h)  
-        if yestoday_h == 00:
-            # 跨天需要隔表查询
-            yestoday_str = LocalTime.yestoday_str()
-            yestoday_time = LocalTime.from_today(-1).strftime("%Y-%m-%d")+ " 23:00:00"
-            yestoday_nowtime = LocalTime.from_today(-1).strftime("%Y-%m-%d") +" 24:00:00"
-        else:
-            yestoday_str = LocalTime.now_str()
-            SingleLogger().log.debug("======day=======>%s" % yestoday_str)
-            yestoday_time = LocalTime.nowtime_str(-1).strftime("%Y-%m-%d %H:%M:%S")
-            yestoday_nowtime = LocalTime.from_today(self.time_go).strftime("%Y-%m-%d %H:%M:%S")
-            SingleLogger().log.debug("======yestoday_time=======>%s" % yestoday_time)
-            SingleLogger().log.debug("======yestoday_nowtime=======>%s" % yestoday_nowtime)
 
-        runner_logs = self._database["push" + yestoday_str]
-        mongo_cursor = runner_logs.find({'time': {'$gte': yestoday_time, '$lte': yestoday_nowtime}})
-        try:
+    def updateLevel(self):
+        today = LocalTime.from_today(self.time_go)
+        today_str = today.strftime("%Y%m%d")
+        #查找对应的res_level表
+        reslevel_db = self._database["res_level%s" % today_str]
+        reslevel_db = reslevel_db.find()
+        for row in reslevel_db:
+            res_id = row["res_id"]
+            res_rule = row["res_rule"]+ "Level"
+            res_level = row["res_level"]
+            sql="UPDATE analysis_data_normal_total SET "+res_rule+" = "+res_level+" WHERE res_id = '"+res_id+"' "
+            print("=======sql======>%s" % sql)
             conn = MySQLHelper.pool_connection.get_connection()
             # 创建游标
             mysql_cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-            for row in mongo_cursor:
-                sql_str = """INSERT ignore INTO `analysis_data_normal_total`
-                              (`res_id`,
-                              `title`,
-                              `description`,
-                              `crawl_time`,
-                              `XueXingBaoLiRule`,
-                              `screenshot`,
-                              `screen_index`,
-                              `app_tag`,
-                              `category_tag`,
-                              `shorturl`,
-                              `create_date`,
-                              `SexyRule`,
-                              `PoliticalRule`,
-                              `ZongJiaoRule`,
-                              `BiaoTiDangRule`)
-                              VALUES
-                              ('%s','%s','%s','%s',%d,'%s',%s,'%s','%s','%s','%s',%d,%d,%d,%d)
-                              """ % (
-                    Secret.md5(row["imgfilename"]), row["msg"],"Push消息无详情",
-                    row["time"], 0, row["imgfilename"], 1,
-                    row["tag"], "", "", yestoday_str, 0, 0, 0, 0)
-
-                SingleLogger().log.debug(sql_str)
-                row_count = mysql_cursor.execute(sql_str)
-                SingleLogger().log.debug(row_count)
-                #将数据插入到指定的处理消息队列(id，日期)
-                RedisHelper.strict_redis.lpush("newslist", Secret.md5(row["imgfilename"])+","+yestoday_str)
-
-        except Exception as ex:
-            SingleLogger().log.error(ex)
-        finally:
-            pass
-
-        pass
+            row_count = mysql_cursor.execute(sql)
+            print("=======row_count======>%s" % sql)
 
 
 
