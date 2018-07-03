@@ -456,6 +456,9 @@ where create_date = '%s'
     def updateLevel(self):
         today = LocalTime.from_today(self.time_go)
         today_str = today.strftime("%Y%m%d")
+        conn = MySQLHelper.pool_connection.get_connection()
+        # 创建游标
+        mysql_cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
         #查找对应的res_level表
         reslevel_db = self._database["res_level%s" % today_str]
         reslevel_db = reslevel_db.find()
@@ -465,9 +468,6 @@ where create_date = '%s'
             res_level = row["res_level"]
             sql="UPDATE analysis_data_normal_total SET "+res_rule+" = "+res_level+" WHERE res_id = '"+res_id+"' "
             print("=======sql======>%s" % sql)
-            conn = MySQLHelper.pool_connection.get_connection()
-            # 创建游标
-            mysql_cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
             row_count = mysql_cursor.execute(sql)
             print("=======row_count======>%s" % row_count)
 
