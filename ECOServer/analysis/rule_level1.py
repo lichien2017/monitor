@@ -75,7 +75,6 @@ class BaseLevel1Rule(Rule,Thread):
                         # 时间修正一下，改为本地时间
                         record_date = LocalTime.get_local_date(day, "%Y-%m-%d").strftime("%Y-%m-%d")
                         restable = self._mongodb["reslevel%s" % record_date]
-                        SingleLogger().log.debug("========== record_date===========>%s" % record_date)
                         if  len(res_recv) == 5 :
                             SingleLogger().log.debug("========== res_recvlenth===========>%s" % len(res_recv))
                             resitem = restable.find_one({"res_id": "%s" % res_recv[0]})
@@ -83,8 +82,8 @@ class BaseLevel1Rule(Rule,Thread):
                                 # 获取当前的时分秒
                                 nowtime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
                                 nowtime = LocalTime.get_local_date(nowtime, "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d %H:%M:%S")
-                                restable.insert({"res_id": "%s" % res_recv[0], "res_level": res_recv[4],
-                                                 "res_time":"%s" % nowtime})
+                                restable.insert({"res_id": "%s" % res_recv[0], "res_level": "%s" % res_recv[4],
+                                                 "res_time":"%s" % nowtime,"res_rule":"%s" % res_recv[2].split(":")[0]})
 
 
 
