@@ -118,7 +118,7 @@ class Rule:
                 RedisHelper.strict_redis.hset(sub_job, col, -1)
                 normal_msg["seq"] = col
                 normal_msg["data"] = [resource[col]]
-                normal_msg["resdata"] = "%s,%s,%s:video,%s" % (res_id,crawl_time_str,self.__class__.__name__,record_time)
+                normal_msg["resdata"] = "%s,%s,%s:%s,%s" % (res_id,crawl_time_str,self.__class__.__name__,col,record_time)
                 SingleLogger().log.debug("title package:%s", normal_msg)
                 # 将数据插入到指定的处理消息队列
                 RedisHelper.strict_redis.lpush(self.queue_name_text, json.dumps(normal_msg))
@@ -138,7 +138,7 @@ class Rule:
             RedisHelper.strict_redis.hset(sub_job, index, -1)
             normal_msg["seq"] = index
             normal_msg["data"] = [x,"%s/%s/%s"%(ConfigHelper.download_savepath,crawl_time_str,Secret.md5(x)),"%s/%s" % (media_savepath,Secret.md5(x))]
-            normal_msg["resdata"] = "%s,%s,%s:video,%s" % (res_id,crawl_time_str,self.__class__.__name__,record_time)
+            normal_msg["resdata"] = "%s,%s,%s:logo,%s" % (res_id,crawl_time_str,self.__class__.__name__,record_time)
             RedisHelper.strict_redis.lpush(self.queue_name_image, json.dumps(normal_msg))
             index += 1
 
@@ -148,7 +148,7 @@ class Rule:
             normal_msg["seq"] = index
             normal_msg["data"] = [x, "%s/%s/%s" % (ConfigHelper.download_savepath,crawl_time_str, Secret.md5(x)),
                                   "%s/%s" % (media_savepath, Secret.md5(x))]
-            normal_msg["resdata"] = "%s,%s,%s:video,%s" % (res_id,crawl_time_str,self.__class__.__name__,record_time)
+            normal_msg["resdata"] = "%s,%s,%s:image,%s" % (res_id,crawl_time_str,self.__class__.__name__,record_time)
             RedisHelper.strict_redis.lpush(self.queue_name_image, json.dumps(normal_msg))
             index += 1
 
