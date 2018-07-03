@@ -71,12 +71,11 @@ class BaseLevel1Rule(Rule,Thread):
                         SingleLogger().log.info(self._mongodb_tablename + res_recv[1])
                         self._mongodb = self._mongodb_client['crawlnews']
                         #新增资源级别分类表，按当前时间分表
-                        day= time.strftime('%Y-%m-%d', time.localtime(time.time()))
+                        day= time.strftime('%Y%m%d', time.localtime(time.time()))
                         # 时间修正一下，改为本地时间
-                        record_date = LocalTime.get_local_date(day, "%Y-%m-%d").strftime("%Y-%m-%d")
-                        restable = self._mongodb["reslevel%s" % record_date]
+                        record_date = LocalTime.get_local_date(day, "%Y%m%d").strftime("%Y%m%d")
+                        restable = self._mongodb["res_level%s" % record_date]
                         if  len(res_recv) == 5 :
-                            SingleLogger().log.debug("========== res_recvlenth===========>%s" % len(res_recv))
                             resitem = restable.find_one({"res_id": "%s" % res_recv[0]})
                             if resitem == None:
                                 # 获取当前的时分秒
