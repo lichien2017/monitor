@@ -31,69 +31,69 @@ class MongodbConn(Thread):
         # 使用execute方法执行SQL语句
         cursor.execute("SELECT * FROM app_information WHERE isonline = 1 AND isartificial=0")
         # 使用 fetchone() 方法获取一条数据
-        data = cursor.fetchall()
-        if bool(data) != True:
-            print("( ⊙ o ⊙ )啊哦，竟然没有查询到数据结果")
-        else:
-            # 对查询出的数据进行处理
-            self.i = 0;
-            for record in data:
-                sqldata = data[self.i]
-                #默认下标1为应用名
-                appname = sqldata[1]
-                #获取当前日期
-                day = time.strftime('%Y-%m-%d', time.localtime(time.time()))
-                # 时间修正一下，改为本地时间
-                day = LocalTime.get_local_date(day, "%Y-%m-%d").strftime("%Y-%m-%d")
-                # 获取当天零点时间
-                passtime = day + " %s" % "00:00:00";
-
-
-                #查询tablelog中数据
-                logrows = tablelog.find({"appname": appname,'day': day});
-                if logrows.count() == 0:
-                    #如果没有数据，插入数据
-                    datalog = {'appname':appname,'num':0,'day':day,"time":"00:00:00"}
-                    tablelog.insert_one(datalog)
-                    logtime = "00:00:00";
-                    lognum = 0;
-                else:
-                    #如果有数据，取出数据
-                    logtime = logrows[0]["time"]
-                    lognum = logrows[0]["num"]
-
-                # 获取当前的时分秒
-                nowtime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
-                record_date = LocalTime.get_local_date(nowtime, "%Y-%m-%d %H:%M:%S")
-                # 时间修正一下，改为本地时间
-                nowtime = record_date.strftime("%Y-%m-%d %H:%M:%S")
-
-                # 现在的时分秒
-                now = time.strftime('%H:%M:%S', time.localtime(time.time()))
-                # 现在的时分秒修正一下，改为本地时间
-                now = LocalTime.get_local_date(now, "%H:%M:%S").strftime("%H:%M:%S")
-                # 转换成时间戳
-                logdaytime = day +" "+ logtime
-                nowtimestr = int(time.mktime(time.strptime(nowtime, "%Y-%m-%d %H:%M:%S")))
-                logtimestr = int(time.mktime(time.strptime(logdaytime, "%Y-%m-%d %H:%M:%S")))
-                # 是否大于70分钟
-                if ((nowtimestr - logtimestr)/60) < 70:
-                    continue;
-                rows = table.find({'crawltimestr': {'$gte': passtime, '$lte': nowtime},"appname": appname}).count();
-                if rows == 0:
-                    #无数据，记录下来发邮件
-                    self.sendemail = self.sendemail + "，%s" % appname
-                else:
-                    if rows <= int(lognum):
-                        #无新数据更新，记录下来发邮件
-                        self.sendemail = self.sendemail + "，%s" % appname
-                    else:
-                        #更新数据
-                        tablelog.update({'appname': appname,'day':day}, {'$set': {'num': rows,"time":now}})
-
-                self.i += 1
-            if self.sendemail != "":
-                self.send(self.sendemail)
+        # data = cursor.fetchall()
+        # if bool(data) != True:
+        #     print("( ⊙ o ⊙ )啊哦，竟然没有查询到数据结果")
+        # else:
+        #     # 对查询出的数据进行处理
+        #     self.i = 0;
+        #     for record in data:
+        #         sqldata = data[self.i]
+        #         #默认下标1为应用名
+        #         appname = sqldata[1]
+        #         #获取当前日期
+        #         day = time.strftime('%Y-%m-%d', time.localtime(time.time()))
+        #         # 时间修正一下，改为本地时间
+        #         day = LocalTime.get_local_date(day, "%Y-%m-%d").strftime("%Y-%m-%d")
+        #         # 获取当天零点时间
+        #         passtime = day + " %s" % "00:00:00";
+        #
+        #
+        #         #查询tablelog中数据
+        #         logrows = tablelog.find({"appname": appname,'day': day});
+        #         if logrows.count() == 0:
+        #             #如果没有数据，插入数据
+        #             datalog = {'appname':appname,'num':0,'day':day,"time":"00:00:00"}
+        #             tablelog.insert_one(datalog)
+        #             logtime = "00:00:00";
+        #             lognum = 0;
+        #         else:
+        #             #如果有数据，取出数据
+        #             logtime = logrows[0]["time"]
+        #             lognum = logrows[0]["num"]
+        #
+        #         # 获取当前的时分秒
+        #         nowtime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+        #         record_date = LocalTime.get_local_date(nowtime, "%Y-%m-%d %H:%M:%S")
+        #         # 时间修正一下，改为本地时间
+        #         nowtime = record_date.strftime("%Y-%m-%d %H:%M:%S")
+        #
+        #         # 现在的时分秒
+        #         now = time.strftime('%H:%M:%S', time.localtime(time.time()))
+        #         # 现在的时分秒修正一下，改为本地时间
+        #         now = LocalTime.get_local_date(now, "%H:%M:%S").strftime("%H:%M:%S")
+        #         # 转换成时间戳
+        #         logdaytime = day +" "+ logtime
+        #         nowtimestr = int(time.mktime(time.strptime(nowtime, "%Y-%m-%d %H:%M:%S")))
+        #         logtimestr = int(time.mktime(time.strptime(logdaytime, "%Y-%m-%d %H:%M:%S")))
+        #         # 是否大于70分钟
+        #         if ((nowtimestr - logtimestr)/60) < 70:
+        #             continue;
+        #         rows = table.find({'crawltimestr': {'$gte': passtime, '$lte': nowtime},"appname": appname}).count();
+        #         if rows == 0:
+        #             #无数据，记录下来发邮件
+        #             self.sendemail = self.sendemail + "，%s" % appname
+        #         else:
+        #             if rows <= int(lognum):
+        #                 #无新数据更新，记录下来发邮件
+        #                 self.sendemail = self.sendemail + "，%s" % appname
+        #             else:
+        #                 #更新数据
+        #                 tablelog.update({'appname': appname,'day':day}, {'$set': {'num': rows,"time":now}})
+        #
+        #         self.i += 1
+        #     if self.sendemail != "":
+        #         self.send(self.sendemail)
 
         self.checkmysql(cursor)
 
@@ -109,7 +109,8 @@ class MongodbConn(Thread):
         else:
             # 对查询出的数据进行处理
             for record in data:
-                appname =record[0]
+                apptag =record[0]
+                appname = self.appname(cursor, apptag)
                 # 获取当前日期
                 day = time.strftime('%Y-%m-%d', time.localtime(time.time()))
                 # 时间修正一下，改为本地时间
@@ -151,7 +152,7 @@ class MongodbConn(Thread):
                     continue;
                 # 查询同步资源数据情况
                 ressql = "SELECT * FROM analysis_data_normal_total WHERE app_tag='%s' " \
-                         "AND crawl_time>='%s' AND crawl_time<='%s'" % (appname,passtime,nowtime);
+                         "AND crawl_time>='%s' AND crawl_time<='%s'" % (apptag,passtime,nowtime);
                 resnum = cursor.execute(ressql)
                 data = cursor.fetchall()
                 if bool(data) != True:
@@ -176,7 +177,19 @@ class MongodbConn(Thread):
 
 
 
+    def appname(self,cursor,apptag):
+        # APPtag转为APPname
+        sql = "SELECT name FROM app_information WHERE tag='%s'" % apptag
+        cursor.execute(sql)
+        # 使用 fetchone() 方法获取一条数据
+        data = cursor.fetchall()
+        if bool(data) != True:
+            print("( ⊙ o ⊙ )啊哦，竟然没有查询到数据结果")
+        else:
+            # 对查询出的数据进行处理
+            appname = data[0][0]
 
+        return appname
 
     def send(self,appname):
         # qq邮箱smtp服务器
