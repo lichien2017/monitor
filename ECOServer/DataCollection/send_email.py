@@ -20,11 +20,9 @@ class MongodbConn(Thread):
         #连接到mongodb
         database = "crawlnews"
         self.db = self.CONN[database]
-
         day = time.strftime('%Y%m%d', time.localtime(time.time()))
         # 时间修正一下，改为本地时间
         day = LocalTime.get_local_date(day, "%Y%m%d").strftime("%Y%m%d")
-        SingleLogger().log.debug("===tableday====>%s" % day)
         table = self.db["originnews%s" % day]
         #存放每天解析的数据表
         tablelog = self.db["originnewsLog"]
@@ -96,6 +94,87 @@ class MongodbConn(Thread):
                 self.i += 1
             if self.sendemail != "":
                 self.send(self.sendemail)
+
+        self.checkmysql(cursor)
+
+
+    def checkmysql(self,cursor):
+        #检查每小时的数据获取情况
+        sql="SELECT tag FROM app_information WHERE isonline=1"
+        cursor.execute(sql)
+        # 使用 fetchone() 方法获取一条数据
+        data = cursor.fetchall()
+        if bool(data) != True:
+            print("( ⊙ o ⊙ )啊哦，竟然没有查询到数据结果")
+        else:
+            # 对查询出的数据进行处理
+            for record in data:
+                appname =record[0]
+                # 获取当前日期
+                day = time.strftime('%Y-%m-%d', time.localtime(time.time()))
+                # 时间修正一下，改为本地时间
+                day = LocalTime.get_local_date(day, "%Y-%m-%d").strftime("%Y-%m-%d")
+                # 获取当天零点时间
+                passtime = day + " %s" % "00:00:00";
+                # 查询log中数据
+                logsql = "SELECT * FROM resLog WHERE day='"+day+"' AND appname='"+appname+"'";
+                cursor.execute(logsql)
+                data = cursor.fetchall()
+                if bool(data) != True:
+                    logtime = "00:00:00";
+                    lognum = 0;
+                    # 如果没有数据，插入数据
+                    insertsql = "INSERT INTO resLog(appname,day,num,time)VALUES('%s','%s',0,'%s')"%(appname,day,logtime)
+                    cursor.execute(insertsql)
+                    self.sdb.commit()
+                else:
+                    # 如果有数据，取出数据
+                    logtime = data[0][4]
+                    lognum = data[0][2]
+
+                # 获取当前的时分秒
+                nowtime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+                record_date = LocalTime.get_local_date(nowtime, "%Y-%m-%d %H:%M:%S")
+                # 时间修正一下，改为本地时间
+                nowtime = record_date.strftime("%Y-%m-%d %H:%M:%S")
+
+                # 现在的时分秒
+                now = time.strftime('%H:%M:%S', time.localtime(time.time()))
+                # 现在的时分秒修正一下，改为本地时间
+                now = LocalTime.get_local_date(now, "%H:%M:%S").strftime("%H:%M:%S")
+                # 转换成时间戳
+                logdaytime = day +" "+ logtime
+                nowtimestr = int(time.mktime(time.strptime(nowtime, "%Y-%m-%d %H:%M:%S")))
+                logtimestr = int(time.mktime(time.strptime(logdaytime, "%Y-%m-%d %H:%M:%S")))
+                # 是否大于70分钟
+                if ((nowtimestr - logtimestr)/60) < 70:
+                    continue;
+                # 查询同步资源数据情况
+                ressql = "SELECT * FROM analysis_data_normal_total WHERE app_tag='%s' " \
+                         "AND crawl_time>='%s' AND crawl_time<='%s'" % (appname,passtime,nowtime);
+                resnum = cursor.execute(ressql)
+                data = cursor.fetchall()
+                if bool(data) != True:
+                    #无数据，记录下来发邮件
+                    self.sendemail = self.sendemail + "，%s" % appname
+                else:
+                    if resnum <= int(lognum):
+                        #无新数据更新，记录下来发邮件
+                        self.sendemail = self.sendemail + "，%s" % appname
+                    else:
+                        #更新数据
+                        updatesql = "UPDATE resLog SET num = %d ,time = '%s' WHERE appname = '%s' AND  day = '%s'" % (resnum,now,appname,day)
+                        cursor.execute(updatesql)
+                        # 提交到数据库执行
+                        self.sdb.commit()
+
+            if self.sendemail != "":
+                self.send("，Mysql同步"+self.sendemail)
+
+
+
+
+
 
 
 
