@@ -112,7 +112,7 @@ class Collector(Thread):
                                     `XueXingBaoLiRuleLevel`,`SexyRuleLevel`,`PoliticalRuleLevel`,
                                     `ZongJiaoRuleLevel`,`BiaoTiDangRuleLevel`)
                                     VALUES
-                                    ('%s','%s','%s','%s',%d,'%s',%d,'%s','%s','%s','%s',%d,%d,%d,%d,%d,%d,%d,%d,%d,'%s','%s',%d,%d)
+                                    ('%s','%s','%s','%s',%d,'%s',%d,'%s','%s','%s','%s',%d,%d,%d,%d,%d,%d,%d,%d,%d,'%s','%s',%d,%d,%d,%d,%d,%d)
                                     """ % (
                                     row["res_id"],pymysql.escape_string(res["title"]),pymysql.escape_string(res["description"]),res["crawltimestr"],0,screenshot,screen_index,
                                     res["app_tag"], res["category_tag"], res["shorturl"],date, 0,0,0,0, 0,0,0,0,0,res["source"],res["content"],res["restype"],0,0,0,0,0)
@@ -214,7 +214,7 @@ class Collector(Thread):
                                                          `XueXingBaoLiRuleLevel`,`SexyRuleLevel`,`PoliticalRuleLevel`,
                                                          `ZongJiaoRuleLevel`,`BiaoTiDangRuleLevel`)
                                                         VALUES
-                                                        ('%s','%s','%s','%s',%d,'%s',%s,'%s','%s','%s','%s',%d,%d,%d,%d,%d)
+                                                        ('%s','%s','%s','%s',%d,'%s',%s,'%s','%s','%s','%s',%d,%d,%d,%d,%d,%d,%d,%d,%d)
                                                         """ % (
                             row["res_id"], pymysql.escape_string(res["title"]), pymysql.escape_string(res["description"]),
                             res["crawltimestr"], 0, row["image"],row["screen_index"],
@@ -420,7 +420,7 @@ where create_date = '%s'
                                 `XueXingBaoLiRuleLevel`,`SexyRuleLevel`,`PoliticalRuleLevel`,
                                 `ZongJiaoRuleLevel`,`BiaoTiDangRuleLevel`)
                                 VALUES
-                                ('%s','%s','%s','%s',%d,'%s',%s,'%s','%s','%s','%s',%d,%d,%d,%d,%d)
+                                ('%s','%s','%s','%s',%d,'%s',%s,'%s','%s','%s','%s',%d,%d,%d,%d,%d,%d,%d,%d,%d)
                                 """ % (
                     Secret.md5(row["screenshot"]), "人工审核无标题","",
                     row["time"], 0, row["screenshot"], row["screen"],
