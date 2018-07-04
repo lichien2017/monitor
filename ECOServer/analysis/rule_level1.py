@@ -50,6 +50,20 @@ class BaseLevel1Rule(Rule,Thread):
                 hset_keys = RedisHelper.strict_redis.hkeys(sub_job)  # 得到任务所有keys，用于检查是否完成校验，等到服务返回
                 remove_flag = 1  # 是否删除标示
                 inserted = 0  # 可以插入数据库
+                self._mongodb = self._mongodb_client['crawlnews']
+                # 新增资源级别分类表，按当前时间分表
+                day = time.strftime('%Y%m%d', time.localtime(time.time()))
+                # 时间修正一下，改为本地时间
+                record_date = LocalTime.get_local_date(day, "%Y%m%d").strftime("%Y%m%d")
+                restable = self._mongodb["res_level%s" % record_date]
+                if len(res_recv) == 5:
+                    # 获取当前的时分秒
+                    nowtime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+                    nowtime = LocalTime.get_local_date(nowtime, "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d %H:%M:%S")
+                    SingleLogger().log.debug("=========nowtime=========>%s" % nowtime)
+                    restable.insert({"res_id": "%s" % res_recv[0], "res_level": "%s" % res_recv[4],
+                                     "res_time":"%s" % nowtime,"res_rule":"%s" % res_recv[2].split(":")[0]})
+
                 for key in hset_keys:
                     rel = RedisHelper.strict_redis.hget(sub_job, key)
                     if rel == None :
@@ -63,6 +77,38 @@ class BaseLevel1Rule(Rule,Thread):
                         video_json = json.loads(key_value) # 将传过来的json字符串进行反序列化
                         pass
 
+                    # 同时将有问题的数据加入到每天的合计表中
+                    total_table = self._mongodb["all_resource" + res_recv[1]]
+                    total_item = total_table.find_one({"res_id": "%s" % res_recv[0],"badkey":"%s" % key.decode("utf-8")})
+                    if total_item == None:  # 如果不存在就插入
+                            tmp_res = self._get_resource("%s" % res_recv[0], res_recv[1])
+                            if not key.isdigit():
+                                # lzq 20180608 增加对视频的处理
+                                tmp_content = ""
+                                if key.decode("utf-8").startswith("video"):
+                                    tmp_content = tmp_res["video"]
+                                else:
+                                    tmp_content = tmp_res[key.decode("utf-8")]
+                                total_table.insert({"res_id": "%s" % res_recv[0], "badkey": "%s" % key.decode("utf-8"),
+                                                    "badcontent": tmp_content, "app_tag": tmp_res["app_tag"],
+                                                    "category_tag": tmp_res["category_tag"]})
+                            else:
+                                logo = tmp_res["logo"].split(",")
+                                images = tmp_res["gallary"].split(",")
+                                logo = [x for x in logo if
+                                        x != '' and (x.startswith("http://") or x.startswith("https://"))]
+                                images = [x for x in images if
+                                          x != '' and (x.startswith("http://") or x.startswith("https://"))]
+                                gallary = logo + images
+                                key_index = int(key.decode("utf-8")) - 1
+                                if key_index < 0 or key_index >= len(gallary):
+                                    SingleLogger().log.debug(
+                                        "key_index = %d and gallary len is %d" % (key_index, len(gallary)))
+                                else:
+                                    total_table.insert(
+                                        {"res_id": "%s" % res_recv[0], "badkey": "%s" % key.decode("utf-8"),
+                                         "badcontent": gallary[key_index], "app_tag": tmp_res["app_tag"],
+                                         "category_tag": tmp_res["category_tag"]})
 
                     #rel = int(rel.decode("utf-8")) # 得到结果，1表示有问题，0 表示没有问题
                     # SingleLogger().log.debug("ret = %d" % rel)
@@ -70,56 +116,11 @@ class BaseLevel1Rule(Rule,Thread):
                         # 只要有一个为1，表示规则匹配成功，插入数据库
                         SingleLogger().log.info(self._mongodb_tablename + res_recv[1])
                         self._mongodb = self._mongodb_client['crawlnews']
-                        #新增资源级别分类表，按当前时间分表
-                        day= time.strftime('%Y%m%d', time.localtime(time.time()))
-                        # 时间修正一下，改为本地时间
-                        record_date = LocalTime.get_local_date(day, "%Y%m%d").strftime("%Y%m%d")
-                        restable = self._mongodb["res_level%s" % record_date]
-                        if len(res_recv) == 5 :
-                            # 获取当前的时分秒
-                            nowtime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
-                            nowtime = LocalTime.get_local_date(nowtime, "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d %H:%M:%S")
-                            SingleLogger().log.debug("=========nowtime=========>%s" %nowtime)
-                            restable.insert({"res_id": "%s" % res_recv[0], "res_level": "%s" % res_recv[4],
-                                                 "res_time":"%s" % nowtime,"res_rule":"%s" % res_recv[2].split(":")[0]})
-
-
-
-
                         table = self._mongodb[self._mongodb_tablename + res_recv[1]]
                         item = table.find_one({"res_id": "%s" % res_recv[0]})
                         if item == None:
                             # 插入到指定有问题的数据表中，比如血腥暴力、色情表
                             table.insert({"res_id": "%s" % res_recv[0],"record_time":res_recv[3]})
-
-                            # 同时将有问题的数据加入到每天的合计表中
-                            total_table = self._mongodb["all_resource" + res_recv[1]]
-                            total_item = total_table.find_one({"res_id": "%s" % res_recv[0]})
-                            if total_item == None :# 如果不存在就插入
-                                tmp_res = self._get_resource("%s" % res_recv[0], res_recv[1])
-                                if not key.isdigit() :
-                                    # lzq 20180608 增加对视频的处理
-                                    tmp_content = ""
-                                    if key.decode("utf-8").startswith("video"):
-                                        tmp_content = tmp_res["video"]
-                                    else:
-                                        tmp_content = tmp_res[key.decode("utf-8")]
-                                    total_table.insert({"res_id": "%s" % res_recv[0],"badkey":"%s" % key.decode("utf-8"),"badcontent":tmp_content,"app_tag":tmp_res["app_tag"],"category_tag":tmp_res["category_tag"]})
-                                else:
-                                    logo = tmp_res["logo"].split(",")
-                                    images = tmp_res["gallary"].split(",")
-                                    logo = [x for x in logo if
-                                            x != '' and (x.startswith("http://") or x.startswith("https://"))]
-                                    images = [x for x in images if
-                                              x != '' and (x.startswith("http://") or x.startswith("https://"))]
-                                    gallary = logo + images
-                                    key_index = int(key.decode("utf-8")) - 1
-                                    if key_index <0 or key_index >= len(gallary) :
-                                        SingleLogger().log.debug("key_index = %d and gallary len is %d" %(key_index,len(gallary)))
-                                    else:
-                                        total_table.insert(
-                                        {"res_id": "%s" % res_recv[0], "badkey":"%s" % key.decode("utf-8"), "badcontent": gallary[key_index],"app_tag":tmp_res["app_tag"],"category_tag":tmp_res["category_tag"]})
-
                         # 同时对于视频的结果要存入到视频记录表中 lzq add
                         if key.decode("utf-8").startswith("video"):  # key是video开头表示视频
                             self._mongodb = self._mongodb_client['crawlnews']
