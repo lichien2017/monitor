@@ -79,3 +79,9 @@ class LocalTime:
         yestoday = LocalTime.yestoday().strftime(format)
         return yestoday
         pass
+
+    @classmethod
+    def month(cls):
+        month = LocalTime.now().strftime("%Y%m")
+        return month
+        pass
