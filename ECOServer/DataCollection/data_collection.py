@@ -430,19 +430,19 @@ where create_date = '%s'
 
         pass
     def run(self):
-        # self.tags = self.queryManualApp() # 查询人工审核的tags
-        # self.batchImportMachineData()
-        # for tag in self.tags:
-        #     self.batchImportManualData(tag["tag"])
-        # pass
+        self.tags = self.queryManualApp() # 查询人工审核的tags
+        self.batchImportMachineData()
+        for tag in self.tags:
+            self.batchImportManualData(tag["tag"])
+        pass
 
         #更改资源级别字段
         self.updateLevel()
 
-        # # 删除空数据
-        # yestoday = LocalTime.from_today(self.time_go)
-        # yestoday_str = yestoday.strftime("%Y%m%d")
-        # self.remove_all_empty_data(yestoday_str)
+        # 删除空数据
+        yestoday = LocalTime.from_today(self.time_go)
+        yestoday_str = yestoday.strftime("%Y%m%d")
+        self.remove_all_empty_data(yestoday_str)
 
 
     def updateLevel(self):
