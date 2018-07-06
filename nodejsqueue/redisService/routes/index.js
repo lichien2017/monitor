@@ -353,7 +353,9 @@ router.get('/filename', function (req, res) {
         var filePath = path.join(tmp_path, req.query.fn);
         console.log('filePath='+filePath);
         fs.exists(filePath, function (exists) {
-            res.sendfile(exists ? filePath : path.join(tmp_path, ""));
+            var finally_path = exists ? filePath : path.join(tmp_path, "");
+            console.log('finally_path='+finally_path);
+            res.sendfile(finally_path);
         });
 
     }catch (e){
