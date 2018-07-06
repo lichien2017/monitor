@@ -65,8 +65,6 @@ class Collector(Thread):
         else:
             yestoday_time = LocalTime.nowtime_str(-1).strftime("%Y-%m-%d %H:%M:%S")
             yestoday_nowtime = LocalTime.from_today(self.time_go).strftime("%Y-%m-%d %H:%M:%S")
-            SingleLogger().log.debug("======yestoday_time=======>%s" % yestoday_time)
-            SingleLogger().log.debug("======yestoday_nowtime=======>%s" % yestoday_nowtime)
 
         rows = table.find({'record_time': {'$gte': yestoday_time, '$lte': yestoday_nowtime}})
         
@@ -387,12 +385,6 @@ where create_date = '%s'
         else:
             yestoday_time = LocalTime.nowtime_str(-1).strftime("%Y-%m-%d %H:%M:%S")
             yestoday_nowtime = LocalTime.from_today(self.time_go).strftime("%Y-%m-%d %H:%M:%S")
-            SingleLogger().log.debug("======yestoday_time=======>%s" % yestoday_time)
-            SingleLogger().log.debug("======yestoday_nowtime=======>%s" % yestoday_nowtime)
-
-
-
-
 
         mongo_cursor = runner_logs.find({'time': {'$gte': yestoday_time, '$lte': yestoday_nowtime},"tag": tag})
 
@@ -438,19 +430,19 @@ where create_date = '%s'
 
         pass
     def run(self):
-        self.tags = self.queryManualApp() # 查询人工审核的tags
-        self.batchImportMachineData()
-        for tag in self.tags:
-            self.batchImportManualData(tag["tag"])
-        pass
+        # self.tags = self.queryManualApp() # 查询人工审核的tags
+        # self.batchImportMachineData()
+        # for tag in self.tags:
+        #     self.batchImportManualData(tag["tag"])
+        # pass
 
         #更改资源级别字段
         self.updateLevel()
 
-        # 删除空数据
-        yestoday = LocalTime.from_today(self.time_go)
-        yestoday_str = yestoday.strftime("%Y%m%d")
-        self.remove_all_empty_data(yestoday_str)
+        # # 删除空数据
+        # yestoday = LocalTime.from_today(self.time_go)
+        # yestoday_str = yestoday.strftime("%Y%m%d")
+        # self.remove_all_empty_data(yestoday_str)
 
 
     def updateLevel(self):
@@ -462,14 +454,48 @@ where create_date = '%s'
         #查找对应的res_level表
         reslevel_db = self._database["res_level%s" % today_str]
         reslevel_db = reslevel_db.find()
-        for row in reslevel_db:
-            res_id = row["res_id"]
-            res_rule = row["res_rule"]+ "Level"
-            res_level = row["res_level"]
-            sql="UPDATE analysis_data_normal_total SET "+res_rule+" = "+res_level+" WHERE res_id = '"+res_id+"' "
-            print("=======sql======>%s" % sql)
-            row_count = mysql_cursor.execute(sql)
-            print("=======row_count======>%s" % row_count)
+        for rowlevel in reslevel_db:
+            # 查询表中是否有对应的数据
+            res_id = rowlevel["res_id"]
+            mysql_cursor.execute("SELECT * FROM analysis_data_normal_total_level WHERE res_id='%s'" % res_id)
+            data = mysql_cursor.fetchall()
+            if bool(data) != True:
+                # 如果没有数据，就去mongodb中查询后写入
+                mongo_cursor = self._database["originnews%s" % today_str].find({"identity": res_id})
+                for row in mongo_cursor:
+                    sql_str = """INSERT ignore INTO `analysis_data_normal_total_level`
+                                               (`res_id`,
+                                               `title`,
+                                               `description`,
+                                               `crawl_time`,
+                                               `screenshot`,
+                                               `screen_index`,
+                                               `app_tag`,
+                                               `category_tag`,
+                                               `shorturl`,
+                                               `create_date`,
+                                               `XueXingBaoLiRule`,
+                                               `SexyRule`,
+                                               `PoliticalRule`,
+                                               `ZongJiaoRule`,
+                                               `BiaoTiDangRule`,
+                                               `XueXingBaoLiRuleLevel`,`SexyRuleLevel`,`PoliticalRuleLevel`,
+                                               `ZongJiaoRuleLevel`,`BiaoTiDangRuleLevel`)
+                                               VALUES
+                                               ('%s','%s','%s','%s','%s',%s,'%s','%s','%s','%s',%d,%d,%d,%d,%d,%d,%d,%d,%d,%d)
+                                               """ % (
+                        row["identity"], row["title"], row["description"],row["crawltimestr"], "",0,row["app_tag"], row["category_tag"], row["shorturl"], today_str, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+
+                    mysql_cursor.execute(sql_str)
+
+            res_rule = rowlevel["res_rule"]+ "Level"
+            res_level = rowlevel["res_level"]
+            #判断 res_level 等级
+            if int(res_level) == 2:
+                sql="UPDATE analysis_data_normal_total_level SET "+res_rule+" = "+res_level+","+rowlevel["res_rule"]+" = 1 WHERE res_id = '"+res_id+"' "
+            else:
+                sql="UPDATE analysis_data_normal_total_level SET "+res_rule+" = "+res_level+" WHERE res_id = '"+res_id+"' "
+            mysql_cursor.execute(sql)
 
 
 
