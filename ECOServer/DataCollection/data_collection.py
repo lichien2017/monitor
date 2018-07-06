@@ -485,8 +485,10 @@ where create_date = '%s'
                                                ('%s','%s','%s','%s','%s',%s,'%s','%s','%s','%s',%d,%d,%d,%d,%d,%d,%d,%d,%d,%d)
                                                """ % (
                         row["identity"], row["title"], row["description"],row["crawltimestr"], "",0,row["app_tag"], row["category_tag"], row["shorturl"], today_str, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-
-                    mysql_cursor.execute(sql_str)
+                    try:
+                        mysql_cursor.execute(sql_str)
+                    except:
+                        SingleLogger().log.error("插入数据错误")
 
             res_rule = rowlevel["res_rule"]+ "Level"
             res_level = rowlevel["res_level"]
@@ -495,7 +497,10 @@ where create_date = '%s'
                 sql="UPDATE analysis_data_normal_total_level SET "+res_rule+" = "+res_level+","+rowlevel["res_rule"]+" = 1 WHERE res_id = '"+res_id+"' "
             else:
                 sql="UPDATE analysis_data_normal_total_level SET "+res_rule+" = "+res_level+" WHERE res_id = '"+res_id+"' "
-            mysql_cursor.execute(sql)
+            try:
+                mysql_cursor.execute(sql)
+            except:
+                SingleLogger().log.error("更新数据错误")
 
 
 
