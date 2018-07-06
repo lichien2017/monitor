@@ -132,7 +132,7 @@ router.post("/image",function (req,res) {
             res.send({"status": "success"});
         })
     }catch (e){
-        console.log('image='+e)
+        console.log('image_error='+e)
         res.send({"status": "error"});
     }
 
@@ -359,7 +359,7 @@ router.get('/filename', function (req, res) {
         });
 
     }catch (e){
-        console.log('filename='+e);
+        console.log('filename_error='+e);
         res.send({"status": "error"});
     }
     //res.send({"status": "success"});
