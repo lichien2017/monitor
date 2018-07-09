@@ -353,9 +353,15 @@ router.get('/filename', function (req, res) {
         var filePath = path.join(tmp_path, req.query.fn);
         console.log('filePath='+filePath);
         fs.exists(filePath, function (exists) {
-            var finally_path = exists ? filePath : path.join(tmp_path, "");
-            console.log('finally_path='+finally_path);
-            res.sendfile(finally_path);
+            if (exists){
+                // var finally_path = exists ? filePath : path.join(tmp_path, "");
+                // console.log('finally_path='+finally_path);
+                res.sendfile(filePath);
+            }else{
+                console.log("不存在路径:"+filePath);
+                res.send({"status": "error"});
+            }
+
         });
 
     }catch (e){
