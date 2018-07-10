@@ -186,5 +186,15 @@
       "app_tag":"ximalaya",
       "categroy":{"推荐":"推荐"}
     }
+  },
+  {
+    "modname": "scrapyServer.DeDaoModel",
+    "classname": "DeDaoParse",
+    "queuename": "origin:dedao",
+    "apppinfo":{
+      "app_name":"得到",
+      "app_tag":"dedao",
+      "categroy":{"发现":"发现"}
+    }
   }
 ]
