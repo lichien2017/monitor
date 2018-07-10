@@ -176,5 +176,15 @@
       "app_tag":"flipboard",
       "categroy":{"首页":"首页"}
     }
+  },
+  {
+    "modname": "scrapyServer.XiMaLaYaModel",
+    "classname": "XiMaLaYaParse",
+    "queuename": "origin:ximalaya",
+    "apppinfo":{
+      "app_name":"喜马拉雅",
+      "app_tag":"ximalaya",
+      "categroy":{"推荐":"推荐"}
+    }
   }
 ]
