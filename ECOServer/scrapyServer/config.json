@@ -196,5 +196,15 @@
       "app_tag":"dedao",
       "categroy":{"发现":"发现"}
     }
+  },
+  {
+    "modname": "scrapyServer.AiKanModel",
+    "classname": "AiKanParse",
+    "queuename": "origin:aikan",
+    "apppinfo":{
+      "app_name":"爱看",
+      "app_tag":"aikan",
+      "categroy":{"推荐":"推荐"}
+    }
   }
 ]
