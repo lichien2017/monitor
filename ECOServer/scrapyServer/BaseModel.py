@@ -33,41 +33,41 @@ class BaseParse(object):
 
 
 
-    # def sdata(self,title,abstract,content,source,publish_timestr,publish_time,
-    #         crawltimestr,crawltime,url,logo,tab,keyword,seq,articleid,appname,
-    #         apptag,categorytag,category,restype,gallary,video,audio):
-    #     sdata = {
-    #         "title": title,
-    #         "description": abstract,
-    #         "content": content,
-    #         "source": source,
-    #         "pubtimestr": publish_timestr,
-    #         "pubtime": publish_time,
-    #         "crawltimestr": crawltimestr,
-    #         "crawltime": crawltime,
-    #         "status": 0,
-    #         "shorturl": url,
-    #         "logo": logo,
-    #         "labels": tab,
-    #         "keyword": keyword,
-    #         "seq": seq,
-    #         "identity": str(articleid),
-    #         "appname": appname,
-    #         "app_tag": apptag,
-    #         "category_tag": categorytag,
-    #         "category": category,
-    #         "restype": restype,
-    #         "gallary": gallary,
-    #         "video": video,
-    #         "audio": audio
-    #     }
-    #
-    #     return  sdata
-    #
-    #
-    # def timeStr(self,timestr):
-    #     timestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(timestr / 1000))
-    #     return timestr;
+    def sdata(self,title,abstract,content,source,publish_timestr,publish_time,
+            crawltimestr,crawltime,url,logo,tab,keyword,seq,articleid,appname,
+            apptag,categorytag,category,restype,gallary,video,audio):
+        sdata = {
+            "title": title,
+            "description": abstract,
+            "content": content,
+            "source": source,
+            "pubtimestr": publish_timestr,
+            "pubtime": publish_time,
+            "crawltimestr": crawltimestr,
+            "crawltime": crawltime,
+            "status": 0,
+            "shorturl": url,
+            "logo": logo,
+            "labels": tab,
+            "keyword": keyword,
+            "seq": seq,
+            "identity": str(articleid),
+            "appname": appname,
+            "app_tag": apptag,
+            "category_tag": categorytag,
+            "category": category,
+            "restype": restype,
+            "gallary": gallary,
+            "video": video,
+            "audio": audio
+        }
+
+        return  sdata
+
+
+    def timeStr(self,timestr):
+        timestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(timestr / 1000))
+        return timestr;
 
 
     #插入mongodb
