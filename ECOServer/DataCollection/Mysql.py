@@ -7,7 +7,7 @@ from util import LocalTime
 from pymongo import MongoClient
 
 
-class MongodbConn():
+class MongodbConn(Thread):
 
     def __init__(self):
         Thread.__init__(self)
@@ -16,7 +16,7 @@ class MongodbConn():
                                   ConfigHelper.mysql_pwd, ConfigHelper.mysql_db, charset='utf8')
     def run(self):
         # 获取前一天的日期
-        yestoday_str = LocalTime.yestoday_str("%Y%m%d")
+        yestoday_str = '20180705'
         # mysql使用cursor()方法获取操作游标
         cursor = self.sdb.cursor()
         month = LocalTime.month()
