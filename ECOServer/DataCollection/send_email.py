@@ -99,6 +99,7 @@ class MongodbConn(Thread):
 
 
     def checkmysql(self,cursor):
+        self.sendemail = "";
         #检查每小时的数据获取情况
         sql="SELECT tag FROM app_information WHERE isonline=1"
         cursor.execute(sql)
@@ -157,11 +158,11 @@ class MongodbConn(Thread):
                 data = cursor.fetchall()
                 if bool(data) != True:
                     #无数据，记录下来发邮件
-                    self.sendemail = self.sendemail + "，%s" % appname
+                    self.sendemail = self.sendemail + "，%s" % appname + "(0)"
                 else:
                     if resnum <= int(lognum):
                         #无新数据更新，记录下来发邮件
-                        self.sendemail = self.sendemail + "，%s" % appname
+                        self.sendemail = self.sendemail + "，%s" % appname + "(%s)" % resnum
                     else:
                         #更新数据
                         updatesql = "UPDATE resLog SET num = %d ,time = '%s' WHERE appname = '%s' AND  day = '%s'" % (resnum,now,appname,day)
