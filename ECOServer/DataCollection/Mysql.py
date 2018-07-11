@@ -35,11 +35,11 @@ class MongodbConn(Thread):
         database = "crawlnews"
         self.db = self.CONN[database]
         table = self.db["originnews%s" % yestoday_str]
-        # passtime = '2018-07-05 20:54:39'
-        # nowtime = '2018-07-05 23:59:59'
+        passtime = '2018-07-08 19:07:36'
+        nowtime = '2018-07-08 23:59:59'
         #找出匹配上的数据
-        # datarow = table.find({'crawltimestr': {'$gte': passtime, '$lte': nowtime}})
-        datarow = table.find()
+        datarow = table.find({'crawltimestr': {'$gte': passtime, '$lte': nowtime}})
+        # datarow = table.find()
         for row in datarow:
             sqlid = "SELECT * FROM %s WHERE identity='%s'" % (monthtable, row["identity"])
             cursor.execute(sqlid)
