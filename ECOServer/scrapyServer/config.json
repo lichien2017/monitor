@@ -206,5 +206,15 @@
       "app_tag":"aikan",
       "categroy":{"推荐":"推荐"}
     }
+  },
+  {
+    "modname": "scrapyServer.DouYuModel",
+    "classname": "DouYuParse",
+    "queuename": "origin:douyu",
+    "apppinfo":{
+      "app_name":"斗鱼",
+      "app_tag":"douyu",
+      "categroy":{"推荐":"推荐"}
+    }
   }
 ]
