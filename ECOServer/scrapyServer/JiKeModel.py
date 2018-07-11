@@ -61,11 +61,12 @@ class JiKeParse(BaseParse):
             else:
                 #纯文本
                 restype = 1
-            #标题
-            title =data['item']['topic']['content']
-            source =data['item']['topic']['content']
+            # 标题更为和内容一致
+            #title = data['item']['topic']['content']
+            title = data['item']['content']
+            source = data['item']['topic']['content']
             #内容
-            content =data['item']['content']
+            content = data['item']['content']
             if restype==3:
                 video=content
             #时间
@@ -90,32 +91,10 @@ class JiKeParse(BaseParse):
             return
 
         SingleLogger().log.debug(title)
-        sdata = {
-            "title": title,
-            "description": abstract,
-            "content": content,
-            "source": source,
-            "pubtimestr": publish_timestr,
-            "pubtime": publish_time,
-            "crawltimestr": crawltimestr,
-            "crawltime": crawltime,
-            "status": 0,
-            "shorturl": url,
-            "logo": logo,
-            "labels": tab,
-            "keyword": "",
-            "seq": seq,
-            "identity": str(articleid),
-            "appname": self.appname,
-            "app_tag": self.apptag,
-            "category_tag":categorytag,
-            "category": category,
-            "restype": restype,
-            "gallary": gallary,#里面的所有图片地址
-            "video": video,
-            "audio": audio
-        }
-        self.db(sdata, articleid, title)
+        sdatas = self.sdata(title, abstract, content, source, publish_timestr, publish_time,
+                            crawltimestr, crawltime, url, logo, tab, "", seq, articleid, self.appname,
+                            self.apptag, categorytag, category, restype, gallary, video, audio)
+        self.db(sdatas, articleid, title)
 
     def tryparse(self, str):
         # 转换编码格式
