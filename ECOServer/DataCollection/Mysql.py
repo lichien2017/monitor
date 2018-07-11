@@ -16,7 +16,7 @@ class MongodbConn(Thread):
                                   ConfigHelper.mysql_pwd, ConfigHelper.mysql_db, charset='utf8')
     def run(self):
         # 获取前一天的日期
-        yestoday_str = '20180708'
+        yestoday_str = '20180709'
         # mysql使用cursor()方法获取操作游标
         cursor = self.sdb.cursor()
         month = LocalTime.month()
@@ -35,11 +35,11 @@ class MongodbConn(Thread):
         database = "crawlnews"
         self.db = self.CONN[database]
         table = self.db["originnews%s" % yestoday_str]
-        passtime = '2018-07-08 19:07:36'
-        nowtime = '2018-07-08 23:59:59'
+        # passtime = '2018-07-08 19:07:36'
+        # nowtime = '2018-07-08 23:59:59'
         #找出匹配上的数据
-        datarow = table.find({'crawltimestr': {'$gte': passtime, '$lte': nowtime}})
-        # datarow = table.find()
+        # datarow = table.find({'crawltimestr': {'$gte': passtime, '$lte': nowtime}})
+        datarow = table.find()
         for row in datarow:
             sqlid = "SELECT * FROM %s WHERE identity='%s'" % (monthtable, row["identity"])
             cursor.execute(sqlid)
