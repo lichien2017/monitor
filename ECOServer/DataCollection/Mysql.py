@@ -16,7 +16,7 @@ class MongodbConn(Thread):
                                   ConfigHelper.mysql_pwd, ConfigHelper.mysql_db, charset='utf8')
     def run(self):
         # 获取前一天的日期
-        yestoday_str = '20180706'
+        yestoday_str = '20180707'
         # mysql使用cursor()方法获取操作游标
         cursor = self.sdb.cursor()
         month = LocalTime.month()
