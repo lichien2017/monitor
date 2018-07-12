@@ -1,7 +1,8 @@
 FROM golang
 
+WORKDIR $GOPATH/src/github.com/imgserver
+COPY . $GOPATH/src/github.com/imgserver
+RUN go build .
+
 EXPOSE 9001
-RUN mkdir /usr/local/imgserver
-RUN mkdir /mnt/upload_files
-WORKDIR /usr/local/imgserver
-CMD ["./imgServer"]
+ENTRYPOINT ["./imgserver"]
