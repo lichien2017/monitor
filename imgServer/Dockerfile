@@ -4,4 +4,4 @@ EXPOSE 9001
 RUN mkdir /usr/local/imgserver
 RUN mkdir /mnt/upload_files
 WORKDIR /usr/local/imgserver
-CMD ["go","run *.go"]
+CMD["imgserver"]
