@@ -21,7 +21,7 @@ services:
     networks:
       - mobilephone_release
   mysql:
-    image: mysql:5
+    image: mysql
     restart: always
     ports: 
         - "3306:3306"
