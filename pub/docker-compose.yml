@@ -151,7 +151,20 @@ services:
       options:
         gelf-address: "udp://192.168.10.177:12201"
         tag: imagedownload
-
+  imgserver:
+    build: ../imgServer/
+    restart: always
+    volumes:
+      - /mnt/upload_files:/mnt/upload_files
+      - /home/tymx/Documents/DockerContainer/imgServer:/usr/local/imgserver
+    command: go run *.go
+    networks:
+      - mobilephone_release
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://192.168.10.177:12201"
+        tag: imgserver
 networks:
   mobilephone_release:
     driver: bridge
