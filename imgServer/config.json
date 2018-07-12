@@ -1,4 +1,4 @@
 {
-	"ListenAddr":"0.0.0.0:9001",
+	"ListenAddr":"192.168.10.177:9001",
 	"Storage":"/mnt/upload_files/"
 }
