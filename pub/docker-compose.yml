@@ -154,6 +154,8 @@ services:
   imgserver:
     build: ../imgServer/
     restart: always
+    ports: 
+      - "9001:9001"
     volumes:
       - /mnt/upload_files:/mnt/upload_files
       - /home/tymx/Documents/DockerContainer/imgServer:/usr/local/imgserver
