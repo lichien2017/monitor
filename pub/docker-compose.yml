@@ -157,7 +157,7 @@ services:
     volumes:
       - /mnt/upload_files:/mnt/upload_files
       - /home/tymx/Documents/DockerContainer/imgServer:/usr/local/imgserver
-    command: go run *.go
+    command: go run /usr/local/imgserver/*.go
     networks:
       - mobilephone_release
     logging:
