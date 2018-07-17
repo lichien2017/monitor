@@ -1,6 +1,5 @@
 # coding=utf-8
 from scrapyServer.BaseModel import BaseParse
-from util.TestHttp import MyWebBrowser
 import json
 from util.log import SingleLogger
 class AiKanParse(BaseParse):
