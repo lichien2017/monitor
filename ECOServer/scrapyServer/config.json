@@ -216,5 +216,15 @@
       "app_tag":"douyu",
       "categroy":{"推荐":"推荐"}
     }
+  },
+  {
+    "modname": "scrapyServer.SBaiDuModel",
+    "classname": "SBaiDuParse",
+    "queuename": "origin:sbaidu",
+    "apppinfo":{
+      "app_name":"百度搜索",
+      "app_tag":"sbaidu",
+      "categroy":{"推荐":"推荐"}
+    }
   }
 ]
