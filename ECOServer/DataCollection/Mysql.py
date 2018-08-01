@@ -19,7 +19,8 @@ class MongodbConn(Thread):
         yestoday_str = LocalTime.yestoday_str("%Y%m%d")
         # mysql使用cursor()方法获取操作游标
         cursor = self.sdb.cursor()
-        month = LocalTime.month()
+        # 应该取的是前一天的月份，不然跨月会错误
+        month =  LocalTime.yestoday_str("%Y%m")
         monthtable = "ResDataMonth%s" % month
         # 查找数据库是否有本月的表
         try:
