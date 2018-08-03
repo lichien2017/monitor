@@ -13,7 +13,7 @@ class MongodbConn(Thread):
         Thread.__init__(self)
         self.CONN = MongoClient(ConfigHelper.mongodbip, ConfigHelper.mongodbport)
         self.sdb = pymysql.connect(ConfigHelper.mysql_ip, ConfigHelper.mysql_user,
-                                  ConfigHelper.mysql_pwd, ConfigHelper.mysql_db, charset='utf8')
+                                  ConfigHelper.mysql_pwd, ConfigHelper.mysql_db, charset='utf8mb4')
     def run(self):
         # 获取前一天的日期
         yestoday_str = LocalTime.yestoday_str("%Y%m%d")
@@ -46,25 +46,40 @@ class MongodbConn(Thread):
             cursor.execute(sqlid)
             data = cursor.fetchall()
             if bool(data) != True:
-                # MySQL中无数据，mongodb取出数据拼接写入MySql
-                insertsql = self.insertsql(monthtable,row["title"],row["description"],row["content"],row["source"],row["pubtimestr"],row["pubtime"],
+                # MySQL中无数据
+                # 查询screencapocr中有没有数据
+                screencapocrtable = self.db["screencapocr%s" % yestoday_str]
+                screencapocrrow = screencapocrtable.find({"res_id":row["identity"]})
+                imgfilename = ""
+                if screencapocrrow.count() != 0:
+                    imgfilename = screencapocrrow[0]["image"]
+                if row["restype"] == 4:
+                    imgfilename = row["gallary"]
+                title = row["title"]
+                content = row["content"]
+                content.replace("<P>", "")
+                # mongodb取出数据拼接写入MySql
+                insertsql = self.insertsql(monthtable,row["title"],row["description"],content,row["source"],row["pubtimestr"],row["pubtime"],
                            row["crawltimestr"],row["crawltime"],row["status"],row["shorturl"],row["logo"],row["labels"],
                            row["keyword"],row["seq"],row["identity"],row["appname"],row["app_tag"],row["category_tag"],
-                           row["category"],row["restype"],row["gallary"],row["video"],row["audio"])
+                           row["category"],row["restype"],row["gallary"],row["video"],row["audio"],imgfilename)
                 try:
                     cursor.execute(insertsql)
                     self.sdb.commit()
                 except Exception as e:
                     SingleLogger().log.error("======error=======>%s" % e)
+                    SingleLogger().log.error("=======title======>%s"% title)
+                    SingleLogger().log.error("=======content======>%s" % content)
+
 
 
     def insertsql(self,monthtable,title,description,content,source,pubtimestr,pubtime,crawltimestr,crawltime,status,shorturl,logo,
-                        labels,keyword,seq,identity,appname,app_tag,category_tag,category,restype,gallary,video,audio):
+                        labels,keyword,seq,identity,appname,app_tag,category_tag,category,restype,gallary,video,audio,imgfilename):
         sql = "INSERT INTO %s (title,description,content,source,pubtimestr,pubtime,crawltimestr,crawltime,status,shorturl,logo," \
-              "labels,keyword,seq,identity,appname,app_tag,category_tag,category,restype,gallary,video,audio) VALUES" \
-              "('%s', '%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')" \
+              "labels,keyword,seq,identity,appname,app_tag,category_tag,category,restype,gallary,video,audio,imgfilename) VALUES" \
+              "('%s', '%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')" \
               % (monthtable,pymysql.escape_string(title),pymysql.escape_string(description), pymysql.escape_string(content),source,pubtimestr,pubtime,
-                 crawltimestr,crawltime,status,shorturl,logo,labels,keyword,seq,identity,appname,app_tag,category_tag,category,restype,gallary,video,audio)
+                 crawltimestr,crawltime,status,shorturl,logo,labels,keyword,seq,identity,appname,app_tag,category_tag,category,restype,gallary,video,audio,imgfilename)
         return sql
 
 
@@ -92,6 +107,7 @@ class MongodbConn(Thread):
                 "`gallary` text COLLATE utf8mb4_general_ci DEFAULT NULL," \
                 "`video` text COLLATE utf8mb4_general_ci DEFAULT NULL," \
                 "`audio` text COLLATE utf8mb4_general_ci DEFAULT NULL," \
+                "`imgfilename` text COLLATE utf8mb4_general_ci DEFAULT NULL," \
                 "PRIMARY KEY (`id`),KEY `title` (`title`),KEY `crawltimestr` (`crawltimestr`),KEY `app_tag` (`app_tag`)," \
                 "KEY `appname` (`appname`),KEY `identity` (`identity`),KEY `pubtimestr` (`pubtimestr`)) ENGINE=InnoDB DEFAULT " \
                 "CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci" % month
