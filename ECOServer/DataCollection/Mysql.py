@@ -57,7 +57,10 @@ class MongodbConn(Thread):
                     imgfilename = row["gallary"]
                 title = row["title"]
                 content = row["content"]
-                content.replace("<P>", "")
+                gallary = row["gallary"]
+                # content进行进一步的解析
+                if content.find("{") >-1 and content.find("}") >-1:
+                    content = content[content.find("}")+1:len(content)]
                 # mongodb取出数据拼接写入MySql
                 insertsql = self.insertsql(monthtable,row["title"],row["description"],content,row["source"],row["pubtimestr"],row["pubtime"],
                            row["crawltimestr"],row["crawltime"],row["status"],row["shorturl"],row["logo"],row["labels"],
@@ -68,8 +71,7 @@ class MongodbConn(Thread):
                     self.sdb.commit()
                 except Exception as e:
                     SingleLogger().log.error("======error=======>%s" % e)
-                    SingleLogger().log.error("=======title======>%s"% title)
-                    SingleLogger().log.error("=======content======>%s" % content)
+                    SingleLogger().log.error("=======gallary======>%s" % gallary)
 
 
 
