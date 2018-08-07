@@ -9,10 +9,10 @@ import datetime
 
 class Collector(Thread):
     # 不必要获前一天的数据，改为获取当天每小时同步
-    time_go = -1
+    time_go = 0
     def __init__(self,time_go=0):
         Thread.__init__(self)
-        self.time_go = -1
+        self.time_go = time_go
         self._client = MongoClient(ConfigHelper.mongodbip, ConfigHelper.mongodbport)
         self._database = self._client["crawlnews"]
         self.thread_stop = False
