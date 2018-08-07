@@ -17,6 +17,7 @@ class MongodbConn(Thread):
     def run(self):
         # 获取前一天的日期
         yestoday_str = LocalTime.yestoday_str("%Y%m%d")
+        # yestoday_str = "20180805"
         # mysql使用cursor()方法获取操作游标
         cursor = self.sdb.cursor()
         # 应该取的是前一天的月份，不然跨月会错误
@@ -36,9 +37,9 @@ class MongodbConn(Thread):
         database = "crawlnews"
         self.db = self.CONN[database]
         table = self.db["originnews%s" % yestoday_str]
-        # passtime = '2018-07-08 19:07:36'
-        # nowtime = '2018-07-08 23:59:59'
-        #找出匹配上的数据
+        # passtime = '2018-08-05 20:00:14'
+        # nowtime = '2018-08-05 23:59:59'
+        # #找出匹配上的数据
         # datarow = table.find({'crawltimestr': {'$gte': passtime, '$lte': nowtime}})
         datarow = table.find()
         for row in datarow:
@@ -72,6 +73,19 @@ class MongodbConn(Thread):
                 except Exception as e:
                     SingleLogger().log.error("======error=======>%s" % e)
                     SingleLogger().log.error("=======gallary======>%s" % gallary)
+
+            else:
+                # 如果有数据
+                screencapocrtable = self.db["screencapocr%s" % yestoday_str]
+                screencapocrrow = screencapocrtable.find({"res_id": row["identity"]})
+                imgfilename = ""
+                if screencapocrrow.count() != 0:
+                    imgfilename = screencapocrrow[0]["image"]
+                if row["restype"] == 4:
+                    imgfilename = row["gallary"]
+                sqlupdate =  "update %s set imgfilename = '%s' where identity = '%s'" % (monthtable,imgfilename,row["identity"])
+                cursor.execute(sqlupdate)
+
 
 
 
