@@ -18,4 +18,4 @@ urllib3==1.22
 bs4==0.0.1
 jieba==0.39
 beautifulsoup4==4.6.0
-mitmproxy==4.0.1
+mitmproxy==7.0.3
